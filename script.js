@@ -6,6 +6,7 @@ let playerShield = false;
 let opponentShield = false;
 let playerDodge = false;
 let opponentDodge = false;
+let luffyBuffed = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -99,7 +100,7 @@ const pokemons = {
     },
     apollo: {
         name: 'Apollo',
-        type: 'Psychic',
+        type: 'Fire',
         maxHP: 200,
         moves: [
             { name: 'Solar Prominence', type: 'Fire', power: 130 },
@@ -107,23 +108,34 @@ const pokemons = {
             { name: 'Helios Cataclysm', type: 'Normal', power: 0 }, // Heal move
             { name: 'Aurora Ultima', type: 'Fire', power: 250 }
         ]
+    },
+    luffy: {
+        name: 'Luffy',
+        type: 'Fighting',
+        maxHP: 200,
+        moves: [
+            { name: 'gomu gomu no pistol', type: 'Fighting', power: 70 },
+            { name: 'gigant pistol', type: 'Fighting', power: 150 },
+            { name: 'hack', type: 'Normal', power: 0 }, // Heal move
+            { name: 'segunda marcha', type: 'Normal', power: 0 } // buff
+        ]
     }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 };
 
 // Tabela de efetividade simplificada
 const typeChart = {
-    Fire:    { Grass: 2, Water: 0.5, Fire: 0.5, Electric: 1, Ice: 2, Ground: 1, Flying: 1, Dragon: 0.5 },
-    Water:   { Fire: 2, Grass: 0.5, Water: 0.5, Electric: 1, Ground: 2, Ice: 1, Flying: 1, Dragon: 0.5 },
-    Grass:   { Water: 2, Fire: 0.5, Grass: 0.5, Electric: 1, Ground: 2, Flying: 0.5, Poison: 0.5 },
-    Electric:{ Water: 2, Grass: 0.5, Fire: 1, Electric: 0.5, Flying: 2, Ground: 0 },
-    Flying:  { Grass: 2, Electric: 0.5, Fighting: 2, Bug: 2, Rock: 0.5 },
-    Poison:  { Grass: 2, Fairy: 2, Ground: 0.5, Rock: 0.5, Poison: 0.5 },
-    Ground:  { Fire: 2, Electric: 2, Grass: 0.5, Flying: 0, Rock: 2, Poison: 2 },
-    Dragon:  { Dragon: 2 },
-    Dark:    { Psychic: 2, Ghost: 2, Fighting: 0.5, Dark: 0.5 },
-    Steel:   { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5 },
-    Normal:  { Rock: 0.5, Ghost: 0, Steel: 0.5 }
+    Fire: { Grass: 2, Water: 0.5, Fire: 0.5, Electric: 1, Ice: 2, Ground: 1, Flying: 1, Dragon: 0.5 },
+    Water: { Fire: 2, Grass: 0.5, Water: 0.5, Electric: 1, Ground: 2, Ice: 1, Flying: 1, Dragon: 0.5 },
+    Grass: { Water: 2, Fire: 0.5, Grass: 0.5, Electric: 1, Ground: 2, Flying: 0.5, Poison: 0.5 },
+    Electric: { Water: 2, Grass: 0.5, Fire: 1, Electric: 0.5, Flying: 2, Ground: 0 },
+    Flying: { Grass: 2, Electric: 0.5, Fighting: 2, Bug: 2, Rock: 0.5 },
+    Poison: { Grass: 2, Fairy: 2, Ground: 0.5, Rock: 0.5, Poison: 0.5 },
+    Ground: { Fire: 2, Electric: 2, Grass: 0.5, Flying: 0, Rock: 2, Poison: 2 },
+    Dragon: { Dragon: 2 },
+    Dark: { Psychic: 2, Ghost: 2, Fighting: 0.5, Dark: 0.5 },
+    Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5 },
+    Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 }
 };
 
 // Sons
@@ -314,6 +326,14 @@ function attack(move) {
         }
         updateHP();
     }
+    else if (move.name === 'segunda marcha') {
+    if (attacker.name === 'Luffy') {
+        luffyBuffed = true;
+        logMessage(`${attacker.name} ativou a Segunda Marcha! Seus próximos ataques causarão o dobro de dano.`);
+    } else {
+        logMessage(`${attacker.name} tentou usar Segunda Marcha, mas não é Luffy!`);
+    }
+}
     else {
         // Caso normal: calcular dano e aplicar
 
@@ -353,6 +373,17 @@ function attack(move) {
                 logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${finalDamage} de dano.`);
             }
         }
+        let damage = Math.floor((Math.random() * 5) + move.power);
+        let effectiveness = getTypeEffectiveness(move.type, defender.type);
+        let finalDamage = Math.floor(damage * effectiveness);
+
+        // Se for Luffy e ele usou Segunda Marcha, dobre o dano
+        if (attacker.name === 'Luffy' && luffyBuffed && move.name !== 'segunda marcha') {
+            finalDamage *= 2;
+            luffyBuffed = false; // Consome o efeito
+            logMessage(`O golpe foi energizado pela Segunda Marcha! Dano dobrado!`);
+        }
+
     }
 
     updateHP();
