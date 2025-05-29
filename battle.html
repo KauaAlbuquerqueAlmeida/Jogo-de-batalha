@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalha Pokémon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="battle-screen">
+
+    <div class="battle-container">
+        <!-- Área superior (Pokémon adversário) -->
+        <div class="opponent">
+            <div class="info-box">
+                <span id="opponent-name">Pokémon</span> Lv.100
+                <div class="hp-bar">
+                    <div class="hp-fill" id="opponent-hp"></div>
+                </div>
+            </div>
+            <img id="opponent-img" src="" class="pokemon-img opponent-img">
+        </div>
+
+        <!-- Área inferior (seu Pokémon) -->
+        <div class="player">
+            <img id="player-img" src="" class="pokemon-img player-img">
+            <div class="info-box">
+                <span id="player-name">Pokémon</span> Lv.100
+                <div class="hp-bar">
+                    <div class="hp-fill" id="player-hp"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caixa de opções -->
+        <div class="menu-box">
+            <div id="main-menu">
+                <button onclick="openFight()">Fight</button>
+                <button>Bag</button>
+                <button>Pokémon</button>
+                <button onclick="run()">Run</button>
+            </div>
+
+            <div id="fight-menu" class="hidden">
+                <button onclick="attack('Attack 1')">Attack 1</button>
+                <button onclick="attack('Attack 2')">Attack 2</button>
+                <button onclick="attack('Attack 3')">Attack 3</button>
+                <button onclick="attack('Attack 4')">Attack 4</button>
+            </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
