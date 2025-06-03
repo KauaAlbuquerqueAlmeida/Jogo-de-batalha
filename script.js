@@ -356,7 +356,7 @@ function attack(move) {
                 opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
                 const healed = opponentHP - oldHP;
                 logMessage(`${attacker.name} usou Regeneração Ultra-Rápida e curou ${healed} de HP!`);
-            }
+            } updateHP();
         } else {
             logMessage(`${attacker.name} tentou se curar, mas não conseguiu!`);
         }
