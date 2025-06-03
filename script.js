@@ -107,6 +107,17 @@ const pokemons = {
             { name: 'Helios Cataclysm', type: 'Normal', power: 0 }, // Heal move
             { name: 'Aurora Ultima', type: 'Fire', power: 250 }
         ]
+    },
+    godzillaminusone: {
+        name: 'Godzilla Minus One',
+        type: 'Dragon',
+        maxHP: 450,
+        moves: [
+            { name: 'Atomic Breath', type: 'Dragon', power: 2000 },
+            { name: 'Tail of God', type: 'Normal', power: 100 },
+            { name: 'Regen', type: 'Dragon', power: 0 },
+            { name: 'Earthquake', type: 'Ground', power: 200 }
+        ]
     }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 };
@@ -314,6 +325,18 @@ function attack(move) {
         }
         updateHP();
     }
+    else if (move.name === 'Regen') {
+        // Cura o atacante, vamos curar 30% do maxHP
+        const healAmount = Math.floor(attacker.maxHP * 0.5);
+        if (playerTurn) {
+            playerHP = Math.min(playerPokemon.maxHP, playerHP + healAmount);
+            logMessage(`${attacker.name} usou Regen e curou ${healAmount} de HP!`);
+        } else {
+            opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
+            logMessage(`${attacker.name} usou Regen e curou ${healAmount} de HP!`);
+        }
+        updateHP();
+    }
     else {
         // Caso normal: calcular dano e aplicar
 
@@ -336,7 +359,7 @@ function attack(move) {
             } else {
                 playerDodge = false;
                 logMessage(`${defender.name} desviou do ataque com Dodge! Nenhum dano foi causado.`);
-            }
+            } 
         }
         else {
             // Calcula dano normalmente
