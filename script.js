@@ -230,36 +230,6 @@ function getTypeEffectiveness(attackType, defenderType) {
 }
 
 // Atacar
-function attack(move) {
-
-    const attacker = playerTurn ? playerPokemon : opponentPokemon;
-    const defender = playerTurn ? opponentPokemon : playerPokemon;
-
-    const damage = Math.floor((Math.random() * 5) + move.power); // Power + variação 0-5
-    const effectiveness = getTypeEffectiveness(move.type, defender.type);
-
-    const finalDamage = Math.floor(damage * effectiveness);
-
-    if (playerTurn) {
-        opponentHP = Math.max(0, opponentHP - finalDamage);
-        logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${finalDamage} de dano.`);
-    } else {
-        playerHP = Math.max(0, playerHP - finalDamage);
-        logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${finalDamage} de dano.`);
-    }
-
-    updateHP();
-    checkFaint();
-
-    if (playerHP > 0 && opponentHP > 0) {
-        playerTurn = !playerTurn;
-
-        setTimeout(() => {
-            document.getElementById('fight-menu').classList.add('hidden');
-            document.getElementById('main-menu').classList.remove('hidden');
-        }, 500);
-    }
-}
 
 // Verificar se algum desmaiou
 function checkFaint() {
@@ -287,134 +257,6 @@ function logMessage(msg) {
     console.log(msg);
 }
 
-
-function attack(move) {
-    const attacker = playerTurn ? playerPokemon : opponentPokemon;
-    const defender = playerTurn ? opponentPokemon : playerPokemon;
-
-    // Referência para os HPs e status dos jogadores (facilita)
-    let attackerHP = playerTurn ? playerHP : opponentHP;
-    let defenderHP = playerTurn ? opponentHP : playerHP;
-    let attackerShield = playerTurn ? playerShield : opponentShield;
-    let defenderShield = playerTurn ? opponentShield : playerShield;
-    let attackerDodge = playerTurn ? playerDodge : opponentDodge;
-    let defenderDodge = playerTurn ? opponentDodge : playerDodge;
-
-    // Tratar golpes especiais:
-    if (move.name === 'Shield of God') {
-        // Ativa o escudo no atacante para bloquear o próximo golpe
-        if (playerTurn) playerShield = true; else opponentShield = true;
-        logMessage(`${attacker.name} ativou Shield of God e ficará imune ao próximo golpe!`);
-    }
-    else if (move.name === 'Dodge') {
-        // Ativa o desvio para evitar o próximo golpe
-        if (playerTurn) playerDodge = true; else opponentDodge = true;
-        logMessage(`${attacker.name} preparou um Dodge e vai desviar do próximo golpe!`);
-    }
-    else if (move.name === 'Helios Cataclysm') {
-        // Cura o atacante, vamos curar 30% do maxHP
-        const healAmount = Math.floor(attacker.maxHP * 0.3);
-        if (playerTurn) {
-            playerHP = Math.min(playerPokemon.maxHP, playerHP + healAmount);
-            logMessage(`${attacker.name} usou Helios Cataclysm e curou ${healAmount} de HP!`);
-        } else {
-            opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
-            logMessage(`${attacker.name} usou Helios Cataclysm e curou ${healAmount} de HP!`);
-        }
-        updateHP();
-    }
-    else if (move.name === 'Regen') {
-        // Cura o atacante, vamos curar 30% do maxHP
-        const healAmount = Math.floor(attacker.maxHP * 0.5);
-        if (playerTurn) {
-            playerHP = Math.min(playerPokemon.maxHP, playerHP + healAmount);
-            logMessage(`${attacker.name} usou Regen e curou ${healAmount} de HP!`);
-        } else {
-            opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
-            logMessage(`${attacker.name} usou Regen e curou ${healAmount} de HP!`);
-        }
-        updateHP();
-    }
-    else if (move.name === 'segunda marcha') {
-        if (attacker.name === 'Luffy') {
-            luffyBuffed = true;
-            logMessage(`${attacker.name} ativou a Segunda Marcha! Seus próximos ataques causarão o dobro de dano.`);
-        } else {
-            logMessage(`${attacker.name} tentou usar Segunda Marcha, mas não é Luffy!`);
-        }
-    } else if (move.name === 'Regeneração Ultra-Rápida') {
-        const healAmount = Math.floor(attacker.maxHP * 0.5); // Cura 50% do HP máximo
-
-        if (healAmount > 0) {
-            if (playerTurn) {
-                const oldHP = playerHP;
-                playerHP = Math.min(playerPokemon.maxHP, playerHP + healAmount);
-                const healed = playerHP - oldHP;
-                logMessage(`${attacker.name} usou Regeneração Ultra-Rápida e curou ${healed} de HP!`);
-            } else {
-                const oldHP = opponentHP;
-                opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
-                const healed = opponentHP - oldHP;
-                logMessage(`${attacker.name} usou Regeneração Ultra-Rápida e curou ${healed} de HP!`);
-            } updateHP();
-        } else {
-            logMessage(`${attacker.name} tentou se curar, mas não conseguiu!`);
-        }
-
-        updateHP();
-    }
-    else {
-        // Caso normal: calcular dano e aplicar
-
-        // Antes de causar dano, verificar se o defensor tem Shield ou Dodge ativo
-        if ((playerTurn && opponentShield) || (!playerTurn && playerShield)) {
-            // Escudo bloqueia o golpe, escudo é consumido
-            if (playerTurn) {
-                opponentShield = false;
-                logMessage(`${defender.name} bloqueou o ataque com Shield of God! Nenhum dano foi causado.`);
-            } else {
-                playerShield = false;
-                logMessage(`${defender.name} bloqueou o ataque com Shield of God! Nenhum dano foi causado.`);
-            }
-        }
-        else if ((playerTurn && opponentDodge) || (!playerTurn && playerDodge)) {
-            // Dodge evita o golpe, consumindo o status
-            if (playerTurn) {
-                opponentDodge = false;
-                logMessage(`${defender.name} desviou do ataque com Dodge! Nenhum dano foi causado.`);
-            } else {
-                playerDodge = false;
-                logMessage(`${defender.name} desviou do ataque com Dodge! Nenhum dano foi causado.`);
-            }
-        }
-        else {
-            // Calcula dano normalmente
-            const damage = Math.floor((Math.random() * 5) + move.power); // Power + variação 0-5
-            const effectiveness = getTypeEffectiveness(move.type, defender.type);
-
-            const finalDamage = Math.floor(damage * effectiveness);
-
-            if (playerTurn) {
-                opponentHP = Math.max(0, opponentHP - finalDamage);
-                logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${finalDamage} de dano.`);
-            } else {
-                playerHP = Math.max(0, playerHP - finalDamage);
-                logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${finalDamage} de dano.`);
-            }
-        }
-        let damage = Math.floor((Math.random() * 5) + move.power);
-        let effectiveness = getTypeEffectiveness(move.type, defender.type);
-        let finalDamage = Math.floor(damage * effectiveness);
-
-        // Se for Luffy e ele usou Segunda Marcha, dobre o dano
-        if (attacker.name === 'Luffy' && luffyBuffed && move.name !== 'segunda marcha') {
-            finalDamage *= 2;
-            luffyBuffed = false; // Consome o efeito
-            logMessage(`O golpe foi energizado pela Segunda Marcha! Dano dobrado!`);
-        }
-
-    }
-
     updateHP();
     checkFaint();
 
@@ -427,122 +269,185 @@ function attack(move) {
             loadMoves(); // Atualiza o menu com o turno correto
         }, 500);
     }
-}
 
 function attack(move) {
-
     const attacker = playerTurn ? playerPokemon : opponentPokemon;
     const defender = playerTurn ? opponentPokemon : playerPokemon;
-    const attackerHP = playerTurn ? playerHP : opponentHP;
-    const defenderHP = playerTurn ? opponentHP : playerHP;
+
+    let attackerHP = playerTurn ? playerHP : opponentHP;
+    let defenderHP = playerTurn ? opponentHP : playerHP;
+    let attackerShield = playerTurn ? playerShield : opponentShield;
+    let defenderShield = playerTurn ? opponentShield : playerShield;
+    let attackerDodge = playerTurn ? playerDodge : opponentDodge;
+    let defenderDodge = playerTurn ? opponentDodge : playerDodge;
     const attackerImg = playerTurn ? document.getElementById('player-img') : document.getElementById('opponent-img');
 
     let movePower = move.power;
 
-    // Demon Boost - Ativa o modo especial
+    // -------------------------------
+    // Modos Especiais
+    // -------------------------------
+
+    // Demon Boost - Godzilla in Hell
     if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
         demonBoostActive = true;
-
-        // Troca a imagem para a forma Demon Boost
         attackerImg.src = 'Godzillainhelldemonboost.png';
-
         alert('Godzilla in Hell entrou no modo DEMON BOOST! Seu próximo ataque será o Godzilla\'s Final Blast!');
-
-        // Substitui temporariamente o golpe Demon Boost pelo Godzilla's Final Blast
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
-                m.power = 8000; // Poder devastador
+                m.power = 8000;
             }
         });
-
         endTurn();
         return;
     }
 
-    // Caso Demon Boost esteja ativo e o jogador use o ataque Godzilla's Final Blast
     if (attacker.name === 'Godzilla in Hell' && demonBoostActive && move.name === 'Godzilla\'s Final Blast') {
         alert('Godzilla\'s Final Blast!!!');
-
-        // Aplica dano gigantesco
         movePower = 8000;
         demonBoostActive = false;
-
-        // Volta o nome do golpe para Demon Boost após usar
         attacker.moves.forEach(m => {
             if (m.name === 'Godzilla\'s Final Blast') {
                 m.name = 'Demon Boost';
                 m.power = 0;
             }
         });
-
-        // Volta para a imagem normal
         attackerImg.src = 'godzillainhell.png';
     }
 
-    // Cálculo de dano padrão
-    const effectiveness = typeChart[move.type] && typeChart[move.type][defender.type] || 1;
-    const damage = movePower * effectiveness;
-
-    if (playerTurn) {
-        opponentHP = Math.max(0, opponentHP - damage);
-    } else {
-        playerHP = Math.max(0, playerHP - damage);
-    }
-
+    // Kaiju Nº 8 - Kaiju Liberation Mode
     if (attacker.name === 'Kaiju Nº 8' && move.name === 'Kaiju Liberation Mode') {
         kaijun8Active = true;
-    
-        // Troca a imagem para a forma Kaiju Liberation Mode
         attackerImg.src = 'kaijun8ataque.png';
-    
         alert('Kaiju Nº 8 entrou no modo Kaiju Liberation Mode! Seu próximo ataque será o Hyper Destructive Punch!');
-    
-        // Substitui temporariamente o golpe Kaiju Liberation Mode pelo Hyper Destructive Punch
         attacker.moves.forEach(m => {
             if (m.name === 'Kaiju Liberation Mode') {
                 m.name = 'Hyper Destructive Punch';
-                m.power = 1000; // Poder devastador
+                m.power = 1000;
             }
         });
-    
         endTurn();
         return;
     }
-    
-    // Caso Kaiju Liberation Mode esteja ativo e o jogador use o ataque Hyper Destructive Punch
+
     if (attacker.name === 'Kaiju Nº 8' && kaijun8Active && move.name === 'Hyper Destructive Punch') {
         alert('Hyper Destructive Punch!!!');
-    
-        // Aplica dano gigantesco
         movePower = 1000;
         kaijun8Active = false;
-    
-        // Volta o nome do golpe para Kaiju Liberation Mode após usar
         attacker.moves.forEach(m => {
             if (m.name === 'Hyper Destructive Punch') {
                 m.name = 'Kaiju Liberation Mode';
                 m.power = 0;
             }
         });
-    
-        // Volta para a imagem normal
         attackerImg.src = 'kaijun8.png';
     }
 
+    // -------------------------------
+    // Golpes Especiais Defensivos/Cura
+    // -------------------------------
+
+    if (move.name === 'Shield of God') {
+        if (playerTurn) playerShield = true; else opponentShield = true;
+        logMessage(`${attacker.name} ativou Shield of God e ficará imune ao próximo golpe!`);
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'Dodge') {
+        if (playerTurn) playerDodge = true; else opponentDodge = true;
+        logMessage(`${attacker.name} preparou um Dodge e vai desviar do próximo golpe!`);
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'Helios Cataclysm' || move.name === 'Regen' || move.name === 'Regeneração Ultra-Rápida') {
+        const healPercent = move.name === 'Helios Cataclysm' ? 0.3 : 0.5;
+        const healAmount = Math.floor(attacker.maxHP * healPercent);
+        const oldHP = playerTurn ? playerHP : opponentHP;
+
+        if (playerTurn) {
+            playerHP = Math.min(playerPokemon.maxHP, playerHP + healAmount);
+        } else {
+            opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
+        }
+
+        const healed = (playerTurn ? playerHP : opponentHP) - oldHP;
+        logMessage(`${attacker.name} usou ${move.name} e curou ${healed} de HP!`);
+        updateHP();
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'segunda marcha') {
+        if (attacker.name === 'Luffy') {
+            luffyBuffed = true;
+            logMessage(`${attacker.name} ativou a Segunda Marcha! Seus próximos ataques causarão o dobro de dano.`);
+        } else {
+            logMessage(`${attacker.name} tentou usar Segunda Marcha, mas não é Luffy!`);
+        }
+        endTurn();
+        return;
+    }
+
+    // -------------------------------
+    // Verificação de Shield ou Dodge
+    // -------------------------------
+
+    if (defenderShield) {
+        if (playerTurn) opponentShield = false; else playerShield = false;
+        logMessage(`${defender.name} bloqueou o ataque com Shield of God! Nenhum dano foi causado.`);
+        endTurn();
+        return;
+    }
+
+    if (defenderDodge) {
+        if (playerTurn) opponentDodge = false; else playerDodge = false;
+        logMessage(`${defender.name} desviou do ataque com Dodge! Nenhum dano foi causado.`);
+        endTurn();
+        return;
+    }
+
+    // -------------------------------
+    // Cálculo de Dano
+    // -------------------------------
+
+    let damage = Math.floor((Math.random() * 5) + movePower);
+    const effectiveness = getTypeEffectiveness(move.type, defender.type);
+    damage = Math.floor(damage * effectiveness);
+
+    // Segunda Marcha (Luffy)
+    if (attacker.name === 'Luffy' && luffyBuffed && move.name !== 'segunda marcha') {
+        damage *= 2;
+        luffyBuffed = false;
+        logMessage(`O golpe foi energizado pela Segunda Marcha! Dano dobrado!`);
+    }
+
+    // Aplicar dano
+    if (playerTurn) {
+        opponentHP = Math.max(0, opponentHP - damage);
+    } else {
+        playerHP = Math.max(0, playerHP - damage);
+    }
+
+    logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${damage} de dano.`);
+
     updateHP();
 
-    // Verifica se alguém perdeu
+    // -------------------------------
+    // Verificar Vitória
+    // -------------------------------
     if (opponentHP === 0 || playerHP === 0) {
         setTimeout(() => {
-            alert(playerHP === 0 ? 'Você perdeu!' : 'Você venceu!');
-            window.location.href = 'select.html';
+            alert(`${opponentHP === 0 ? playerPokemon.name : opponentPokemon.name} venceu a batalha!`);
         }, 500);
         return;
     }
 
     endTurn();
 }
+
 
 function endTurn() {
     playerTurn = !playerTurn;
