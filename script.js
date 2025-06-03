@@ -73,7 +73,7 @@ const pokemons = {
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 180 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
-            { name: 'Demon Boost', type: 'Dragon', power: 0 },
+            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon', power: demonBoostActive ? 9999 : 0 },
             { name: 'Earthquake', type: 'Ground', power: 200 }
         ]
     },
@@ -433,26 +433,50 @@ function attack(move) {
     const defenderHP = playerTurn ? opponentHP : playerHP;
     const attackerImg = playerTurn ? document.getElementById('player-img') : document.getElementById('opponent-img');
 
-    // Demon Boost especial
+    let movePower = move.power;
+
+    // Demon Boost - Ativa o modo especial
     if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
         demonBoostActive = true;
+
+        // Troca a imagem para a forma Demon Boost
         attackerImg.src = 'Godzillainhelldemonboost.png';
+
         alert('Godzilla in Hell entrou no modo DEMON BOOST! Seu próximo ataque será o Godzilla\'s Final Blast!');
+
+        // Substitui temporariamente o golpe Demon Boost pelo Godzilla's Final Blast
+        attacker.moves.forEach(m => {
+            if (m.name === 'Demon Boost') {
+                m.name = 'Godzilla\'s Final Blast';
+                m.power = 8000; // Poder devastador
+            }
+        });
+
         endTurn();
         return;
     }
 
-    let movePower = move.power;
+    // Caso Demon Boost esteja ativo e o jogador use o ataque Godzilla's Final Blast
+    if (attacker.name === 'Godzilla in Hell' && demonBoostActive && move.name === 'Godzilla\'s Final Blast') {
+        alert('Godzilla\'s Final Blast!!!');
 
-    // Se Demon Boost estiver ativo, substitui o ataque atual pelo Final Blast
-    if (attacker.name === 'Godzilla in Hell' && demonBoostActive) {
-        if (playerTurn) {
-            alert('Godzilla\'s Final Blast!');
-        }
+        // Aplica dano gigantesco
         movePower = 8000;
         demonBoostActive = false;
+
+        // Volta o nome do golpe para Demon Boost após usar
+        attacker.moves.forEach(m => {
+            if (m.name === 'Godzilla\'s Final Blast') {
+                m.name = 'Demon Boost';
+                m.power = 0;
+            }
+        });
+
+        // Volta para a imagem normal
+        attackerImg.src = 'godzillainhell.png';
     }
 
+    // Cálculo de dano padrão
     const effectiveness = typeChart[move.type] && typeChart[move.type][defender.type] || 1;
     const damage = movePower * effectiveness;
 
@@ -464,6 +488,7 @@ function attack(move) {
 
     updateHP();
 
+    // Verifica se alguém perdeu
     if (opponentHP === 0 || playerHP === 0) {
         playSound(sounds.faint);
         setTimeout(() => {
@@ -481,4 +506,9 @@ function endTurn() {
     playerTurn = !playerTurn;
     document.getElementById('main-menu').classList.remove('hidden');
     document.getElementById('fight-menu').classList.add('hidden');
+
+    if (!playerTurn) {
+        setTimeout(enemyTurn, 1000);
+    }
 }
+
