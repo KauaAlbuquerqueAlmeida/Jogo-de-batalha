@@ -7,6 +7,7 @@ let opponentShield = false;
 let playerDodge = false;
 let opponentDodge = false;
 let luffyBuffed = false;
+let demonBoostActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -72,7 +73,7 @@ const pokemons = {
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 180 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
-            { name: 'Godzillas Final Blast', type: 'Dragon', power: 8000 },
+            { name: 'Demon Boost', type: 'Dragon', power: 0 },
             { name: 'Earthquake', type: 'Ground', power: 200 }
         ]
     },
@@ -350,13 +351,13 @@ function attack(move) {
         updateHP();
     }
     else if (move.name === 'segunda marcha') {
-    if (attacker.name === 'Luffy') {
-        luffyBuffed = true;
-        logMessage(`${attacker.name} ativou a Segunda Marcha! Seus próximos ataques causarão o dobro de dano.`);
-    } else {
-        logMessage(`${attacker.name} tentou usar Segunda Marcha, mas não é Luffy!`);
+        if (attacker.name === 'Luffy') {
+            luffyBuffed = true;
+            logMessage(`${attacker.name} ativou a Segunda Marcha! Seus próximos ataques causarão o dobro de dano.`);
+        } else {
+            logMessage(`${attacker.name} tentou usar Segunda Marcha, mas não é Luffy!`);
+        }
     }
-}
     else {
         // Caso normal: calcular dano e aplicar
 
@@ -379,7 +380,7 @@ function attack(move) {
             } else {
                 playerDodge = false;
                 logMessage(`${defender.name} desviou do ataque com Dodge! Nenhum dano foi causado.`);
-            } 
+            }
         }
         else {
             // Calcula dano normalmente
@@ -421,4 +422,63 @@ function attack(move) {
             loadMoves(); // Atualiza o menu com o turno correto
         }, 500);
     }
+}
+
+function attack(move) {
+    playSound(sounds.attack);
+
+    const attacker = playerTurn ? playerPokemon : opponentPokemon;
+    const defender = playerTurn ? opponentPokemon : playerPokemon;
+    const attackerHP = playerTurn ? playerHP : opponentHP;
+    const defenderHP = playerTurn ? opponentHP : playerHP;
+    const attackerImg = playerTurn ? document.getElementById('player-img') : document.getElementById('opponent-img');
+
+    // Demon Boost especial
+    if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
+        demonBoostActive = true;
+        attackerImg.src = 'Godzillainhelldemonboost.png';
+        alert('Godzilla in Hell entrou no modo DEMON BOOST! Seu próximo ataque será o Godzilla\'s Final Blast!');
+        endTurn();
+        return;
+    }
+
+    let movePower = move.power;
+
+    // Se Demon Boost estiver ativo, substitui o ataque atual pelo Final Blast
+    if (attacker.name === 'Godzilla in Hell' && demonBoostActive) {
+        if (playerTurn) {
+            alert('Godzilla\'s Final Blast!');
+        }
+        movePower = 8000;
+        demonBoostActive = false;
+    }
+
+    const effectiveness = typeChart[move.type] && typeChart[move.type][defender.type] || 1;
+    const damage = movePower * effectiveness;
+
+    if (playerTurn) {
+        opponentHP = Math.max(0, opponentHP - damage);
+    } else {
+        playerHP = Math.max(0, playerHP - damage);
+    }
+
+    updateHP();
+
+    if (opponentHP === 0 || playerHP === 0) {
+        playSound(sounds.faint);
+        setTimeout(() => {
+            alert(playerHP === 0 ? 'Você perdeu!' : 'Você venceu!');
+            sounds.battle.pause();
+            window.location.href = 'select.html';
+        }, 500);
+        return;
+    }
+
+    endTurn();
+}
+
+function endTurn() {
+    playerTurn = !playerTurn;
+    document.getElementById('main-menu').classList.remove('hidden');
+    document.getElementById('fight-menu').classList.add('hidden');
 }
