@@ -69,7 +69,7 @@ const pokemons = {
     godzillainhell: {
         name: 'Godzilla in Hell',
         type: 'Dragon',
-        maxHP: 10000,
+        maxHP: 100000,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 500 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
