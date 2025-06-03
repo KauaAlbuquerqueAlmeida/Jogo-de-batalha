@@ -71,7 +71,7 @@ const pokemons = {
         type: 'Dragon',
         maxHP: 10000,
         moves: [
-            { name: 'Atomic Breath', type: 'Dragon', power: 180 },
+            { name: 'Atomic Breath', type: 'Dragon', power: 500 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
             { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon', power: demonBoostActive ? 9999 : 0 },
             { name: 'Earthquake', type: 'Ground', power: 200 }
