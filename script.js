@@ -8,16 +8,9 @@ let playerDodge = false;
 let opponentDodge = false;
 let luffyBuffed = false;
 let demonBoostActive = false;
+let kaijun8Active = false;
 
 let playerPokemon, opponentPokemon;
-
-const sounds = {
-    battle: new Audio('sounds/battle-theme.mp3'),
-    click: new Audio('sounds/click.wav'),
-    attack: new Audio('sounds/attack.wav'),
-    faint: new Audio('sounds/faint.wav'),
-    run: new Audio('sounds/run.wav'),
-};
 
 // Dados dos Pokémon
 const pokemons = {
@@ -131,6 +124,17 @@ const pokemons = {
             { name: 'hack', type: 'Normal', power: 0 }, // Heal move
             { name: 'segunda marcha', type: 'Normal', power: 0 } // buff
         ]
+    },
+    kaijun8: {
+        name: 'Kaiju Nº 8',
+        type: 'Dragon',
+        maxHP: 500,
+        moves: [
+            { name: 'Sound Burst Punch', type: 'Dragon', power: 200 },
+            { name: 'Shockwave Emission', type: 'Electric', power: 150 },
+            { name: 'Regeneração Ultra-Rápida', type: 'Dragon', power: 0 },
+            { name: kaijun8Active ? 'Hyper Destructive Punch' : 'Kaiju Liberation Mode', type: 'Dragon', power: kaijun8Active ? 1000 : 0}
+        ]
     }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 };
@@ -149,12 +153,6 @@ const typeChart = {
     Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5 },
     Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 }
 };
-
-// Sons
-function playSound(sound) {
-    sound.currentTime = 0;
-    sound.play();
-}
 
 // Iniciar batalha
 function startBattle() {
@@ -188,10 +186,6 @@ window.onload = function () {
 
         loadMoves();
         updateHP();
-
-        sounds.battle.loop = true;
-        sounds.battle.volume = 0.3;
-        playSound(sounds.battle);
     }
 };
 
@@ -218,7 +212,6 @@ function updateHP() {
 
 // Abrir menu de luta
 function openFight() {
-    playSound(sounds.click);
     document.getElementById('main-menu').classList.add('hidden');
     document.getElementById('fight-menu').classList.remove('hidden');
     loadMoves();
@@ -226,9 +219,7 @@ function openFight() {
 
 // Fugir
 function run() {
-    playSound(sounds.run);
     alert('Você fugiu da batalha!');
-    sounds.battle.pause();
     window.location.href = 'select.html';
 }
 
@@ -240,7 +231,6 @@ function getTypeEffectiveness(attackType, defenderType) {
 
 // Atacar
 function attack(move) {
-    playSound(sounds.attack);
 
     const attacker = playerTurn ? playerPokemon : opponentPokemon;
     const defender = playerTurn ? opponentPokemon : playerPokemon;
@@ -274,14 +264,12 @@ function attack(move) {
 // Verificar se algum desmaiou
 function checkFaint() {
     if (opponentHP <= 0) {
-        playSound(sounds.faint);
         setTimeout(() => {
             alert('O oponente desmaiou! Você venceu!');
             endBattle();
         }, 500);
     }
     if (playerHP <= 0) {
-        playSound(sounds.faint);
         setTimeout(() => {
             alert('Seu Pokémon desmaiou! Você perdeu!');
             endBattle();
@@ -291,7 +279,6 @@ function checkFaint() {
 
 // Encerrar batalha
 function endBattle() {
-    sounds.battle.pause();
     window.location.href = 'select.html';
 }
 
@@ -302,8 +289,6 @@ function logMessage(msg) {
 
 
 function attack(move) {
-    playSound(sounds.attack);
-
     const attacker = playerTurn ? playerPokemon : opponentPokemon;
     const defender = playerTurn ? opponentPokemon : playerPokemon;
 
@@ -357,6 +342,26 @@ function attack(move) {
         } else {
             logMessage(`${attacker.name} tentou usar Segunda Marcha, mas não é Luffy!`);
         }
+    } else if (move.name === 'Regeneração Ultra-Rápida') {
+        const healAmount = Math.floor(attacker.maxHP * 0.5); // Cura 50% do HP máximo
+
+        if (healAmount > 0) {
+            if (playerTurn) {
+                const oldHP = playerHP;
+                playerHP = Math.min(playerPokemon.maxHP, playerHP + healAmount);
+                const healed = playerHP - oldHP;
+                logMessage(`${attacker.name} usou Regeneração Ultra-Rápida e curou ${healed} de HP!`);
+            } else {
+                const oldHP = opponentHP;
+                opponentHP = Math.min(opponentPokemon.maxHP, opponentHP + healAmount);
+                const healed = opponentHP - oldHP;
+                logMessage(`${attacker.name} usou Regeneração Ultra-Rápida e curou ${healed} de HP!`);
+            }
+        } else {
+            logMessage(`${attacker.name} tentou se curar, mas não conseguiu!`);
+        }
+
+        updateHP();
     }
     else {
         // Caso normal: calcular dano e aplicar
@@ -425,7 +430,6 @@ function attack(move) {
 }
 
 function attack(move) {
-    playSound(sounds.attack);
 
     const attacker = playerTurn ? playerPokemon : opponentPokemon;
     const defender = playerTurn ? opponentPokemon : playerPokemon;
@@ -486,14 +490,52 @@ function attack(move) {
         playerHP = Math.max(0, playerHP - damage);
     }
 
+    if (attacker.name === 'Kaiju Nº 8' && move.name === 'Kaiju Liberation Mode') {
+        kaijun8Active = true;
+    
+        // Troca a imagem para a forma Kaiju Liberation Mode
+        attackerImg.src = 'kaijun8ataque.png';
+    
+        alert('Kaiju Nº 8 entrou no modo Kaiju Liberation Mode! Seu próximo ataque será o Hyper Destructive Punch!');
+    
+        // Substitui temporariamente o golpe Kaiju Liberation Mode pelo Hyper Destructive Punch
+        attacker.moves.forEach(m => {
+            if (m.name === 'Kaiju Liberation Mode') {
+                m.name = 'Hyper Destructive Punch';
+                m.power = 1000; // Poder devastador
+            }
+        });
+    
+        endTurn();
+        return;
+    }
+    
+    // Caso Kaiju Liberation Mode esteja ativo e o jogador use o ataque Hyper Destructive Punch
+    if (attacker.name === 'Kaiju Nº 8' && kaijun8Active && move.name === 'Hyper Destructive Punch') {
+        alert('Hyper Destructive Punch!!!');
+    
+        // Aplica dano gigantesco
+        movePower = 1000;
+        kaijun8Active = false;
+    
+        // Volta o nome do golpe para Kaiju Liberation Mode após usar
+        attacker.moves.forEach(m => {
+            if (m.name === 'Hyper Destructive Punch') {
+                m.name = 'Kaiju Liberation Mode';
+                m.power = 0;
+            }
+        });
+    
+        // Volta para a imagem normal
+        attackerImg.src = 'kaijun8.png';
+    }
+
     updateHP();
 
     // Verifica se alguém perdeu
     if (opponentHP === 0 || playerHP === 0) {
-        playSound(sounds.faint);
         setTimeout(() => {
             alert(playerHP === 0 ? 'Você perdeu!' : 'Você venceu!');
-            sounds.battle.pause();
             window.location.href = 'select.html';
         }, 500);
         return;
