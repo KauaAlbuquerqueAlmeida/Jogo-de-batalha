@@ -133,7 +133,7 @@ const pokemons = {
             { name: 'Sound Burst Punch', type: 'Dragon', power: 200 },
             { name: 'Shockwave Emission', type: 'Electric', power: 150 },
             { name: 'Regeneração Ultra-Rápida', type: 'Dragon', power: 0 },
-            { name: kaijun8Active ? 'Hyper Destructive Punch' : 'Kaiju Liberation Mode', type: 'Dragon', power: kaijun8Active ? 1000 : 0}
+            { name: kaijun8Active ? 'Hyper Destructive Punch' : 'Kaiju Liberation Mode', type: 'Dragon', power: kaijun8Active ? 1000 : 0 }
         ]
     }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
@@ -232,43 +232,24 @@ function getTypeEffectiveness(attackType, defenderType) {
 // Atacar
 
 // Verificar se algum desmaiou
-function checkFaint() {
-    if (opponentHP <= 0) {
-        setTimeout(() => {
-            alert('O oponente desmaiou! Você venceu!');
-            endBattle();
-        }, 500);
-    }
-    if (playerHP <= 0) {
-        setTimeout(() => {
-            alert('Seu Pokémon desmaiou! Você perdeu!');
-            endBattle();
-        }, 500);
-    }
-}
-
-// Encerrar batalha
-function endBattle() {
-    window.location.href = 'select.html';
-}
 
 // Log para console (ou futuramente interface)
 function logMessage(msg) {
     console.log(msg);
 }
 
-    updateHP();
-    checkFaint();
+updateHP();
+checkFaint();
 
-    if (playerHP > 0 && opponentHP > 0) {
-        playerTurn = !playerTurn;
+if (playerHP > 0 && opponentHP > 0) {
+    playerTurn = !playerTurn;
 
-        setTimeout(() => {
-            document.getElementById('fight-menu').classList.add('hidden');
-            document.getElementById('main-menu').classList.remove('hidden');
-            loadMoves(); // Atualiza o menu com o turno correto
-        }, 500);
-    }
+    setTimeout(() => {
+        document.getElementById('fight-menu').classList.add('hidden');
+        document.getElementById('main-menu').classList.remove('hidden');
+        loadMoves(); // Atualiza o menu com o turno correto
+    }, 500);
+}
 
 function attack(move) {
     const attacker = playerTurn ? playerPokemon : opponentPokemon;
@@ -430,21 +411,35 @@ function attack(move) {
     } else {
         playerHP = Math.max(0, playerHP - damage);
     }
-
+    
     logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${damage} de dano.`);
-
+    
     updateHP();
-
+    
     // -------------------------------
     // Verificar Vitória
     // -------------------------------
-    if (opponentHP === 0 || playerHP === 0) {
+    function checkFaint() {
+    if (opponentHP <= 0) {
         setTimeout(() => {
-            alert(`${opponentHP === 0 ? playerPokemon.name : opponentPokemon.name} venceu a batalha!`);
+            alert('O oponente desmaiou! Você venceu!');
+            endBattle();
         }, 500);
-        return;
     }
+    if (playerHP <= 0) {
+        setTimeout(() => {
+            alert('Seu Pokémon desmaiou! Você perdeu!');
+            endBattle();
+        }, 500);
+    }
+}
 
+// Encerrar batalha
+function endBattle() {
+    window.location.href = 'select.html';
+}
+    checkFaint();
+    
     endTurn();
 }
 
