@@ -9,6 +9,7 @@ let opponentDodge = false;
 let luffyBuffed = false;
 let demonBoostActive = false;
 let kaijun8Active = false;
+let trueformActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -62,9 +63,9 @@ const pokemons = {
     godzillainhell: {
         name: 'Godzilla in Hell',
         type: 'Dragon',
-        maxHP: 100000,
+        maxHP: 20000,
         moves: [
-            { name: 'Atomic Breath', type: 'Dragon', power: 500 },
+            { name: 'Atomic Breath', type: 'Dragon', power: 1000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
             { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon', power: demonBoostActive ? 9999 : 0 },
             { name: 'Earthquake', type: 'Ground', power: 200 }
@@ -135,8 +136,20 @@ const pokemons = {
             { name: 'Regeneração Ultra-Rápida', type: 'Dragon', power: 0 },
             { name: kaijun8Active ? 'Hyper Destructive Punch' : 'Kaiju Liberation Mode', type: 'Dragon', power: kaijun8Active ? 1000 : 0 }
         ]
+    },
+    godzillaultima: {
+        name: 'Godzilla Ultima',
+        type: 'Dragon',
+        maxHP: 1500,
+        moves: [
+            { name: 'Atomic Breath', type: 'Dragon', power: 500 },
+            { name: 'Regen', type: 'Normal', power: 0 },
+            { name: trueformActive ? 'Gravitational Control' : 'Transformation', type: 'Dragon', power: trueformActive ? 1000 : 0 },
+            { name: 'Earthquake', type: 'Ground', power: 200 }
+        ]
+        // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
     }
-    // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
+
 };
 
 // Tabela de efetividade simplificada
@@ -273,7 +286,7 @@ function attack(move) {
     if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
         demonBoostActive = true;
         attackerImg.src = 'Godzillainhelldemonboost.png';
-        alert('Godzilla in Hell entrou no modo DEMON BOOST! Seu próximo ataque será o Godzilla\'s Final Blast!');
+        alert('Godzilla in Hell é cercado por morcegos demonios que o devora sobrando seus ossos e eles se aglomeram em torno dos ossos de Godzilla, ele controla eles');
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
@@ -325,6 +338,59 @@ function attack(move) {
         attackerImg.src = 'kaijun8.png';
     }
 
+// Godzilla Ultima - True Form
+if (attacker.name === 'Godzilla Ultima' && move.name === 'Transformation') {
+    trueformActive = true;
+    attackerImg.src = 'godzillaultimatrueform.png'; // Imagem da True Form
+
+    // Muda o fundo da div battle-container para vermelho escuro
+    document.querySelector('.battle-container').style.backgroundColor = '#8B0000'; // vermelho escuro
+
+    alert('Godzilla Ultima criou uma camada dura envolta dele e despertou soltando arquétipo em toda a arena e agora ele está em sua forma verdadeira!');
+
+    if (move.name === 'Transformation' && playerPokemon.name === 'Godzilla Ultima') {
+        trueformActive = true;
+        playerPokemon.maxHP = 9000;
+        playerHP = 9000;
+        alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
+    }
+    if (move.name === 'Transformation' && opponentPokemon.name === 'Godzilla Ultima') {
+        trueformActive = true;
+        opponentPokemon.maxHP = 9000;
+        opponentHP = 9000;
+        alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
+    }
+
+    // Aumenta a vida máxima e cura totalmente
+    attacker.maxHP = 9000;
+    attacker.currentHP = 9000;
+
+    // Altera os movimentos
+    attacker.moves.forEach(m => {
+        if (m.name === 'Atomic Breath') {
+            m.name = 'Lunar Destruction Atomic Breath';
+            m.power = 5000;
+        }
+        if (m.name === 'Regen') {
+            m.name = 'Solar Energy Absorption & Blast';
+            m.type = 'Fire';
+            m.power = 3000;
+        }
+        if (m.name === 'Transformation') {
+            m.name = 'Gravitational Control';
+            m.power = 1000;
+        }
+        if (m.name === 'Earthquake') {
+            m.name = 'Dimensional Portal Manipulation';
+            m.type = 'Psychic';
+            m.power = 0;
+        }
+    });
+
+    endTurn();
+    return;
+}
+
     // -------------------------------
     // Golpes Especiais Defensivos/Cura
     // -------------------------------
@@ -339,6 +405,13 @@ function attack(move) {
     if (move.name === 'Dodge') {
         if (playerTurn) playerDodge = true; else opponentDodge = true;
         logMessage(`${attacker.name} preparou um Dodge e vai desviar do próximo golpe!`);
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'Dimensional Portal Manipulation') {
+        if (playerTurn) playerDodge = true; else opponentDodge = true;
+        logMessage(`${attacker.name} preparou um Portal e vai desviar do próximo golpe!`);
         endTurn();
         return;
     }
@@ -411,35 +484,35 @@ function attack(move) {
     } else {
         playerHP = Math.max(0, playerHP - damage);
     }
-    
+
     logMessage(`${attacker.name} usou ${move.name}! ${effectiveness > 1 ? 'É super efetivo!' : effectiveness < 1 ? 'Não é muito efetivo...' : ''} Causou ${damage} de dano.`);
-    
+
     updateHP();
-    
+
     // -------------------------------
     // Verificar Vitória
     // -------------------------------
     function checkFaint() {
-    if (opponentHP <= 0) {
-        setTimeout(() => {
-            alert('O oponente desmaiou! Você venceu!');
-            endBattle();
-        }, 500);
+        if (opponentHP <= 0) {
+            setTimeout(() => {
+                alert('O oponente desmaiou! Você venceu!');
+                endBattle();
+            }, 500);
+        }
+        if (playerHP <= 0) {
+            setTimeout(() => {
+                alert('Seu Pokémon desmaiou! Você perdeu!');
+                endBattle();
+            }, 500);
+        }
     }
-    if (playerHP <= 0) {
-        setTimeout(() => {
-            alert('Seu Pokémon desmaiou! Você perdeu!');
-            endBattle();
-        }, 500);
-    }
-}
 
-// Encerrar batalha
-function endBattle() {
-    window.location.href = 'select.html';
-}
+    // Encerrar batalha
+    function endBattle() {
+        window.location.href = 'select.html';
+    }
     checkFaint();
-    
+
     endTurn();
 }
 
