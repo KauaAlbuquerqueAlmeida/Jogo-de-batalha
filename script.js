@@ -63,7 +63,7 @@ const pokemons = {
     godzillainhell: {
         name: 'Godzilla in Hell',
         type: 'Dragon',
-        maxHP: 20000,
+        maxHP: 26666,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 1000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
@@ -242,10 +242,6 @@ function getTypeEffectiveness(attackType, defenderType) {
     return effectiveness ? effectiveness : 1;
 }
 
-// Atacar
-
-// Verificar se algum desmaiou
-
 // Log para console (ou futuramente interface)
 function logMessage(msg) {
     console.log(msg);
@@ -343,6 +339,13 @@ if (attacker.name === 'Godzilla Ultima' && move.name === 'Transformation') {
     trueformActive = true;
     attackerImg.src = 'godzillaultimatrueform.png'; // Imagem da True Form
 
+    // Verifica se é o jogador ou oponente para aplicar o flip correto
+    if (attacker === playerPokemon) {
+        attackerImg.style.transform = 'scaleX(-1)'; // Normal
+    } else if (attacker === opponentPokemon) {
+        attackerImg.style.transform = 'scaleX(1)'; // Espelhado
+    }
+
     // Muda o fundo da div battle-container para vermelho escuro
     document.querySelector('.battle-container').style.backgroundColor = '#8B0000'; // vermelho escuro
 
@@ -350,31 +353,31 @@ if (attacker.name === 'Godzilla Ultima' && move.name === 'Transformation') {
 
     if (move.name === 'Transformation' && playerPokemon.name === 'Godzilla Ultima') {
         trueformActive = true;
-        playerPokemon.maxHP = 9000;
-        playerHP = 9000;
+        playerPokemon.maxHP = 12000;
+        playerHP = 12000;
         alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
     }
     if (move.name === 'Transformation' && opponentPokemon.name === 'Godzilla Ultima') {
         trueformActive = true;
-        opponentPokemon.maxHP = 9000;
-        opponentHP = 9000;
+        opponentPokemon.maxHP = 12000;
+        opponentHP = 12000;
         alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
     }
 
     // Aumenta a vida máxima e cura totalmente
-    attacker.maxHP = 9000;
-    attacker.currentHP = 9000;
+    attacker.maxHP = 12000;
+    attacker.currentHP = 12000;
 
     // Altera os movimentos
     attacker.moves.forEach(m => {
         if (m.name === 'Atomic Breath') {
             m.name = 'Lunar Destruction Atomic Breath';
-            m.power = 5000;
+            m.power = 8000;
         }
         if (m.name === 'Regen') {
             m.name = 'Solar Energy Absorption & Blast';
             m.type = 'Fire';
-            m.power = 3000;
+            m.power = 4000;
         }
         if (m.name === 'Transformation') {
             m.name = 'Gravitational Control';
