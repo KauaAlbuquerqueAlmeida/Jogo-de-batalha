@@ -163,12 +163,23 @@ const pokemons = {
     supergodzilla: {
         name: 'Super Godzilla',
         type: ['Dragon', 'Water'],
-        maxHP: 10000,
+        maxHP: 9000,
         moves: [
             { name: 'Super Atomic Breath', type: 'Dragon', power: 6000 },
-            { name: 'Super Shield of God', type: 'Normal', power: 0 }, // Shield move
+            { name: 'Super Tail', type: 'Dragon', power: 3000 }, // Shield move
             { name: 'Super Punch', type: 'Ground', power: 500 },
             { name: 'Super Nova Blast', type: 'Fire', power: 7000 }
+        ]
+    },
+    catnap: {
+        name: 'Catnap',
+        type: 'Paranormal',
+        maxHP: 100,
+        moves: [
+            { name: 'Snooze', type: 'Normal', power: 0 }, // Heal move
+            { name: 'Purrfect Strike', type: 'Normal', power: 50 },
+            { name: 'Sleepy Swipe', type: 'Normal', power: 30 },
+            { name: 'Dreamy Dash', type: 'Normal', power: 20 }
         ]
     }
 
@@ -189,6 +200,11 @@ const typeChart = {
     Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
     Ghost: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 },
     Psychic: { Fighting: 2, Poison: 2, Psychic: 0.5, Dark: 0.5 },
+    Fighting: { Normal: 2, Rock: 2, Steel: 2, Flying: 0.5, Psychic: 0.5, Fairy: 0.5 },
+    Ice: { Grass: 2, Ground: 2, Flying: 2, Dragon: 2, Fire: 0.5, Water: 0.5, Steel: 0.5 },
+    Bug: { Grass: 2, Fighting: 2, Psychic: 2, Fire: 0.5, Flying: 0.5, Poison: 0.5, Fairy: 0.5 },
+    Fairy: { Fighting: 2, Dragon: 0.5, Dark: 2, Poison: 0.5, Steel: 0.5, Fairy: 1 },
+    Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 }
 };
 
 // Iniciar batalha
