@@ -108,3 +108,14 @@ button:hover {
 button img {
     margin-right: 5px;
 }
+
+.voidghidorah {
+    filter: drop-shadow(0 0 20px #8a2be2); /* roxo cósmico */
+    transition: transform 0.5s ease;
+}
+
+#opponent-img.voidghidorah,
+#player-img.voidghidorah {
+    width: 400px; /* ou o tamanho que quiser */
+    height: auto; /* mantém a proporção */
+}

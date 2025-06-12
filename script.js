@@ -62,18 +62,18 @@ const pokemons = {
 
     godzillainhell: {
         name: 'Godzilla in Hell',
-        type: 'Dragon',
+        type: 'Dragon' & 'Fire',
         maxHP: 26666,
         moves: [
-            { name: 'Atomic Breath', type: 'Dragon', power: 1000 },
+            { name: 'Atomic Breath', type: 'Dragon', power: 5000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
-            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon', power: demonBoostActive ? 9999 : 0 },
-            { name: 'Earthquake', type: 'Ground', power: 200 }
+            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon', power: demonBoostActive ? 10000 : 0 },
+            { name: 'Earthquake', type: 'Ground', power: 400 }
         ]
     },
     saitama: {
         name: 'Saitama',
-        type: 'Fighting',
+        type: 'Fighting' & 'Normal',
         maxHP: 9999,
         moves: [
             { name: 'Serious Punch', type: 'Fighting', power: 2000 },
@@ -84,7 +84,7 @@ const pokemons = {
     },
     jacktheripper: {
         name: 'Jack the Ripper',
-        type: 'Dark',
+        type: 'Dark' & 'Normal',
         maxHP: 120,
         moves: [
             { name: 'Ripper\'s Blade', type: 'Dark', power: 120 },
@@ -95,7 +95,7 @@ const pokemons = {
     },
     apollo: {
         name: 'Apollo',
-        type: 'Fire',
+        type: 'Fire' & 'Psychic',
         maxHP: 200,
         moves: [
             { name: 'Solar Prominence', type: 'Fire', power: 130 },
@@ -106,7 +106,7 @@ const pokemons = {
     },
     godzillaminusone: {
         name: 'Godzilla Minus One',
-        type: 'Dragon',
+        type: 'Dragon' & 'Water',
         maxHP: 450,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 2000 },
@@ -128,7 +128,7 @@ const pokemons = {
     },
     kaijun8: {
         name: 'Kaiju Nº 8',
-        type: 'Dragon',
+        type: 'Dragon' & 'Normal',
         maxHP: 500,
         moves: [
             { name: 'Sound Burst Punch', type: 'Dragon', power: 200 },
@@ -148,6 +148,28 @@ const pokemons = {
             { name: 'Earthquake', type: 'Ground', power: 200 }
         ]
         // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
+    },
+    voidghidorah: {
+        name: 'Void Ghidorah',
+        type: 'Dragon' & 'Ghost',
+        maxHP: 26000,
+        moves: [
+            { name: 'Void Breath', type: 'Dragon', power: 3500 },
+            { name: 'Gravity Crush', type: 'Psychic', power: 2000 },
+            { name: 'Dimensional Portal Manipulation', type: 'Psychic', power: 0 }, // Dodge move
+            { name: 'Cosmic Storm', type: 'Dragon', power: 4000 }
+        ]
+    },
+    supergodzilla: {
+        name: 'Super Godzilla',
+        type: 'Dragon' & 'Water',
+        maxHP: 10000,
+        moves: [
+            { name: 'Super Atomic Breath', type: 'Dragon', power: 6000 },
+            { name: 'Super Shield of God', type: 'Normal', power: 0 }, // Shield move
+            { name: 'Super Punch', type: 'Ground', power: 500 },
+            { name: 'Super Nova Blast', type: 'Fire', power: 7000 }
+        ]
     }
 
 };
@@ -164,7 +186,8 @@ const typeChart = {
     Dragon: { Dragon: 2 },
     Dark: { Psychic: 2, Ghost: 2, Fighting: 0.5, Dark: 0.5 },
     Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5 },
-    Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 }
+    Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
+    Ghost: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 }
 };
 
 // Iniciar batalha
@@ -200,6 +223,18 @@ window.onload = function () {
         loadMoves();
         updateHP();
     }
+
+    if (playerPokemon.name === 'Void Ghidorah' || opponentPokemon.name === 'Void Ghidorah') {
+        document.querySelector('.battle-container').style.backgroundColor = '#000000'; // fundo preto
+        document.body.style.transition = 'background-color 1s ease'; // animação suave
+        if (playerPokemon.name === 'Void Ghidorah') {
+            document.getElementById('player-img').classList.add('voidghidorah');
+        }
+        if (opponentPokemon.name === 'Void Ghidorah') {
+            document.getElementById('opponent-img').classList.add('voidghidorah');
+        }
+    }
+
 };
 
 // Carregar os botões de golpes
@@ -286,7 +321,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
-                m.power = 8000;
+                m.power = 10000;
             }
         });
         endTurn();
@@ -334,65 +369,65 @@ function attack(move) {
         attackerImg.src = 'kaijun8.png';
     }
 
-// Godzilla Ultima - True Form
-if (attacker.name === 'Godzilla Ultima' && move.name === 'Transformation') {
-    trueformActive = true;
-    attackerImg.src = 'godzillaultimatrueform.png'; // Imagem da True Form
-
-    // Verifica se é o jogador ou oponente para aplicar o flip correto
-    if (attacker === playerPokemon) {
-        attackerImg.style.transform = 'scaleX(-1)'; // Normal
-    } else if (attacker === opponentPokemon) {
-        attackerImg.style.transform = 'scaleX(1)'; // Espelhado
-    }
-
-    // Muda o fundo da div battle-container para vermelho escuro
-    document.querySelector('.battle-container').style.backgroundColor = '#8B0000'; // vermelho escuro
-
-    alert('Godzilla Ultima criou uma camada dura envolta dele e despertou soltando arquétipo em toda a arena e agora ele está em sua forma verdadeira!');
-
-    if (move.name === 'Transformation' && playerPokemon.name === 'Godzilla Ultima') {
+    // Godzilla Ultima - True Form
+    if (attacker.name === 'Godzilla Ultima' && move.name === 'Transformation') {
         trueformActive = true;
-        playerPokemon.maxHP = 12000;
-        playerHP = 12000;
-        alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
+        attackerImg.src = 'godzillaultimatrueform.png'; // Imagem da True Form
+
+        // Verifica se é o jogador ou oponente para aplicar o flip correto
+        if (attacker === playerPokemon) {
+            attackerImg.style.transform = 'scaleX(-1)'; // Normal
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.transform = 'scaleX(1)'; // Espelhado
+        }
+
+        // Muda o fundo da div battle-container para vermelho escuro
+        document.querySelector('.battle-container').style.backgroundColor = '#8B0000'; // vermelho escuro
+
+        alert('Godzilla Ultima criou uma camada dura envolta dele e despertou soltando arquétipo em toda a arena e agora ele está em sua forma verdadeira!');
+
+        if (move.name === 'Transformation' && playerPokemon.name === 'Godzilla Ultima') {
+            trueformActive = true;
+            playerPokemon.maxHP = 12000;
+            playerHP = 12000;
+            alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
+        }
+        if (move.name === 'Transformation' && opponentPokemon.name === 'Godzilla Ultima') {
+            trueformActive = true;
+            opponentPokemon.maxHP = 12000;
+            opponentHP = 12000;
+            alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 12000;
+        attacker.currentHP = 12000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Atomic Breath') {
+                m.name = 'Lunar Destruction Atomic Breath';
+                m.power = 6000;
+            }
+            if (m.name === 'Regen') {
+                m.name = 'Solar Energy Absorption & Blast';
+                m.type = 'Fire';
+                m.power = 4000;
+            }
+            if (m.name === 'Transformation') {
+                m.name = 'Gravitational Control';
+                m.power = 1000;
+            }
+            if (m.name === 'Earthquake') {
+                m.name = 'Dimensional Portal Manipulation';
+                m.type = 'Psychic';
+                m.power = 0;
+            }
+        });
+
+        endTurn();
+        return;
     }
-    if (move.name === 'Transformation' && opponentPokemon.name === 'Godzilla Ultima') {
-        trueformActive = true;
-        opponentPokemon.maxHP = 12000;
-        opponentHP = 12000;
-        alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
-    }
-
-    // Aumenta a vida máxima e cura totalmente
-    attacker.maxHP = 12000;
-    attacker.currentHP = 12000;
-
-    // Altera os movimentos
-    attacker.moves.forEach(m => {
-        if (m.name === 'Atomic Breath') {
-            m.name = 'Lunar Destruction Atomic Breath';
-            m.power = 8000;
-        }
-        if (m.name === 'Regen') {
-            m.name = 'Solar Energy Absorption & Blast';
-            m.type = 'Fire';
-            m.power = 4000;
-        }
-        if (m.name === 'Transformation') {
-            m.name = 'Gravitational Control';
-            m.power = 1000;
-        }
-        if (m.name === 'Earthquake') {
-            m.name = 'Dimensional Portal Manipulation';
-            m.type = 'Psychic';
-            m.power = 0;
-        }
-    });
-
-    endTurn();
-    return;
-}
 
     // -------------------------------
     // Golpes Especiais Defensivos/Cura
@@ -528,5 +563,18 @@ function endTurn() {
     if (!playerTurn) {
         setTimeout(enemyTurn, 1000);
     }
+}
+
+const playerImg = document.getElementById('player-img');
+const opponentImg = document.getElementById('opponent-img');
+
+if (playerPokemon.name === 'Void Ghidorah') {
+    playerImg.style.width = '400px'; // aumente conforme desejar
+    playerImg.style.height = 'auto';
+}
+
+if (opponentPokemon.name === 'Void Ghidorah') {
+    opponentImg.style.width = '400px';
+    opponentImg.style.height = 'auto';
 }
 
