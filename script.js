@@ -17,7 +17,7 @@ let playerPokemon, opponentPokemon;
 const pokemons = {
     charizard: {
         name: 'Charizard',
-        type: 'Fire',
+        type: ['Fire', 'Flying'],
         maxHP: 120,
         moves: [
             { name: 'Flamethrower', type: 'Fire', power: 30 },
@@ -62,7 +62,7 @@ const pokemons = {
 
     godzillainhell: {
         name: 'Godzilla in Hell',
-        type: 'Dragon' & 'Fire',
+        type: ['Dragon', 'Fire'],
         maxHP: 26666,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 5000 },
@@ -73,7 +73,7 @@ const pokemons = {
     },
     saitama: {
         name: 'Saitama',
-        type: 'Fighting' & 'Normal',
+        type: ['Fighting', 'Normal'],
         maxHP: 9999,
         moves: [
             { name: 'Serious Punch', type: 'Fighting', power: 2000 },
@@ -84,7 +84,7 @@ const pokemons = {
     },
     jacktheripper: {
         name: 'Jack the Ripper',
-        type: 'Dark' & 'Normal',
+        type: ['Dark', 'Normal'],
         maxHP: 120,
         moves: [
             { name: 'Ripper\'s Blade', type: 'Dark', power: 120 },
@@ -95,7 +95,7 @@ const pokemons = {
     },
     apollo: {
         name: 'Apollo',
-        type: 'Fire' & 'Psychic',
+        type: ['Fire', 'Psychic'],
         maxHP: 200,
         moves: [
             { name: 'Solar Prominence', type: 'Fire', power: 130 },
@@ -106,7 +106,7 @@ const pokemons = {
     },
     godzillaminusone: {
         name: 'Godzilla Minus One',
-        type: 'Dragon' & 'Water',
+        type: ['Dragon', 'Water'],
         maxHP: 450,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 2000 },
@@ -128,7 +128,7 @@ const pokemons = {
     },
     kaijun8: {
         name: 'Kaiju Nº 8',
-        type: 'Dragon' & 'Normal',
+        type: ['Dragon', 'Normal'],
         maxHP: 500,
         moves: [
             { name: 'Sound Burst Punch', type: 'Dragon', power: 200 },
@@ -151,7 +151,7 @@ const pokemons = {
     },
     voidghidorah: {
         name: 'Void Ghidorah',
-        type: 'Dragon' & 'Ghost',
+        type: ['Dragon', 'Ghost'],
         maxHP: 26000,
         moves: [
             { name: 'Void Breath', type: 'Dragon', power: 3500 },
@@ -162,7 +162,7 @@ const pokemons = {
     },
     supergodzilla: {
         name: 'Super Godzilla',
-        type: 'Dragon' & 'Water',
+        type: ['Dragon', 'Water'],
         maxHP: 10000,
         moves: [
             { name: 'Super Atomic Breath', type: 'Dragon', power: 6000 },
@@ -187,7 +187,8 @@ const typeChart = {
     Dark: { Psychic: 2, Ghost: 2, Fighting: 0.5, Dark: 0.5 },
     Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5 },
     Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
-    Ghost: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 }
+    Ghost: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 },
+    Psychic: { Fighting: 2, Poison: 2, Psychic: 0.5, Dark: 0.5 },
 };
 
 // Iniciar batalha
