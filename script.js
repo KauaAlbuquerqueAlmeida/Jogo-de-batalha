@@ -76,9 +76,9 @@ const pokemons = {
     saitama: {
         name: 'Saitama',
         type: ['Fighting', 'Normal'],
-        maxHP: 9999,
+        maxHP: 15000,
         moves: [
-            { name: 'Serious Punch', type: 'Fighting', power: 5000 },
+            { name: 'Serious Punch', type: 'Fighting', power: 8000 },
             { name: 'Consecutive Normal Punches', type: 'Normal', power: 1500 },
             { name: 'Dodge', type: 'Normal', power: 0 },
             { name: 'One Punch', type: 'Fighting', power: 3000 }
@@ -108,7 +108,7 @@ const pokemons = {
     },
     godzillaminusone: {
         name: 'Godzilla Minus One',
-        type: ['Atomic', 'Water'],
+        type: ['Nuclear', 'Water'],
         maxHP: 450,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 2000 },
@@ -141,7 +141,7 @@ const pokemons = {
     },
     godzillaultima: {
         name: 'Godzilla Ultima',
-        type: 'Atomic',
+        type: 'Nuclear',
         maxHP: 1500,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 500 },
@@ -152,18 +152,18 @@ const pokemons = {
     },
     voidghidorah: {
         name: 'Void Ghidorah',
-        type: ['Dragon', 'Cosmic'],
+        type: ['Void', 'Space'],
         maxHP: 26000,
         moves: [
-            { name: 'Void Breath', type: 'Dragon', power: 3500 },
+            { name: 'Void Breath', type: 'Void', power: 3500 },
             { name: 'Gravity Crush', type: 'Psychic', power: 2000 },
             { name: 'Dimensional Portal Manipulation', type: 'Psychic', power: 0 }, // Dodge move
-            { name: 'Cosmic Storm', type: 'Dragon', power: 4000 }
+            { name: 'Cosmic Storm', type: 'Void', power: 4000 }
         ]
     },
     supergodzilla: {
         name: 'Super Godzilla',
-        type: ['Dragon', 'Water'],
+        type: ['Nuclear', 'Space'],
         maxHP: 9000,
         moves: [
             { name: 'Super Atomic Breath', type: 'Dragon', power: 6000 },
@@ -185,7 +185,7 @@ const pokemons = {
     },
     shingodzilla: {
         name: 'Shin Godzilla',
-        type: ['Dragon', 'Atomic'],
+        type: ['Dragon', 'Nuclear'],
         maxHP: 500,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 600 },
@@ -196,18 +196,18 @@ const pokemons = {
     },
     vaporzillainhell: {
         name: 'Vaporzilla in Hell',
-        type: ['Dragon', 'Fire'],
+        type: ['Demon', 'Fire'],
         maxHP: 16666,
         moves: [
-            { name: 'Vapor Breath', type: 'Water', power: 3000 },
-            { name: 'Hellish Wave', type: 'Water', power: 2000 },
+            { name: 'Vapor Breath', type: 'Demon', power: 3000 },
+            { name: 'Mega Infernal Punch', type: 'Demon', power: 3500 },
             { name: 'Shield of God', type: 'Normal', power: 0 }, // Shield move
-            { name: 'Tsunami Strike', type: 'Water', power: 4000 }
+            { name: 'Tsunami Strike in hell', type: 'Water', power: 4000 }
         ]
     },
     godzillainhellslick: {
         name: 'Godzilla in Hell (Slick)',
-        type: ['Dragon', 'Atomic'],
+        type: ['Dragon', 'Nuclear'],
         maxHP: 20000,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 2500 },
@@ -233,29 +233,51 @@ const pokemons = {
 
 // Tabela de efetividade simplificada
 const typeChart = {
-    Fire: { Grass: 2, Water: 0.5, Fire: 0.5, Electric: 1, Ice: 2, Ground: 1, Flying: 1, Dragon: 0.5 },
-    Water: { Fire: 2, Grass: 0.5, Water: 0.5, Electric: 1, Ground: 2, Ice: 1, Flying: 1, Dragon: 0.5 },
-    Grass: { Water: 2, Fire: 0.5, Grass: 0.5, Electric: 1, Ground: 2, Flying: 0.5, Poison: 0.5 },
-    Electric: { Water: 2, Grass: 0.5, Fire: 1, Electric: 0.5, Flying: 2, Ground: 0 },
-    Flying: { Grass: 2, Electric: 0.5, Fighting: 2, Bug: 2, Rock: 0.5 },
-    Poison: { Grass: 2, Fairy: 2, Ground: 0.5, Rock: 0.5, Poison: 0.5 },
-    Ground: { Fire: 2, Electric: 2, Grass: 0.5, Flying: 0, Rock: 2, Poison: 2 },
-    Dragon: { Dragon: 2 },
-    Dark: { Psychic: 2, Ghost: 2, Fighting: 0.5, Dark: 0.5 },
-    Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5 },
-    Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
-    Ghost: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 },
-    Psychic: { Fighting: 2, Poison: 2, Psychic: 0.5, Dark: 0.5 },
-    Fighting: { Normal: 2, Rock: 2, Steel: 2, Flying: 0.5, Psychic: 0.5, Fairy: 0.5 },
-    Ice: { Grass: 2, Ground: 2, Flying: 2, Dragon: 2, Fire: 0.5, Water: 0.5, Steel: 0.5 },
-    Bug: { Grass: 2, Fighting: 2, Psychic: 2, Fire: 0.5, Flying: 0.5, Poison: 0.5, Fairy: 0.5 },
-    Fairy: { Fighting: 2, Dragon: 0.5, Dark: 2, Poison: 0.5, Steel: 0.5, Fairy: 1 },
-    Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 },
-    Sound: { Electric: 2, Psychic: 2, Dragon: 0.5, Normal: 1 },
-    Atomic: { Dragon: 2, Fire: 2, Water: 0.5, Electric: 1, Ground: 1, Flying: 1, Psychic: 1 },
-    Cosmic: { Dragon: 2, Psychic: 2, Fire: 0.5, Water: 0.5, Electric: 1, Ground: 1, Flying: 1 },
-    // Adicione mais tipos e suas interações aqui
+  // Tipos base tradicionais (ajustados)
+  Fire:      { Grass: 2, Ice: 2, Bug: 2, Steel: 2, Water: 0.5, Fire: 0.5, Dragon: 0.5 },
+  Water:     { Fire: 2, Ground: 2, Rock: 2, Water: 0.5, Grass: 0.5 },
+  Grass:     { Water: 2, Ground: 2, Rock: 2, Fire: 0.5, Grass: 0.5, Flying: 0.5 },
+  Electric:  { Water: 2, Flying: 2, Electric: 0.5, Ground: 0 },
+  Flying:    { Grass: 2, Bug: 2, Fighting: 2, Electric: 0.5, Rock: 0.5 },
+  Psychic:   { Fighting: 2, Poison: 2, Dark: 0, Psychic: 0.5 },
+  Dark:      { Psychic: 2, Ghost: 2, Fighting: 0.5, Fairy: 0.5 },
+  Steel:     { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Electric: 0.5 },
+  Ice:       { Grass: 2, Flying: 2, Ground: 2, Dragon: 2, Fire: 0.5, Steel: 0.5 },
+  Fighting:  { Normal: 2, Rock: 2, Steel: 2, Ice: 2, Dark: 2, Fairy: 0.5 },
+  Ghost:     { Psychic: 2, Ghost: 2, Normal: 0, Dark: 0.5 },
+  Fairy:     { Fighting: 2, Dark: 2, Dragon: 2, Steel: 0.5 },
+  Ground:    { Electric: 2, Fire: 2, Poison: 2, Rock: 2, Grass: 0.5 },
+  Poison:    { Grass: 2, Fairy: 2, Ground: 0.5, Steel: 0 },
+  Rock:      { Fire: 2, Ice: 2, Flying: 2, Bug: 2, Ground: 0.5 },
+  Bug:       { Grass: 2, Psychic: 2, Dark: 2, Fire: 0.5, Flying: 0.5 },
+  Dragon:    { Dragon: 2, Steel: 0.5, Fairy: 0 },
+  Normal:    { Ghost: 0 },
+  
+  // Tipos especiais e originais
+  Angel:     { Demon: 2, Dark: 2, God: 0.5, Ghost: 2, Chaos: 0.5 },
+  God:       { All: 1, Void: 0.5, God: 0.5, Quantum: 0.5 },
+  Quantum:   { God: 2, Steel: 2, Psychic: 2, Digital: 2, Normal: 0.5, Time: 2 },
+  Time:      { Psychic: 2, Ghost: 2, Quantum: 0.5, Space: 0.5 },
+  Space:     { Psychic: 2, Flying: 2, Ground: 2, Time: 2, Void: 0.5 },
+  Void:      { All: 0.5, Light: 2, Angel: 2 },
+  Plasma:    { Water: 2, Steel: 2, Flying: 2, Ground: 0.5, Electric: 0.5 },
+  Virus:     { Digital: 2, Psychic: 2, Fairy: 2, Steel: 2, Holy: 0.5 },
+  Crystal:   { Dragon: 2, Dark: 1.5, Fire: 0.5, Fighting: 0.5 },
+  Wind:      { Grass: 2, Bug: 2, Flying: 0.5, Rock: 0.5 },
+  Digital:   { Psychic: 2, Electric: 2, Bug: 2, Water: 0.5, Ground: 0.5 },
+  Nuclear:   { Steel: 2, Water: 0.5, Grass: 0.5, Ground: 2, Fairy: 2 },
+  Holy:      { Demon: 2, Dark: 2, Ghost: 2, Poison: 0.5 },
+  Chaos:     { Fairy: 2, Psychic: 2, Order: 0.5, Angel: 0.5 },
+  Light:     { Dark: 2, Ghost: 2, Shadow: 2, Void: 0.5 },
+  Shadow:    { Light: 0.5, Psychic: 2, Ghost: 2 },
+  Mech:      { Steel: 2, Rock: 2, Bug: 2, Electric: 2, Water: 0.5 },
+  Mythic:    { All: 1, Dragon: 2, Fairy: 2, Dark: 2 },
+  Sound:     { Psychic: 2, Water: 2, Ghost: 1.5, Rock: 0.5 },
+  Dream:     { Psychic: 2, Fairy: 2, Ghost: 0.5, Sound: 2 },
+  Paranormal:{ Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0, Fairy: 0.5, Dream: 2, Paranormal: 0.5 },
+  Demon:     { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 }
 };
+
 
 // Iniciar batalha
 function startBattle() {
@@ -483,18 +505,18 @@ function attack(move) {
 
         if (move.name === 'Transformation' && playerPokemon.name === 'Godzilla Ultima') {
             trueformActive = true;
-            playerPokemon.maxHP = 12000;
-            playerHP = 12000;
+            playerPokemon.maxHP = 18000;
+            playerHP = 18000;
         }
         if (move.name === 'Transformation' && opponentPokemon.name === 'Godzilla Ultima') {
             trueformActive = true;
-            opponentPokemon.maxHP = 12000;
-            opponentHP = 12000;
+            opponentPokemon.maxHP = 18000;
+            opponentHP = 18000;
         }
 
         // Aumenta a vida máxima e cura totalmente
-        attacker.maxHP = 12000;
-        attacker.currentHP = 12000;
+        attacker.maxHP = 18000;
+        attacker.currentHP = 18000;
 
         // Altera os movimentos
         attacker.moves.forEach(m => {
@@ -512,7 +534,7 @@ function attack(move) {
                 m.power = 1000;
             }
             if (m.name === 'Earthquake') {
-                m.name = 'Dimensional Portal Manipulation';
+                m.name = 'Regen';
                 m.type = 'Psychic';
                 m.power = 0;
             }
