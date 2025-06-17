@@ -119,3 +119,9 @@ button img {
     width: 400px; /* ou o tamanho que quiser */
     height: auto; /* mantém a proporção */
 }
+
+#opponent-img.shingodzilla,
+#player-img.shingodzilla {
+    width: 400px; /* ou o tamanho que quiser */
+    height: auto; /* mantém a proporção */
+}

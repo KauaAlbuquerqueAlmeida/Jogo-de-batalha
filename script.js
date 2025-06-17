@@ -10,6 +10,7 @@ let luffyBuffed = false;
 let demonBoostActive = false;
 let kaijun8Active = false;
 let trueformActive = false;
+let nightmareActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -175,10 +176,10 @@ const pokemons = {
         type: 'Paranormal',
         maxHP: 100,
         moves: [
-            { name: 'Snooze', type: 'Normal', power: 0 }, // Heal move
-            { name: 'Purrfect Strike', type: 'Normal', power: 50 },
-            { name: 'Sleepy Swipe', type: 'Normal', power: 30 },
-            { name: 'Dreamy Dash', type: 'Normal', power: 20 }
+            { name: nightmareActive ? 'Chunch' : 'Gás Vermelho', type: 'Normal', power: nightmareActive ? 200 : 0 },
+            { name: 'Jumpscare', type: 'Normal', power: 50 },
+            { name: 'Sharp Claws Swipe', type: 'Normal', power: 30 },
+            { name: 'Aggressive Charge', type: 'Normal', power: 100 }
         ]
     },
     shingodzilla: {
@@ -454,6 +455,43 @@ function attack(move) {
                 m.name = 'Dimensional Portal Manipulation';
                 m.type = 'Psychic';
                 m.power = 0;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Catnap' && move.name === 'Gás Vermelho') {
+        trueformActive = true;
+        attackerImg.src = 'nightmarecatnap.png'; // Imagem da True Form
+
+        // Muda o fundo da div battle-container para vermelho escuro
+        document.querySelector('.battle-container').style.backgroundColor = '#8B0000'; // vermelho escuro
+
+        alert('Catnap soltou o seu gás vermelho da boca você entrou em um pesadelo e está vendo seus piores medos!');
+
+        if (move.name === 'Gás Vermelho' && playerPokemon.name === 'Catnap') {
+            trueformActive = true;
+            playerPokemon.maxHP = 500;
+            playerHP = 500;
+        }
+        if (move.name === 'Gás Vermelho' && opponentPokemon.name === 'Catnap') {
+            trueformActive = true;
+            opponentPokemon.maxHP = 500;
+            opponentHP = 500;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 500;
+        attacker.currentHP = 500;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Gás Vermelho') {
+                m.name = 'Chunch';
+                m.type = 'Dark';
+                m.power = 200; // Gás Vermelho não causa dano, é um golpe de cura
             }
         });
 
