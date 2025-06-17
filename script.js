@@ -11,6 +11,7 @@ let demonBoostActive = false;
 let kaijun8Active = false;
 let trueformActive = false;
 let nightmareActive = false;
+let demonBoostslickActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -69,7 +70,7 @@ const pokemons = {
             { name: 'Atomic Breath', type: 'Dragon', power: 5000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
             { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon'},
-            { name: 'Earthquake', type: 'Ground', power: 400 }
+            { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 15000 }
         ]
     },
     saitama: {
@@ -193,6 +194,39 @@ const pokemons = {
             { name: 'Fire Atomic Breath', type: 'Fire', power: 400 }
         ]
     },
+    vaporzillainhell: {
+        name: 'Vaporzilla in Hell',
+        type: ['Dragon', 'Fire'],
+        maxHP: 16666,
+        moves: [
+            { name: 'Vapor Breath', type: 'Water', power: 3000 },
+            { name: 'Hellish Wave', type: 'Water', power: 2000 },
+            { name: 'Shield of God', type: 'Normal', power: 0 }, // Shield move
+            { name: 'Tsunami Strike', type: 'Water', power: 4000 }
+        ]
+    },
+    godzillainhellslick: {
+        name: 'Godzilla in Hell (Slick)',
+        type: ['Dragon', 'Atomic'],
+        maxHP: 20000,
+        moves: [
+            { name: 'Atomic Breath', type: 'Dragon', power: 2500 },
+            { name: 'Shield of God', type: 'Normal', power: 0 },
+            { name: demonBoostslickActive ? 'Godzilla\'s Final Blast Cannon' : 'Demon Boost Slick', type: 'Dragon'},
+            { name: 'Atomic Breath With God Power', type: 'Cosmic', power: 4000 }
+        ]
+    },
+    dekudark: {
+        name: 'Deku Dark',
+        type: ['Fighting', 'Dark'],
+        maxHP: 300,
+        moves: [
+            { name: 'Black Smash Omega', type: 'Fighting', power: 1000 },
+            { name: 'Void Whiplash', type: 'Dark', power: 150 },
+            { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
+            { name: 'Full Dark Detroit Smash', type: 'Fighting', power: 5000 }
+        ]
+    }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -372,6 +406,34 @@ function attack(move) {
             }
         });
         attackerImg.src = 'godzillainhell.png';
+    }
+
+    // Demon Boost Slick - Godzilla in Hell Slick
+    if (attacker.name === 'Godzilla in Hell (Slick)' && move.name === 'Demon Boost Slick') {
+        demonBoostslickActive = true;
+        attackerImg.src = 'Godzillainhelldemonboostslick.png';
+        alert('Godzilla in Hell é cercado por morcegos demonios que o devora sobrando seus ossos e eles se aglomeram em torno dos ossos de Godzilla, ele controla eles');
+        attacker.moves.forEach(m => {
+            if (m.name === 'Demon Boost Slick') {
+                m.name = 'Godzilla\'s Final Blast Cannon';
+                m.power = 8000;
+            }
+        });
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Godzilla in Hell (Slick)' && demonBoostslickActive && move.name === 'Godzilla\'s Final Blast Cannon') {
+        alert('Godzilla\'s Final Blast Cannon!!!');
+        movePower = 8000;
+        demonBoostslickActive = false;
+        attacker.moves.forEach(m => {
+            if (m.name === 'Godzilla\'s Final Blast Cannon') {
+                m.name = 'Demon Boost Slick';
+                m.power = 0;
+            }
+        });
+        attackerImg.src = 'godzillainhellslick.png';
     }
 
     // Kaiju Nº 8 - Kaiju Liberation Mode
