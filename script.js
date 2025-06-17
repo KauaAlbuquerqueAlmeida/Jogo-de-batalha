@@ -77,10 +77,10 @@ const pokemons = {
         type: ['Fighting', 'Normal'],
         maxHP: 9999,
         moves: [
-            { name: 'Serious Punch', type: 'Fighting', power: 2000 },
+            { name: 'Serious Punch', type: 'Fighting', power: 5000 },
             { name: 'Consecutive Normal Punches', type: 'Normal', power: 1500 },
             { name: 'Dodge', type: 'Normal', power: 0 },
-            { name: 'One Punch', type: 'Fighting', power: 1000 }
+            { name: 'One Punch', type: 'Fighting', power: 3000 }
         ]
     },
     jacktheripper: {
