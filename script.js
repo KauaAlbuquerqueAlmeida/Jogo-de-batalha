@@ -140,7 +140,7 @@ const pokemons = {
     },
     godzillaultima: {
         name: 'Godzilla Ultima',
-        type: 'Dragon',
+        type: 'Atomic',
         maxHP: 1500,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 500 },
@@ -363,7 +363,7 @@ function attack(move) {
 
     if (attacker.name === 'Godzilla in Hell' && demonBoostActive && move.name === 'Godzilla\'s Final Blast') {
         alert('Godzilla\'s Final Blast!!!');
-        movePower = 8000;
+        movePower = 15000;
         demonBoostActive = false;
         attacker.moves.forEach(m => {
             if (m.name === 'Godzilla\'s Final Blast') {
@@ -423,13 +423,11 @@ function attack(move) {
             trueformActive = true;
             playerPokemon.maxHP = 12000;
             playerHP = 12000;
-            alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
         }
         if (move.name === 'Transformation' && opponentPokemon.name === 'Godzilla Ultima') {
             trueformActive = true;
             opponentPokemon.maxHP = 12000;
             opponentHP = 12000;
-            alert('Godzilla Ultima entrou na True Form! HP aumentado para 9000!');
         }
 
         // Aumenta a vida máxima e cura totalmente
