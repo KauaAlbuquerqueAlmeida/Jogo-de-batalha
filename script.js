@@ -607,7 +607,7 @@ function attack(move) {
         }
         if (playerHP <= 0) {
             setTimeout(() => {
-                alert('Seu Pokémon desmaiou! Você perdeu!');
+                alert('Você desmaiou! Você perdeu!');
                 endBattle();
             }, 500);
         }
@@ -645,4 +645,15 @@ if (opponentPokemon.name === 'Void Ghidorah') {
     opponentImg.style.width = '400px';
     opponentImg.style.height = 'auto';
 }
+
+if (playerPokemon.name === 'Shin Godzilla') {
+    playerImg.style.width = '300px'; // aumente conforme desejar
+    playerImg.style.height = 'auto';
+}
+
+if (opponentPokemon.name === 'Shin Godzilla') {
+    opponentImg.style.width = '300px';
+    opponentImg.style.height = 'auto';
+}
+
 
