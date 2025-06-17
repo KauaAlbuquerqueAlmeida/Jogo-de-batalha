@@ -67,7 +67,7 @@ const pokemons = {
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 5000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
-            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon', power: demonBoostActive ? 10000 : 0 },
+            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon'},
             { name: 'Earthquake', type: 'Ground', power: 400 }
         ]
     },
@@ -106,7 +106,7 @@ const pokemons = {
     },
     godzillaminusone: {
         name: 'Godzilla Minus One',
-        type: ['Dragon', 'Water'],
+        type: ['Atomic', 'Water'],
         maxHP: 450,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 2000 },
@@ -147,11 +147,10 @@ const pokemons = {
             { name: trueformActive ? 'Gravitational Control' : 'Transformation', type: 'Dragon', power: trueformActive ? 1000 : 0 },
             { name: 'Earthquake', type: 'Ground', power: 200 }
         ]
-        // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
     },
     voidghidorah: {
         name: 'Void Ghidorah',
-        type: ['Dragon', 'Ghost'],
+        type: ['Dragon', 'Cosmic'],
         maxHP: 26000,
         moves: [
             { name: 'Void Breath', type: 'Dragon', power: 3500 },
@@ -181,7 +180,19 @@ const pokemons = {
             { name: 'Sleepy Swipe', type: 'Normal', power: 30 },
             { name: 'Dreamy Dash', type: 'Normal', power: 20 }
         ]
-    }
+    },
+    shingodzilla: {
+        name: 'Shin Godzilla',
+        type: ['Dragon', 'Atomic'],
+        maxHP: 500,
+        moves: [
+            { name: 'Atomic Breath', type: 'Dragon', power: 600 },
+            { name: 'Tail Swipe', type: 'Normal', power: 200 },
+            { name: 'Regen', type: 'Normal', power: 0 }, // Heal move
+            { name: 'Fire Atomic Breath', type: 'Fire', power: 400 }
+        ]
+    },
+    // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
 
@@ -204,7 +215,11 @@ const typeChart = {
     Ice: { Grass: 2, Ground: 2, Flying: 2, Dragon: 2, Fire: 0.5, Water: 0.5, Steel: 0.5 },
     Bug: { Grass: 2, Fighting: 2, Psychic: 2, Fire: 0.5, Flying: 0.5, Poison: 0.5, Fairy: 0.5 },
     Fairy: { Fighting: 2, Dragon: 0.5, Dark: 2, Poison: 0.5, Steel: 0.5, Fairy: 1 },
-    Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 }
+    Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 },
+    Sound: { Electric: 2, Psychic: 2, Dragon: 0.5, Normal: 1 },
+    Atomic: { Dragon: 2, Fire: 2, Water: 0.5, Electric: 1, Ground: 1, Flying: 1, Psychic: 1 },
+    Cosmic: { Dragon: 2, Psychic: 2, Fire: 0.5, Water: 0.5, Electric: 1, Ground: 1, Flying: 1 },
+    // Adicione mais tipos e suas interações aqui
 };
 
 // Iniciar batalha
@@ -338,7 +353,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
-                m.power = 10000;
+                m.power = 15000;
             }
         });
         endTurn();
