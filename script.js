@@ -339,6 +339,16 @@ window.onload = function () {
         }
     }
 
+    if (playerPokemon.name === 'Godzilla Monsterverse' || opponentPokemon.name === 'Godzilla Monsterverse') {
+        if (attacker === playerPokemon) {
+            attackerImg.style.width = '300px'; // ou qualquer valor que você quiser
+            attackerImg.style.height = 'auto'; // mantém a proporção
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.width = '300px';
+             attackerImg.style.height = 'auto';
+        }
+    }
+
 };
 
 // Carregar os botões de golpes
@@ -561,8 +571,15 @@ function attack(move) {
 
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Evolve') {
         evolvedActive = true;
-        attackerImg.src = 'godzillaevolved.png'; // Imagem da True Form
+        attackerImg.src = 'godzillaevolved.png';
 
+        if (attacker === playerPokemon) {
+            attackerImg.style.width = '300px'; // ou qualquer valor que você quiser
+            attackerImg.style.height = 'auto'; // mantém a proporção
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.width = '300px';
+             attackerImg.style.height = 'auto';
+        }
         
         alert('Godzilla ficou super carregado de radiação sofrendo uma evolução!');
 
@@ -609,6 +626,15 @@ function attack(move) {
     }
 
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Thermo') {
+
+        if (attacker === playerPokemon) {
+            attackerImg.style.width = '300px'; // ou qualquer valor que você quiser
+            attackerImg.style.height = 'auto'; // mantém a proporção
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.width = '300px';
+             attackerImg.style.height = 'auto';
+        }
+
         thermonuclearActive = true;
         attackerImg.src = 'godzillathermonuclear.png';
         alert('Godzilla depois de ser acertado por uma ogiva absorveu a radiação e agora ele está Thermonuclear!');
@@ -635,7 +661,7 @@ function attack(move) {
         endTurn();
         return;
     }
-
+    // Explosão Thermonuclear - Godzilla Monsterverse
     if (attacker.name === 'Godzilla Monsterverse' && thermonuclearActive && move.name === 'Explosão Thermonuclear') {
         alert('Godzilla soltou uma explosão Thermonuclear!!!');
         movePower = 8000;
@@ -662,10 +688,18 @@ function attack(move) {
         });
         attackerImg.src = 'godzillamonsterverse.png';
     }
-
+    // Supercharged Evolved Godzilla
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Supercharg') {
         superchargedevolvedActive = true;
-        attackerImg.src = 'godzillaevolvedsupercharged.png'; // Imagem da True Form
+        attackerImg.src = 'godzillaevolvedsupercharged.png';
+
+        if (attacker === playerPokemon) {
+            attackerImg.style.width = '300px'; // ou qualquer valor que você quiser
+            attackerImg.style.height = 'auto'; // mantém a proporção
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.width = '300px';
+             attackerImg.style.height = 'auto';
+        }
 
         
         alert('Godzilla se carregou ainda mais com seu corpo super carregado!!!');
@@ -711,10 +745,18 @@ function attack(move) {
         endTurn();
         return;
     }
-
+    //Supercharged Evolved Thermo Godzilla
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'SuperchargThermo') {
         thermonuclearevolvedActive = true;
-        attackerImg.src = 'superchargedevolvedthermogodzilla.png'; // Imagem da True Form
+        attackerImg.src = 'superchargedevolvedthermogodzilla.png';
+
+        if (attacker === playerPokemon) {
+            attackerImg.style.width = '300px'; // ou qualquer valor que você quiser
+            attackerImg.style.height = 'auto'; // mantém a proporção
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.width = '300px';
+             attackerImg.style.height = 'auto';
+        }
 
         
         alert('Godzilla se carregou ainda mais com seu corpo super carregado!!!');

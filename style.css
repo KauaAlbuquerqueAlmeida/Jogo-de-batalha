@@ -125,3 +125,9 @@ button img {
     width: 400px; /* ou o tamanho que quiser */
     height: auto; /* mantém a proporção */
 }
+
+#opponent-img.godzillamonsterverse,
+#player-img.godzillamonsterverse {
+    width: 400px; /* ou o tamanho que quiser */
+    height: auto; /* mantém a proporção */
+}
