@@ -102,12 +102,12 @@ const pokemons = {
     apollo: {
         name: 'Apollo',
         type: ['Fire', 'Psychic'],
-        maxHP: 200,
+        maxHP: 250,
         moves: [
-            { name: 'Solar Prominence', type: 'Fire', power: 130 },
-            { name: 'Harmonia Celestial', type: 'Psychic', power: 110 },
+            { name: 'Corona Ignis', type: 'Fire', power: 160 },
+            { name: 'Orbe Harmônico', type: 'Psychic', power: 130 },
             { name: 'Helios Cataclysm', type: 'Normal', power: 0 }, // Heal move
-            { name: 'Aurora Ultima', type: 'Fire', power: 250 }
+            { name: 'Juízo Solar', type: 'Fire', power: 300 }
         ]
     },
     godzillaminusone: {
@@ -628,10 +628,10 @@ function attack(move) {
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Thermo') {
 
         if (attacker === playerPokemon) {
-            attackerImg.style.width = '300px'; // ou qualquer valor que você quiser
+            attackerImg.style.width = '250px'; // ou qualquer valor que você quiser
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
-            attackerImg.style.width = '300px';
+            attackerImg.style.width = '250px';
              attackerImg.style.height = 'auto';
         }
 
