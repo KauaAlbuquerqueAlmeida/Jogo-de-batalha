@@ -721,18 +721,18 @@ function attack(move) {
 
         if (move.name === 'SuperchargThermo' && playerPokemon.name === 'Godzilla Monsterverse') {
             thermonuclearevolvedActive = true;
-            playerPokemon.maxHP = 8000;
-            playerHP = 8000;
+            playerPokemon.maxHP = 10000;
+            playerHP = 10000;
         }
         if (move.name === 'SuperchargThermo' && opponentPokemon.name === 'Godzilla Monsterverse') {
             thermonuclearevolvedActive = true;
-            opponentPokemon.maxHP = 8000;
-            opponentHP = 8000;
+            opponentPokemon.maxHP = 10000;
+            opponentHP = 10000;
         }
 
         // Aumenta a vida máxima e cura totalmente
-        attacker.maxHP = 8000;
-        attacker.currentHP = 8000;
+        attacker.maxHP = 10000;
+        attacker.currentHP = 10000;
 
         // Altera os movimentos
         attacker.moves.forEach(m => {
@@ -753,7 +753,7 @@ function attack(move) {
             if (m.name === 'Chuva super carregada do Rei') {
                 m.name = 'Supernova do Rei';
                 m.type = 'Atomic';
-                m.power = 2500;
+                m.power = 7000;
             }
         });
 
