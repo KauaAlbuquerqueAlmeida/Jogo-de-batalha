@@ -12,6 +12,10 @@ let kaijun8Active = false;
 let trueformActive = false;
 let nightmareActive = false;
 let demonBoostslickActive = false;
+let evolvedActive = false;
+let superchargedevolvedActive = false;
+let thermonuclearActive = false;
+let thermonuclearevolvedActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -225,6 +229,17 @@ const pokemons = {
             { name: 'Void Whiplash', type: 'Dark', power: 150 },
             { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
             { name: 'Full Dark Detroit Smash', type: 'Fighting', power: 5000 }
+        ]
+    },
+    godzillamonsterverse: {
+        name: 'Godzilla Monsterverse',
+        type: ['Nuclear', 'Water'],
+        maxHP: 4000,
+        moves: [
+            { name: 'Atomic Breath', type: 'Dragon', power: 2000 },
+            { name: 'Tail Swipe', type: 'Normal', power: 500 },
+            { name: evolvedActive ? 'Supercharg' : 'Evolve', type: 'Dragon', power: evolvedActive ? 1000 : 0 },
+            { name: thermonuclearActive ? 'Explosão Thermonuclear' : 'Thermo', type: 'Dragon', power: evolvedActive ? 1000 : 0 },
         ]
     }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
@@ -544,6 +559,208 @@ function attack(move) {
         return;
     }
 
+    if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Evolve') {
+        evolvedActive = true;
+        attackerImg.src = 'godzillaevolved.png'; // Imagem da True Form
+
+        
+        alert('Godzilla ficou super carregado de radiação sofrendo uma evolução!');
+
+        if (move.name === 'Evolve' && playerPokemon.name === 'Godzilla Monsterverse') {
+            evolvedActive = true;
+            playerPokemon.maxHP = 7000;
+            playerHP = 7000;
+        }
+        if (move.name === 'Evolved' && opponentPokemon.name === 'Godzilla Monsterverse') {
+            evolvedActive = true;
+            opponentPokemon.maxHP = 7000;
+            opponentHP = 7000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 7000;
+        attacker.currentHP = 7000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Atomic Breath') {
+                m.name = 'Evolved Atomic Breath';
+                m.type = 'Atomic';
+                m.power = 2500;
+            }
+            if (m.name === 'Tail Swipe') {
+                m.name = 'Evolved Tail Swipe';
+                m.type = 'Dragon';
+                m.power = 1000;
+            }
+            if (m.name === 'Evolve') {
+                m.name = 'Supercharg';
+                m.power = 0;
+            }
+            if (m.name === 'Thermo') {
+                m.name = 'Arrancada do Rei';
+                m.type = 'Dragon';
+                m.power = 1000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Thermo') {
+        thermonuclearActive = true;
+        attackerImg.src = 'godzillathermonuclear.png';
+        alert('Godzilla depois de ser acertado por uma ogiva absorveu a radiação e agora ele está Thermonuclear!');
+        attacker.moves.forEach(m => {
+            if (m.name === 'Atomic Breath') {
+                m.name = 'Thermo Atomic Breath';
+                m.type = 'Atomic';
+                m.power = 2500;
+            }
+            if (m.name === 'Tail Swipe') {
+                m.name = 'Thermo Tail Swipe';
+                m.type = 'Dragon';
+                m.power = 1000;
+            }
+            if (m.name === 'Evolve') {
+                m.name = 'Encandecente';
+                m.power = 3000;
+            }
+            if (m.name === 'Thermo') {
+                m.name = 'Explosão Thermonuclear';
+                m.power = 8000;
+            }
+        });
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Godzilla Monsterverse' && thermonuclearActive && move.name === 'Explosão Thermonuclear') {
+        alert('Godzilla soltou uma explosão Thermonuclear!!!');
+        movePower = 8000;
+        thermonuclearActive = false;
+        attacker.moves.forEach(m => {
+            if (m.name === 'Thermo Atomic Breath') {
+                m.name = 'Atomic Breath';
+                m.type = 'Atomic';
+                m.power = 2500;
+            }
+            if (m.name === 'Thermo Tail Swipe') {
+                m.name = 'Tail Swipe';
+                m.type = 'Dragon';
+                m.power = 1000;
+            }
+            if (m.name === 'Encandecente') {
+                m.name = 'Evolve';
+                m.power = 0;
+            }
+            if (m.name === 'Explosão Thermonuclear') {
+                m.name = 'Thermo';
+                m.power = 0;
+            }
+        });
+        attackerImg.src = 'godzillamonsterverse.png';
+    }
+
+    if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Supercharg') {
+        superchargedevolvedActive = true;
+        attackerImg.src = 'godzillaevolvedsupercharged.png'; // Imagem da True Form
+
+        
+        alert('Godzilla se carregou ainda mais com seu corpo super carregado!!!');
+
+        if (move.name === 'Supercharg' && playerPokemon.name === 'Godzilla Monsterverse') {
+            superchargedevolvedActive = true;
+            playerPokemon.maxHP = 7000;
+            playerHP = 7000;
+        }
+        if (move.name === 'Supercharg' && opponentPokemon.name === 'Godzilla Monsterverse') {
+            superchargedevolvedActive = true;
+            opponentPokemon.maxHP = 7000;
+            opponentHP = 7000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 7000;
+        attacker.currentHP = 7000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Evolved Atomic Breath') {
+                m.name = 'Supercharged Evolved Atomic Breath';
+                m.type = 'Atomic';
+                m.power = 3000;
+            }
+            if (m.name === 'Evolved Tail Swipe') {
+                m.name = 'Supercharged Evolved Pulse';
+                m.type = 'Dragon';
+                m.power = 4000;
+            }
+            if (m.name === 'Supercharg') {
+                m.name = 'SuperchargThermo';
+                m.power = 0;
+            }
+            if (m.name === 'Arrancada do Rei') {
+                m.name = 'Chuva super carregada do Rei';
+                m.type = 'Dragon';
+                m.power = 10000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Godzilla Monsterverse' && move.name === 'SuperchargThermo') {
+        thermonuclearevolvedActive = true;
+        attackerImg.src = 'superchargedevolvedthermogodzilla.png'; // Imagem da True Form
+
+        
+        alert('Godzilla se carregou ainda mais com seu corpo super carregado!!!');
+
+        if (move.name === 'SuperchargThermo' && playerPokemon.name === 'Godzilla Monsterverse') {
+            thermonuclearevolvedActive = true;
+            playerPokemon.maxHP = 8000;
+            playerHP = 8000;
+        }
+        if (move.name === 'SuperchargThermo' && opponentPokemon.name === 'Godzilla Monsterverse') {
+            thermonuclearevolvedActive = true;
+            opponentPokemon.maxHP = 8000;
+            opponentHP = 8000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 8000;
+        attacker.currentHP = 8000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Supercharged Evolved Atomic Breath') {
+                m.name = 'Supercharged Evolved Thermo Atomic Breath';
+                m.type = 'Atomic';
+                m.power = 6000;
+            }
+            if (m.name === 'Supercharged Evolved Pulse') {
+                m.name = 'Supercharged Thermo Evolved Pulse';
+                m.type = 'Nuclear';
+                m.power = 8000;
+            }
+            if (m.name === 'SuperchargThermo') {
+                m.name = 'Dodge';
+                m.power = 0;
+            }
+            if (m.name === 'Chuva super carregada do Rei') {
+                m.name = 'Supernova do Rei';
+                m.type = 'Atomic';
+                m.power = 2500;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
     if (attacker.name === 'Catnap' && move.name === 'Gás Vermelho') {
         trueformActive = true;
         attackerImg.src = 'nightmarecatnap.png'; // Imagem da True Form
@@ -740,4 +957,12 @@ if (opponentPokemon.name === 'Shin Godzilla') {
     opponentImg.style.height = 'auto';
 }
 
+if (playerPokemon.name === 'Godzilla Monsterverse') {
+    playerImg.style.width = '400px'; // aumente conforme desejar
+    playerImg.style.height = 'auto';
+}
 
+if (opponentPokemon.name === 'Godzilla Monsterverse') {
+    opponentImg.style.width = '400px';
+    opponentImg.style.height = 'auto';
+}
