@@ -16,6 +16,7 @@ let evolvedActive = false;
 let superchargedevolvedActive = false;
 let thermonuclearActive = false;
 let thermonuclearevolvedActive = false;
+let thermonuclearmothraevolvedActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -687,6 +688,62 @@ function attack(move) {
             }
         });
         attackerImg.src = 'godzillamonsterverse.png';
+    }
+
+    // Thermonuclear Mothra Evolved Godzilla
+    if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Encandecente') {
+
+         document.querySelector('.battle-container').style.backgroundColor = '#000000'; // vermelho escuro
+
+
+        if (attacker === playerPokemon) {
+            attackerImg.style.width = '250px'; // ou qualquer valor que você quiser
+            attackerImg.style.height = 'auto'; // mantém a proporção
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.width = '250px';
+             attackerImg.style.height = 'auto';
+        }
+
+        if (move.name === 'Encandecente' && playerPokemon.name === 'Godzilla Monsterverse') {
+            trueformActive = true;
+            playerPokemon.maxHP = 12000;
+            playerHP = 12000;
+        }
+        if (move.name === 'Encandecente' && opponentPokemon.name === 'Godzilla Monsterverse') {
+            trueformActive = true;
+            opponentPokemon.maxHP = 12000;
+            opponentHP = 12000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 12000;
+        attacker.currentHP = 12000;
+
+        thermonuclearmothraevolvedActive = true;
+        attackerImg.src = 'thermonuclearmothragodzilla.png';
+        alert('Godzilla fica ainda mais poderoso com a energia de Mothra!');
+        attacker.moves.forEach(m => {
+            if (m.name === 'Thermo Atomic Breath') {
+                m.name = 'Thermo Spiral Atomic Breath';
+                m.type = 'Atomic';
+                m.power = 6000;
+            }
+            if (m.name === 'Thermo Tail Swipe') {
+                m.name = 'Thermo Lazer Tail Swipe';
+                m.type = 'Dragon';
+                m.power = 3000;
+            }
+            if (m.name === 'Encandecente') {
+                m.name = 'Inferno Aura';
+                m.power = 5500;
+            }
+            if (m.name === 'Explosão Thermonuclear') {
+                m.name = 'Luz do Trono Queimado';
+                m.power = 12000;
+            }
+        });
+        endTurn();
+        return;
     }
     // Supercharged Evolved Godzilla
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Supercharg') {
