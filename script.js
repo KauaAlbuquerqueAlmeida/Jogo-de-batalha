@@ -17,6 +17,7 @@ let superchargedevolvedActive = false;
 let thermonuclearActive = false;
 let thermonuclearevolvedActive = false;
 let thermonuclearmothraevolvedActive = false;
+let serioActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -83,7 +84,7 @@ const pokemons = {
         type: ['Fighting', 'Normal'],
         maxHP: 15000,
         moves: [
-            { name: 'Serious Punch', type: 'Fighting', power: 8000 },
+            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 8000 },
             { name: 'Consecutive Normal Punches', type: 'Normal', power: 1500 },
             { name: 'Dodge', type: 'Normal', power: 0 },
             { name: 'One Punch', type: 'Fighting', power: 3000 }
@@ -563,6 +564,53 @@ function attack(move) {
                 m.name = 'Regen';
                 m.type = 'Psychic';
                 m.power = 0;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Saitama' && move.name === 'Serious Punch') {
+        serioActive = true;
+        attackerImg.src = 'saitamamodoserio.png'; // Imagem Serious mode
+
+        alert('Saitama percebeu que tem que levar isso mais a sério!');
+
+        if (move.name === 'Serious Punch' && playerPokemon.name === 'Saitama') {
+            serioActive = true;
+            playerPokemon.maxHP = 18000;
+            playerHP = 18000;
+        }
+        if (move.name === 'Serious Punch' && opponentPokemon.name === 'Saitama') {
+           serioActive = true;
+            opponentPokemon.maxHP = 18000;
+            opponentHP = 18000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 18000;
+        attacker.currentHP = 18000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Serious Punch') {
+                m.name = 'Super Serious Punch';
+                m.power = 8000;
+            }
+            if (m.name === 'Consecutive Normal Punches') {
+                m.name = 'Consecutive Serious Punches';
+                m.type = 'Fighting';
+                m.power = 16000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.power = 0;
+            }
+            if (m.name === 'One Punch') {
+                m.name = 'Serious One Punch';
+                m.type = 'Fighting';
+                m.power = 10000;
             }
         });
 
