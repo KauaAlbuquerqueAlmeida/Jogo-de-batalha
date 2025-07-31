@@ -255,7 +255,7 @@ const pokemons = {
             { name: 'Snowball Barrage', type: 'Ice', power: 200 },
             { name: 'Silent Shot', type: 'Normal', power: 300 },
             { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
-            { name: carregadoActive ? 'White Death Strike' : 'Carregar', type: 'Steel', power: carregadoActive ? 2000 : 0 }
+            { name: carregadoActive ? 'White Death Shoot' : 'Carregar', type: 'Steel', power: carregadoActive ? 2000 : 0 }
         ]
     },
     mechagodzillamonsterverse: {
@@ -486,7 +486,15 @@ function attack(move) {
     // -------------------------------
     // Modos Especiais
     // -------------------------------
-
+    const simoIsDefender = defender.name === 'Simo Hayha';
+    if (carregadoActive && simoIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.3) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Simo Hayha está camuflado!`);
+            endTurn();
+            return;
+        }
+    }
     // Demon Boost - Godzilla in Hell
     if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
         demonBoostActive = true;
@@ -522,7 +530,7 @@ function attack(move) {
         attackerImg.src = 'simohayhacarregado.png';
         attacker.moves.forEach(m => {
             if (m.name === 'Carregar') {
-                m.name = 'White Death Strike';
+                m.name = 'White Death Shoot';
                 m.power = 2000;
             }
         });
@@ -530,17 +538,17 @@ function attack(move) {
         return;
     }
 
-    if (attacker.name === 'Simo Hayha' && carregadoActive && move.name === 'White Death Strike') {
-        alert('White Death Strike!!!');
+    if (attacker.name === 'Simo Hayha' && carregadoActive && move.name === 'White Death Shoot') {
+        alert('White Death Shoot!!!');
         movePower = 2000;
         carregadoActive = false;
         attacker.moves.forEach(m => {
-            if (m.name === 'White Death Strike') {
+            if (m.name === 'White Death Shoot') {
                 m.name = 'Carregar';
                 m.power = 0;
             }
 
-        aplicarAutoDanoSimo();
+            aplicarAutoDanoSimo();
         });
         attackerImg.src = 'simohayha.png';
     }
@@ -688,7 +696,7 @@ function attack(move) {
         return;
     }
 
-    
+
     if (attacker.name === 'Godzilla (Heisei)' && move.name === 'Burning') {
         burningActive = true;
         attackerImg.src = 'burninggodzillaheisei.png'; // Imagem da True Form
