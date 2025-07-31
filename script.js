@@ -256,6 +256,17 @@ const pokemons = {
             { name: carregadoActive ? 'White Death Strike' : 'Carregar', type: 'Steel', power: carregadoActive ? 2000 : 0 }
         ]
     },
+    mechagodzillamonsterverse: {
+        name: 'Mecha Godzilla (Monsterverse)',
+        type: ['Steel', 'Electric'],
+        maxHP: 6000,
+        moves: [
+            { name: 'Proton Scream', type: 'Electric', power: 3000 },
+            { name: 'Missiles and bombs', type: 'Steel', power: 800 },
+            { name: 'Tail Mortal', type: 'Steel', power: 600 }, // Shield move
+            { name: 'Eletric Punch', type: 'Eletric', power: 1500 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
