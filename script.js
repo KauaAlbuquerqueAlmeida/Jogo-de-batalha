@@ -662,6 +662,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Atomic Breath') {
                 m.name = 'Lunar Destruction Atomic Breath';
+                m.type = 'Dragon';
                 m.power = 6000;
             }
             if (m.name === 'Regen') {
@@ -671,6 +672,7 @@ function attack(move) {
             }
             if (m.name === 'Transformation') {
                 m.name = 'Gravitational Control';
+                m.type = 'Psychic';
                 m.power = 1000;
             }
             if (m.name === 'Earthquake') {
