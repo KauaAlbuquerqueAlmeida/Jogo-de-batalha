@@ -282,12 +282,12 @@ const pokemons = {
     distortusrex: {
         name: 'Distortus Rex',
         type: ['Dragon', 'Mythic'],
-        maxHP: 8000,
+        maxHP: 800,
         moves: [
-            { name: 'Distortion Bite', type: 'Dragon', power: 2500 },
-            { name: 'Slash', type: 'Normal', power: 1200 },
-            { name: 'Tail', type: 'Normal', power: 200 }, // Dodge move
-            { name: 'Tackle Gackle', type: 'Dragon', power: 5000 }
+            { name: 'Distortion Bite', type: 'Dragon', power: 500 },
+            { name: 'Slash', type: 'Normal', power: 200 },
+            { name: 'Tail', type: 'Normal', power: 100 }, // Dodge move
+            { name: 'Tackle Gackle', type: 'Dragon', power: 400 }
         ]
     },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
