@@ -495,6 +495,16 @@ function attack(move) {
             return;
         }
     }
+
+    const saitamaIsDefender = defender.name === 'Saitama';
+    if (serioActive && saitamaIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.4) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Saitama Desviou!`);
+            endTurn();
+            return;
+        }
+    }
     // Demon Boost - Godzilla in Hell
     if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
         demonBoostActive = true;
