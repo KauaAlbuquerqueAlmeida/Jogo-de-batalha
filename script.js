@@ -469,6 +469,18 @@ if (playerHP > 0 && opponentHP > 0) {
     }, 500);
 }
 
+function calcularDanoComCritico(basePower) {
+    const critChance = 0.1; // 10% de chance
+    const isCrit = Math.random() < critChance;
+    const finalPower = isCrit ? Math.floor(basePower * 3) : basePower;
+
+    if (isCrit) {
+        alert('Acerto Crítico!');
+    }
+
+    return finalPower;
+}
+
 function attack(move) {
     const attacker = playerTurn ? playerPokemon : opponentPokemon;
     const defender = playerTurn ? opponentPokemon : playerPokemon;
@@ -481,7 +493,7 @@ function attack(move) {
     let defenderDodge = playerTurn ? opponentDodge : playerDodge;
     const attackerImg = playerTurn ? document.getElementById('player-img') : document.getElementById('opponent-img');
 
-    let movePower = move.power;
+    let movePower = calcularDanoComCritico(move.power);
 
     // -------------------------------
     // Modos Especiais
