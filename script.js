@@ -539,6 +539,8 @@ function attack(move) {
                 m.name = 'Carregar';
                 m.power = 0;
             }
+
+        aplicarAutoDanoSimo();
         });
         attackerImg.src = 'simohayha.png';
     }
@@ -1249,6 +1251,22 @@ function attack(move) {
     checkFaint();
 
     endTurn();
+}
+
+function aplicarAutoDanoSimo() {
+    const maxHP = playerTurn ? playerPokemon.maxHP : opponentPokemon.maxHP;
+    const selfDamage = Math.floor(maxHP * 0.025);
+
+    if (playerTurn) {
+        playerHP -= selfDamage;
+        if (playerHP < 0) playerHP = 0;
+    } else {
+        opponentHP -= selfDamage;
+        if (opponentHP < 0) opponentHP = 0;
+    }
+
+    // Atualiza as barras de vida, se houver função para isso
+    if (typeof updateHPBars === 'function') updateHPBars();
 }
 
 
