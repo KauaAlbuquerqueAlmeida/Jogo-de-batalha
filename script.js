@@ -18,6 +18,7 @@ let thermonuclearActive = false;
 let thermonuclearevolvedActive = false;
 let thermonuclearmothraevolvedActive = false;
 let serioActive = false;
+let carregadoActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -243,7 +244,18 @@ const pokemons = {
             { name: evolvedActive ? 'Supercharg' : 'Evolve', type: 'Dragon', power: evolvedActive ? 1000 : 0 },
             { name: thermonuclearActive ? 'Explosão Thermonuclear' : 'Thermo', type: 'Dragon', power: evolvedActive ? 1000 : 0 },
         ]
-    }
+    },
+    simohayha: {
+        name: 'Simo Hayha',
+        type: ['Fighting', 'Normal'],
+        maxHP: 500,
+        moves: [
+            { name: 'Snowball Barrage', type: 'Ice', power: 200 },
+            { name: 'Silent Shot', type: 'Normal', power: 300 },
+            { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
+            { name: carregadoActive ? 'White Death Strike' : 'Carregar', type: 'Steel', power: carregadoActive ? 2000 : 0 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -455,6 +467,34 @@ function attack(move) {
             }
         });
         attackerImg.src = 'godzillainhell.png';
+    }
+
+    //Simo Hayha - Carregar
+
+    if (attacker.name === 'Simo Hayha' && move.name === 'Carregar') {
+        carregadoActive = true;
+        attackerImg.src = 'simohayhacarregado.png';
+        attacker.moves.forEach(m => {
+            if (m.name === 'Carregar') {
+                m.name = 'White Death Strike';
+                m.power = 2000;
+            }
+        });
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Godzilla in Hell' && carregadoActive && move.name === 'White Death Strike') {
+        alert('White Death Strike!!!');
+        movePower = 2000;
+        carregadoActive = false;
+        attacker.moves.forEach(m => {
+            if (m.name === 'White Death Strike') {
+                m.name = 'Carregar';
+                m.power = 0;
+            }
+        });
+        attackerImg.src = 'simohayha.png';
     }
 
     // Demon Boost Slick - Godzilla in Hell Slick
