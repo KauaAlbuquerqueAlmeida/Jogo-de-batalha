@@ -869,7 +869,7 @@ function attack(move) {
             if (m.name === 'Atomic Breath') {
                 m.name = 'Evolved Atomic Breath';
                 m.type = 'Atomic';
-                m.power = 2500;
+                m.power = 3500;
             }
             if (m.name === 'Tail Swipe') {
                 m.name = 'Evolved Tail Swipe';
@@ -908,7 +908,7 @@ function attack(move) {
             if (m.name === 'Atomic Breath') {
                 m.name = 'Thermo Atomic Breath';
                 m.type = 'Atomic';
-                m.power = 2500;
+                m.power = 3500;
             }
             if (m.name === 'Tail Swipe') {
                 m.name = 'Thermo Tail Swipe';
@@ -1046,7 +1046,7 @@ function attack(move) {
             if (m.name === 'Evolved Atomic Breath') {
                 m.name = 'Supercharged Evolved Atomic Breath';
                 m.type = 'Atomic';
-                m.power = 3000;
+                m.power = 4000;
             }
             if (m.name === 'Evolved Tail Swipe') {
                 m.name = 'Supercharged Evolved Pulse';
