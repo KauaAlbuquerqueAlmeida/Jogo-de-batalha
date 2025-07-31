@@ -19,6 +19,7 @@ let thermonuclearevolvedActive = false;
 let thermonuclearmothraevolvedActive = false;
 let serioActive = false;
 let carregadoActive = false;
+let rageadamActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -267,6 +268,17 @@ const pokemons = {
             { name: 'Eletric Punch', type: 'Eletric', power: 1500 }
         ]
     },
+    adao: {
+        name: 'Adão',
+        type: ['Fighting', 'Normal'],
+        maxHP: 1000,
+        moves: [
+            { name: 'Adão Punch', type: 'Fighting', power: 500 },
+            { name: 'Adão Kick', type: 'Fighting', power: 400 },
+            { name: 'Eyes of god', type: 'Normal', power: 0 },
+            { name: rageadamActive ? 'Adão Rage' : 'Rage', type: 'Fighting', power: rageadamActive ? 1000 : 0 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -495,7 +507,7 @@ function attack(move) {
         return;
     }
 
-    if (attacker.name === 'Godzilla in Hell' && carregadoActive && move.name === 'White Death Strike') {
+    if (attacker.name === 'Simo Hayha' && carregadoActive && move.name === 'White Death Strike') {
         alert('White Death Strike!!!');
         movePower = 2000;
         carregadoActive = false;
@@ -507,6 +519,33 @@ function attack(move) {
         });
         attackerImg.src = 'simohayha.png';
     }
+
+    if (attacker.name === 'Adão' && move.name === 'Rage') {
+        rageadamActive = true;
+        attackerImg.src = 'adaopreparado.png';
+        attacker.moves.forEach(m => {
+            if (m.name === 'Rage') {
+                m.name = 'Adão Rage';
+                m.power = 1000;
+            }
+        });
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Adão' && rageadamActive && move.name === 'Adão Rage') {
+        alert('Adão Rage!!!');
+        movePower = 1000;
+        rageadamActive = false;
+        attacker.moves.forEach(m => {
+            if (m.name === 'Adão Rage') {
+                m.name = 'Rage';
+                m.power = 0;
+            }
+        });
+        attackerImg.src = 'adao.png';
+    }
+
 
     // Demon Boost Slick - Godzilla in Hell Slick
     if (attacker.name === 'Godzilla in Hell (Slick)' && move.name === 'Demon Boost Slick') {
@@ -1001,6 +1040,13 @@ function attack(move) {
     // -------------------------------
 
     if (move.name === 'Shield of God') {
+        if (playerTurn) playerShield = true; else opponentShield = true;
+        logMessage(`${attacker.name} ativou Shield of God e ficará imune ao próximo golpe!`);
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'Eyes of God') {
         if (playerTurn) playerShield = true; else opponentShield = true;
         logMessage(`${attacker.name} ativou Shield of God e ficará imune ao próximo golpe!`);
         endTurn();
