@@ -442,7 +442,7 @@ function openFight() {
 // Fugir
 function run() {
     alert('Você fugiu da batalha!');
-    window.location.href = 'select.html';
+    window.location.href = 'index.html';
 }
 
 // Cálculo de dano com tipagem
@@ -1287,7 +1287,7 @@ function attack(move) {
 
     // Encerrar batalha
     function endBattle() {
-        window.location.href = 'select.html';
+        window.location.href = 'index.html';
     }
     checkFaint();
 
