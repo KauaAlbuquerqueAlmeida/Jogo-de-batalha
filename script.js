@@ -442,7 +442,7 @@ function openFight() {
 // Fugir
 function run() {
     alert('Você fugiu da batalha!');
-    window.location.href = 'index.html';
+    window.location.href = 'select.html';
 }
 
 // Cálculo de dano com tipagem
@@ -503,7 +503,7 @@ function attack(move) {
             return;
         }
     }
-    //Esquivas
+    
     const saitamaIsDefender = defender.name === 'Saitama';
     if (serioActive && saitamaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
@@ -1287,7 +1287,7 @@ function attack(move) {
 
     // Encerrar batalha
     function endBattle() {
-        window.location.href = 'index.html';
+        window.location.href = 'select.html';
     }
     checkFaint();
 
