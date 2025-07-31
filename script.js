@@ -279,6 +279,17 @@ const pokemons = {
             { name: rageadamActive ? 'Adão Rage' : 'Rage', type: 'Fighting', power: rageadamActive ? 1000 : 0 }
         ]
     },
+    distortusrex: {
+        name: 'Distortus Rex',
+        type: ['Dragon', 'Mythic'],
+        maxHP: 8000,
+        moves: [
+            { name: 'Distortion Bite', type: 'Dragon', power: 2500 },
+            { name: 'Slash', type: 'Normal', power: 1200 },
+            { name: 'Tail', type: 'Normal', power: 200 }, // Dodge move
+            { name: 'Tackle Gackle', type: 'Dragon', power: 5000 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
