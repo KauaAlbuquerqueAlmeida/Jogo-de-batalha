@@ -20,6 +20,7 @@ let thermonuclearmothraevolvedActive = false;
 let serioActive = false;
 let carregadoActive = false;
 let rageadamActive = false;
+let burningActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -77,7 +78,7 @@ const pokemons = {
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 10000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
-            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon'},
+            { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon' },
             { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 15000 }
         ]
     },
@@ -220,7 +221,7 @@ const pokemons = {
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 2500 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
-            { name: demonBoostslickActive ? 'Godzilla\'s Final Blast Cannon' : 'Demon Boost Slick', type: 'Dragon'},
+            { name: demonBoostslickActive ? 'Godzilla\'s Final Blast Cannon' : 'Demon Boost Slick', type: 'Dragon' },
             { name: 'Atomic Breath With God Power', type: 'Cosmic', power: 4000 }
         ]
     },
@@ -290,55 +291,66 @@ const pokemons = {
             { name: 'Tackle Gackle', type: 'Dragon', power: 400 }
         ]
     },
+    godzillaheisei: {
+        name: 'Godzilla (Heisei)',
+        type: ['Nuclear', 'Dragon'],
+        maxHP: 12000,
+        moves: [
+            { name: 'Atomic Breath', type: 'Dragon', power: 5000 },
+            { name: 'Claws', type: 'Normal', power: 1000 },
+            { name: burningActive ? 'Blast Burn' : 'Burning', type: 'Fire', power: burningActive ? 2000 : 0 },
+            { name: 'Atomic Explosion', type: 'Dragon', power: 5000 },
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
 
 // Tabela de efetividade simplificada
 const typeChart = {
-  // Tipos base tradicionais (ajustados)
-  Fire:      { Grass: 2, Ice: 2, Bug: 2, Steel: 2, Water: 0.5, Fire: 0.5, Dragon: 0.5 },
-  Water:     { Fire: 2, Ground: 2, Rock: 2, Water: 0.5, Grass: 0.5 },
-  Grass:     { Water: 2, Ground: 2, Rock: 2, Fire: 0.5, Grass: 0.5, Flying: 0.5 },
-  Electric:  { Water: 2, Flying: 2, Electric: 0.5, Ground: 0 },
-  Flying:    { Grass: 2, Bug: 2, Fighting: 2, Electric: 0.5, Rock: 0.5 },
-  Psychic:   { Fighting: 2, Poison: 2, Dark: 0, Psychic: 0.5 },
-  Dark:      { Psychic: 2, Ghost: 2, Fighting: 0.5, Fairy: 0.5 },
-  Steel:     { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Electric: 0.5 },
-  Ice:       { Grass: 2, Flying: 2, Ground: 2, Dragon: 2, Fire: 0.5, Steel: 0.5 },
-  Fighting:  { Normal: 2, Rock: 2, Steel: 2, Ice: 2, Dark: 2, Fairy: 0.5 },
-  Ghost:     { Psychic: 2, Ghost: 2, Normal: 0, Dark: 0.5 },
-  Fairy:     { Fighting: 2, Dark: 2, Dragon: 2, Steel: 0.5 },
-  Ground:    { Electric: 2, Fire: 2, Poison: 2, Rock: 2, Grass: 0.5 },
-  Poison:    { Grass: 2, Fairy: 2, Ground: 0.5, Steel: 0 },
-  Rock:      { Fire: 2, Ice: 2, Flying: 2, Bug: 2, Ground: 0.5 },
-  Bug:       { Grass: 2, Psychic: 2, Dark: 2, Fire: 0.5, Flying: 0.5 },
-  Dragon:    { Dragon: 2, Steel: 0.5, Fairy: 0 },
-  Normal:    { Ghost: 0 },
-  
-  // Tipos especiais e originais
-  Angel:     { Demon: 2, Dark: 2, God: 0.5, Ghost: 2, Chaos: 0.5 },
-  God:       { All: 1, Void: 0.5, God: 0.5, Quantum: 0.5 },
-  Quantum:   { God: 2, Steel: 2, Psychic: 2, Digital: 2, Normal: 0.5, Time: 2 },
-  Time:      { Psychic: 2, Ghost: 2, Quantum: 0.5, Space: 0.5 },
-  Space:     { Psychic: 2, Flying: 2, Ground: 2, Time: 2, Void: 0.5 },
-  Void:      { All: 0.5, Light: 2, Angel: 2 },
-  Plasma:    { Water: 2, Steel: 2, Flying: 2, Ground: 0.5, Electric: 0.5 },
-  Virus:     { Digital: 2, Psychic: 2, Fairy: 2, Steel: 2, Holy: 0.5 },
-  Crystal:   { Dragon: 2, Dark: 1.5, Fire: 0.5, Fighting: 0.5 },
-  Wind:      { Grass: 2, Bug: 2, Flying: 0.5, Rock: 0.5 },
-  Digital:   { Psychic: 2, Electric: 2, Bug: 2, Water: 0.5, Ground: 0.5 },
-  Nuclear:   { Steel: 2, Water: 0.5, Grass: 0.5, Ground: 2, Fairy: 2 },
-  Holy:      { Demon: 2, Dark: 2, Ghost: 2, Poison: 0.5 },
-  Chaos:     { Fairy: 2, Psychic: 2, Order: 0.5, Angel: 0.5 },
-  Light:     { Dark: 2, Ghost: 2, Shadow: 2, Void: 0.5 },
-  Shadow:    { Light: 0.5, Psychic: 2, Ghost: 2 },
-  Mech:      { Steel: 2, Rock: 2, Bug: 2, Electric: 2, Water: 0.5 },
-  Mythic:    { All: 1, Dragon: 2, Fairy: 2, Dark: 2 },
-  Sound:     { Psychic: 2, Water: 2, Ghost: 1.5, Rock: 0.5 },
-  Dream:     { Psychic: 2, Fairy: 2, Ghost: 0.5, Sound: 2 },
-  Paranormal:{ Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0, Fairy: 0.5, Dream: 2, Paranormal: 0.5 },
-  Demon:     { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 }
+    // Tipos base tradicionais (ajustados)
+    Fire: { Grass: 2, Ice: 2, Bug: 2, Steel: 2, Water: 0.5, Fire: 0.5, Dragon: 0.5 },
+    Water: { Fire: 2, Ground: 2, Rock: 2, Water: 0.5, Grass: 0.5 },
+    Grass: { Water: 2, Ground: 2, Rock: 2, Fire: 0.5, Grass: 0.5, Flying: 0.5 },
+    Electric: { Water: 2, Flying: 2, Electric: 0.5, Ground: 0 },
+    Flying: { Grass: 2, Bug: 2, Fighting: 2, Electric: 0.5, Rock: 0.5 },
+    Psychic: { Fighting: 2, Poison: 2, Dark: 0, Psychic: 0.5 },
+    Dark: { Psychic: 2, Ghost: 2, Fighting: 0.5, Fairy: 0.5 },
+    Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Electric: 0.5 },
+    Ice: { Grass: 2, Flying: 2, Ground: 2, Dragon: 2, Fire: 0.5, Steel: 0.5 },
+    Fighting: { Normal: 2, Rock: 2, Steel: 2, Ice: 2, Dark: 2, Fairy: 0.5 },
+    Ghost: { Psychic: 2, Ghost: 2, Normal: 0, Dark: 0.5 },
+    Fairy: { Fighting: 2, Dark: 2, Dragon: 2, Steel: 0.5 },
+    Ground: { Electric: 2, Fire: 2, Poison: 2, Rock: 2, Grass: 0.5 },
+    Poison: { Grass: 2, Fairy: 2, Ground: 0.5, Steel: 0 },
+    Rock: { Fire: 2, Ice: 2, Flying: 2, Bug: 2, Ground: 0.5 },
+    Bug: { Grass: 2, Psychic: 2, Dark: 2, Fire: 0.5, Flying: 0.5 },
+    Dragon: { Dragon: 2, Steel: 0.5, Fairy: 0 },
+    Normal: { Ghost: 0 },
+
+    // Tipos especiais e originais
+    Angel: { Demon: 2, Dark: 2, God: 0.5, Ghost: 2, Chaos: 0.5 },
+    God: { All: 1, Void: 0.5, God: 0.5, Quantum: 0.5 },
+    Quantum: { God: 2, Steel: 2, Psychic: 2, Digital: 2, Normal: 0.5, Time: 2 },
+    Time: { Psychic: 2, Ghost: 2, Quantum: 0.5, Space: 0.5 },
+    Space: { Psychic: 2, Flying: 2, Ground: 2, Time: 2, Void: 0.5 },
+    Void: { All: 0.5, Light: 2, Angel: 2 },
+    Plasma: { Water: 2, Steel: 2, Flying: 2, Ground: 0.5, Electric: 0.5 },
+    Virus: { Digital: 2, Psychic: 2, Fairy: 2, Steel: 2, Holy: 0.5 },
+    Crystal: { Dragon: 2, Dark: 1.5, Fire: 0.5, Fighting: 0.5 },
+    Wind: { Grass: 2, Bug: 2, Flying: 0.5, Rock: 0.5 },
+    Digital: { Psychic: 2, Electric: 2, Bug: 2, Water: 0.5, Ground: 0.5 },
+    Nuclear: { Steel: 2, Water: 0.5, Grass: 0.5, Ground: 2, Fairy: 2 },
+    Holy: { Demon: 2, Dark: 2, Ghost: 2, Poison: 0.5 },
+    Chaos: { Fairy: 2, Psychic: 2, Order: 0.5, Angel: 0.5 },
+    Light: { Dark: 2, Ghost: 2, Shadow: 2, Void: 0.5 },
+    Shadow: { Light: 0.5, Psychic: 2, Ghost: 2 },
+    Mech: { Steel: 2, Rock: 2, Bug: 2, Electric: 2, Water: 0.5 },
+    Mythic: { All: 1, Dragon: 2, Fairy: 2, Dark: 2 },
+    Sound: { Psychic: 2, Water: 2, Ghost: 1.5, Rock: 0.5 },
+    Dream: { Psychic: 2, Fairy: 2, Ghost: 0.5, Sound: 2 },
+    Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0, Fairy: 0.5, Dream: 2, Paranormal: 0.5 },
+    Demon: { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 }
 };
 
 
@@ -393,7 +405,7 @@ window.onload = function () {
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
             attackerImg.style.width = '300px';
-             attackerImg.style.height = 'auto';
+            attackerImg.style.height = 'auto';
         }
     }
 
@@ -672,6 +684,65 @@ function attack(move) {
         return;
     }
 
+    
+    if (attacker.name === 'Godzilla (Heisei)' && move.name === 'Burning') {
+        burningActive = true;
+        attackerImg.src = 'burninggodzillaheisei.png'; // Imagem da True Form
+
+        // Verifica se é o jogador ou oponente para aplicar o flip correto
+        if (attacker === playerPokemon) {
+            attackerImg.style.transform = 'scaleX(-1)'; // Normal
+        } else if (attacker === opponentPokemon) {
+            attackerImg.style.transform = 'scaleX(1)'; // Espelhado
+        }
+
+        // Muda o fundo da div battle-container para vermelho escuro
+        document.querySelector('.battle-container').style.backgroundColor = '#ab6714ff'; // vermelho escuro
+
+        alert('Godzilla (Heisei) chegou a 1199 Graus celcius!');
+
+        if (move.name === 'Burning' && playerPokemon.name === 'Godzilla (Heisei)') {
+            burningActive = true;
+            playerPokemon.maxHP = 14000;
+            playerHP = 14000;
+        }
+        if (move.name === 'Burning' && opponentPokemon.name === 'Godzilla (Heisei)') {
+            burningActive = true;
+            opponentPokemon.maxHP = 14000;
+            opponentHP = 14000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 14000;
+        attacker.currentHP = 14000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Atomic Breath') {
+                m.name = 'Spiral of Burning Atomic Breath';
+                m.type = 'Fire';
+                m.power = 6000;
+            }
+            if (m.name === 'Claws') {
+                m.name = 'Burning Claws';
+                m.type = 'Fire';
+                m.power = 4000;
+            }
+            if (m.name === 'Burning') {
+                m.name = 'Blast Burn';
+                m.power = 1000;
+            }
+            if (m.name === 'Atomic Explosion') {
+                m.name = 'Burning Atomic Explosion';
+                m.type = 'Fire';
+                m.power = 10000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
     if (attacker.name === 'Saitama' && move.name === 'Serious Punch') {
         serioActive = true;
         attackerImg.src = 'saitamamodoserio.png'; // Imagem Serious mode
@@ -684,7 +755,7 @@ function attack(move) {
             playerHP = 18000;
         }
         if (move.name === 'Serious Punch' && opponentPokemon.name === 'Saitama') {
-           serioActive = true;
+            serioActive = true;
             opponentPokemon.maxHP = 18000;
             opponentHP = 18000;
         }
@@ -728,9 +799,9 @@ function attack(move) {
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
             attackerImg.style.width = '300px';
-             attackerImg.style.height = 'auto';
+            attackerImg.style.height = 'auto';
         }
-        
+
         alert('Godzilla ficou super carregado de radiação sofrendo uma evolução!');
 
         if (move.name === 'Evolve' && playerPokemon.name === 'Godzilla Monsterverse') {
@@ -782,7 +853,7 @@ function attack(move) {
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
             attackerImg.style.width = '250px';
-             attackerImg.style.height = 'auto';
+            attackerImg.style.height = 'auto';
         }
 
         thermonuclearActive = true;
@@ -842,7 +913,7 @@ function attack(move) {
     // Thermonuclear Mothra Evolved Godzilla
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Encandecente') {
 
-         document.querySelector('.battle-container').style.backgroundColor = '#000000'; // vermelho escuro
+        document.querySelector('.battle-container').style.backgroundColor = '#000000'; // vermelho escuro
 
 
         if (attacker === playerPokemon) {
@@ -850,7 +921,7 @@ function attack(move) {
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
             attackerImg.style.width = '250px';
-             attackerImg.style.height = 'auto';
+            attackerImg.style.height = 'auto';
         }
 
         if (move.name === 'Encandecente' && playerPokemon.name === 'Godzilla Monsterverse') {
@@ -904,10 +975,10 @@ function attack(move) {
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
             attackerImg.style.width = '300px';
-             attackerImg.style.height = 'auto';
+            attackerImg.style.height = 'auto';
         }
 
-        
+
         alert('Godzilla se carregou ainda mais com seu corpo super carregado!!!');
 
         if (move.name === 'Supercharg' && playerPokemon.name === 'Godzilla Monsterverse') {
@@ -961,10 +1032,10 @@ function attack(move) {
             attackerImg.style.height = 'auto'; // mantém a proporção
         } else if (attacker === opponentPokemon) {
             attackerImg.style.width = '300px';
-             attackerImg.style.height = 'auto';
+            attackerImg.style.height = 'auto';
         }
 
-        
+
         alert('Godzilla se carregou ainda mais com seu corpo super carregado!!!');
 
         if (move.name === 'SuperchargThermo' && playerPokemon.name === 'Godzilla Monsterverse') {
