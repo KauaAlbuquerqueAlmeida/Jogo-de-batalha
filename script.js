@@ -71,9 +71,9 @@ const pokemons = {
     godzillainhell: {
         name: 'Godzilla in Hell',
         type: ['Dragon', 'Fire'],
-        maxHP: 26666,
+        maxHP: 66666,
         moves: [
-            { name: 'Atomic Breath', type: 'Dragon', power: 5000 },
+            { name: 'Atomic Breath', type: 'Dragon', power: 10000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
             { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon'},
             { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 15000 }
@@ -437,7 +437,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
-                m.power = 15000;
+                m.power = 30000;
             }
         });
         endTurn();
@@ -446,7 +446,7 @@ function attack(move) {
 
     if (attacker.name === 'Godzilla in Hell' && demonBoostActive && move.name === 'Godzilla\'s Final Blast') {
         alert('Godzilla\'s Final Blast!!!');
-        movePower = 15000;
+        movePower = 30000;
         demonBoostActive = false;
         attacker.moves.forEach(m => {
             if (m.name === 'Godzilla\'s Final Blast') {
@@ -465,7 +465,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost Slick') {
                 m.name = 'Godzilla\'s Final Blast Cannon';
-                m.power = 8000;
+                m.power = 15000;
             }
         });
         endTurn();
@@ -474,7 +474,7 @@ function attack(move) {
 
     if (attacker.name === 'Godzilla in Hell (Slick)' && demonBoostslickActive && move.name === 'Godzilla\'s Final Blast Cannon') {
         alert('Godzilla\'s Final Blast Cannon!!!');
-        movePower = 8000;
+        movePower = 15000;
         demonBoostslickActive = false;
         attacker.moves.forEach(m => {
             if (m.name === 'Godzilla\'s Final Blast Cannon') {
