@@ -29,51 +29,6 @@ let playerPokemon, opponentPokemon;
 
 // Dados dos Pokémon
 const pokemons = {
-    charizard: {
-        name: 'Charizard',
-        type: ['Fire', 'Flying'],
-        maxHP: 120,
-        moves: [
-            { name: 'Flamethrower', type: 'Fire', power: 30 },
-            { name: 'Dragon Claw', type: 'Dragon', power: 25 },
-            { name: 'Air Slash', type: 'Flying', power: 20 },
-            { name: 'Slash', type: 'Normal', power: 15 }
-        ]
-    },
-    blastoise: {
-        name: 'Blastoise',
-        type: 'Water',
-        maxHP: 130,
-        moves: [
-            { name: 'Hydro Pump', type: 'Water', power: 30 },
-            { name: 'Ice Beam', type: 'Ice', power: 25 },
-            { name: 'Bite', type: 'Dark', power: 20 },
-            { name: 'Tackle', type: 'Normal', power: 15 }
-        ]
-    },
-    venusaur: {
-        name: 'Venusaur',
-        type: 'Grass',
-        maxHP: 140,
-        moves: [
-            { name: 'Solar Beam', type: 'Grass', power: 30 },
-            { name: 'Sludge Bomb', type: 'Poison', power: 25 },
-            { name: 'Earthquake', type: 'Ground', power: 20 },
-            { name: 'Tackle', type: 'Normal', power: 15 }
-        ]
-    },
-    pikachu: {
-        name: 'Pikachu',
-        type: 'Electric',
-        maxHP: 90,
-        moves: [
-            { name: 'Thunderbolt', type: 'Electric', power: 30 },
-            { name: 'Iron Tail', type: 'Steel', power: 25 },
-            { name: 'Quick Attack', type: 'Normal', power: 20 },
-            { name: 'Double Team', type: 'Normal', power: 15 }
-        ]
-    },
-
     godzillainhell: {
         name: 'Godzilla in Hell',
         type: ['Dragon', 'Fire'],
@@ -521,7 +476,7 @@ function attack(move) {
     const saitamaIsDefender = defender.name === 'Saitama';
     if (serioActive && saitamaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
-        if (chance > 0.4) { // 70% de chance de errar
+        if (chance > 0.3) { // 70% de chance de errar
             alert(`${attacker.name} errou o ataque! Saitama Desviou!`);
             endTurn();
             return;
@@ -531,7 +486,7 @@ function attack(move) {
     const adaoIsDefender = defender.name === 'Adão';
     if (rageadamActive && adaoIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
-        if (chance > 0.4) { // 70% de chance de errar
+        if (chance > 0.3) { // 70% de chance de errar
             alert(`${attacker.name} errou o ataque! Adão viu o seu golpe e Desviou!`);
             endTurn();
             return;
