@@ -21,6 +21,9 @@ let serioActive = false;
 let carregadoActive = false;
 let rageadamActive = false;
 let burningActive = false;
+let supersonicActive = false;
+let simohayhaActive = false;
+let darksonicActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -302,6 +305,17 @@ const pokemons = {
             { name: 'Atomic Explosion', type: 'Dragon', power: 5000 },
         ]
     },
+    sonic: {
+        name: 'Sonic',
+        type: ['Electric', 'Normal'],
+        maxHP: 300,
+        moves: [
+            { name: 'Spin Dash', type: 'Normal', power: 400 },
+            { name: 'Electric Surge', type: 'Electric', power: 300 },
+            { name: supersonicActive ? 'Super Sonic Punch' : 'Transformar', type: 'Normal', power: supersonicActive ? 500 : 500 },
+            { name: 'Super Sonic Boom', type: 'Electric', power: 1000 }
+        ]
+    }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -503,7 +517,7 @@ function attack(move) {
             return;
         }
     }
-    
+
     const saitamaIsDefender = defender.name === 'Saitama';
     if (serioActive && saitamaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
@@ -523,11 +537,11 @@ function attack(move) {
             return;
         }
     }
-    
-    
-        // -------------------------------
-        // Modos Especiais
-        // -------------------------------
+
+
+    // -------------------------------
+    // Modos Especiais
+    // -------------------------------
     // Demon Boost - Godzilla in Hell
     if (attacker.name === 'Godzilla in Hell' && move.name === 'Demon Boost') {
         demonBoostActive = true;
@@ -834,6 +848,65 @@ function attack(move) {
         endTurn();
         return;
     }
+// Sonic - Transformar em Super ou Dark Sonic
+if (attacker.name === 'Sonic' && move.name === 'Transformar') {
+    const chanceDark = Math.random(); // número entre 0 e 1
+
+    if (chanceDark < 0.10) { // 10% de chance
+        // Dark Sonic!
+        darksonicActive = true;
+        supersonicActive = false;
+        attacker.name = 'Dark Sonic';
+        attackerImg.src = 'darksonic.png';
+
+        attacker.maxHP = 6800; // HP aumentado
+        attacker.currentHP = 6800; // Ajustado para o max
+
+        attacker.moves = [
+            { name: 'Dark Spin Dash', power: 180 },
+            { name: 'Dark Sonic Orb', power: 200 },
+            { name: 'Flip Kick', power: 240 },
+            { name: 'Dark Sonic Meteor', power: 300 }
+        ];
+        alert('Algo deu errado... Sonic virou DARK SONIC!');
+
+        if (playerTurn) {
+            playerHP = attacker.currentHP;
+            playerMaxHP = attacker.maxHP;
+        } else {
+            opponentHP = attacker.currentHP;
+            opponentMaxHP = attacker.maxHP;
+        }
+    } else {
+        // Super Sonic!
+        supersonicActive = true;
+        darksonicActive = false;
+        attacker.name = 'Super Sonic';
+        attackerImg.src = 'supersonic.png';
+
+        attacker.maxHP = 7000; // HP aumentado
+        attacker.currentHP = 7000; // Ajustado para o max
+
+        attacker.moves = [
+            { name: 'Spin Dash', power: 150 },
+            { name: 'Light Speed Attack', power: 200 },
+            { name: 'Super Spin Attack', power: 250 },
+            { name: 'Golden Energy Constructs', power: 300 }
+        ];
+        alert('Sonic se transformou em SUPER SONIC!');
+
+        if (playerTurn) {
+            playerHP = attacker.currentHP;
+            playerMaxHP = attacker.maxHP;
+        } else {
+            opponentHP = attacker.currentHP;
+            opponentMaxHP = attacker.maxHP;
+        }
+    }
+
+    endTurn();
+    return;
+}
 
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Evolve') {
         evolvedActive = true;
