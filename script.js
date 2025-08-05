@@ -863,10 +863,10 @@ if (attacker.name === 'Sonic' && move.name === 'Transformar') {
         attacker.currentHP = 6800; // Ajustado para o max
 
         attacker.moves = [
-            { name: 'Dark Spin Dash', power: 180 },
-            { name: 'Dark Sonic Orb', power: 200 },
-            { name: 'Flip Kick', power: 240 },
-            { name: 'Dark Sonic Meteor', power: 300 }
+            { name: 'Dark Spin Dash', type: 'Dark', power: 180 },
+            { name: 'Dark Sonic Orb', type: 'Dark', power: 200 },
+            { name: 'Flip Kick', type: 'Fighting', power: 240 },
+            { name: 'Dark Sonic Meteor', type: 'Dark', power: 300 }
         ];
         alert('Algo deu errado... Sonic virou DARK SONIC!');
 
@@ -888,10 +888,10 @@ if (attacker.name === 'Sonic' && move.name === 'Transformar') {
         attacker.currentHP = 7000; // Ajustado para o max
 
         attacker.moves = [
-            { name: 'Spin Dash', power: 150 },
-            { name: 'Light Speed Attack', power: 200 },
-            { name: 'Super Spin Attack', power: 250 },
-            { name: 'Golden Energy Constructs', power: 300 }
+            { name: 'Spin Dash', type: 'Mythic', power: 150 },
+            { name: 'Light Speed Attack', type: 'Mythic', power: 200 },
+            { name: 'Super Spin Attack', type: 'Mythic', power: 250 },
+            { name: 'Golden Energy Constructs', type: 'Mythic', power: 300 }
         ];
         alert('Sonic se transformou em SUPER SONIC!');
 
