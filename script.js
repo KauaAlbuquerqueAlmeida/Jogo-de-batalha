@@ -270,7 +270,29 @@ const pokemons = {
             { name: supersonicActive ? 'Super Sonic Punch' : 'Transformar', type: 'Normal', power: supersonicActive ? 500 : 500 },
             { name: 'Super Sonic Boom', type: 'Electric', power: 1000 }
         ]
-    }
+    },
+    jasonvoorhees: {
+        name: 'Jason Voorhees',
+        type: ['Dark', 'Normal'],
+        maxHP: 800,
+        moves: [
+            { name: 'Machete Slash', type: 'Dark', power: 300 },
+            { name: 'Hockey Mask Shield', type: 'Normal', power: 0 }, // Shield move
+            { name: 'Teleport', type: 'Dark', power: 0 }, // Dodge move
+            { name: 'Killer Stab', type: 'Dark', power: 500 }
+        ]
+    },
+    garou: {
+        name: 'Garou',
+        type: ['Fighting', 'Dark'],
+        maxHP: 700,
+        moves: [
+            { name: 'Monster Strike', type: 'Fighting', power: 400 },
+            { name: 'Dark Fist', type: 'Dark', power: 300 },
+            { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
+            { name: 'Garou\'s Rage', type: 'Fighting', power: 600 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -1201,6 +1223,13 @@ if (attacker.name === 'Sonic' && move.name === 'Transformar') {
         return;
     }
 
+    if (move.name === 'Hockey Mask Shield') {
+        if (playerTurn) playerShield = true; else opponentShield = true;
+        logMessage(`${attacker.name} ativou Hockey Mask Shield e ficará imune ao próximo golpe!`);
+        endTurn();
+        return;
+    }
+
     if (move.name === 'Eyes of God') {
         if (playerTurn) playerShield = true; else opponentShield = true;
         logMessage(`${attacker.name} ativou Shield of God e ficará imune ao próximo golpe!`);
@@ -1211,6 +1240,13 @@ if (attacker.name === 'Sonic' && move.name === 'Transformar') {
     if (move.name === 'Dodge') {
         if (playerTurn) playerDodge = true; else opponentDodge = true;
         logMessage(`${attacker.name} preparou um Dodge e vai desviar do próximo golpe!`);
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'Teleport') {
+        if (playerTurn) playerDodge = true; else opponentDodge = true;
+        logMessage(`${attacker.name} preparou um Teleport e vai desviar do próximo golpe!`);
         endTurn();
         return;
     }
