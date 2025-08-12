@@ -24,6 +24,7 @@ let burningActive = false;
 let supersonicActive = false;
 let simohayhaActive = false;
 let darksonicActive = false;
+let armaduradivinaseiyaActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -293,6 +294,17 @@ const pokemons = {
             { name: 'Garou\'s Rage', type: 'Fighting', power: 600 }
         ]
     },
+    seiya: {
+        name: 'Seiya',
+        type: ['Fighting', 'Mythic'],
+        maxHP: 1000,
+        moves: [
+            { name: 'Meteoro de Pégaso', type: 'Fighting', power: 500 },
+            { name: 'Cadeia de Pégaso', type: 'Mythic', power: 5000 }, // Shield move
+            { name: armaduradivinaseiyaActive ? 'Meteoro de Pégaso Divino Absoluto' : 'Armadura Divina', type: 'Mythic', power: armaduradivinaseiyaActive ? 1000 : 0 },
+            { name: 'Pugna de Pégaso', type: 'Mythic', power: 2000 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -495,6 +507,16 @@ function attack(move) {
         }
     }
 
+    const seiyaIsDefender = defender.name === 'Seiya';
+    if (armaduradivinaseiyaActive && seiyaIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.2) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Seiya está esquivou facilmente!`);
+            endTurn();
+            return;
+        }
+    }
+
     const saitamaIsDefender = defender.name === 'Saitama';
     if (serioActive && saitamaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
@@ -506,10 +528,10 @@ function attack(move) {
     }
 
     const sonicIsDefender = defender.name === 'Sonic';
-    if (supersonic && sonicIsDefender) {
+    if (supersonicActive && sonicIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
         if (chance > 0.3) { // 70% de chance de errar
-            alert(`${attacker.name} errou o ataque! Saitamaa Desviou!`);
+            alert(`${attacker.name} errou o ataque! Sonic Desviou!`);
             endTurn();
             return;
         }
@@ -739,6 +761,59 @@ function attack(move) {
         endTurn();
         return;
     }
+
+
+    if (attacker.name === 'Seiya' && move.name === 'Armadura Divina') {
+        armaduradivinaseiyaActive = true;
+        attackerImg.src = 'Seiyaarmaduradivina.png'; // Imagem da True Form
+    
+
+        alert('Seiya juntou tanto cosmo que sua armadura divina se formou!');
+
+        if (move.name === 'Armadura Divina' && playerPokemon.name === 'Seiya') {
+            armaduradivinaseiyaActive = true;
+            playerPokemon.maxHP = 100000;
+            playerHP = 100000;
+        }
+        if (move.name === 'Armadura Divina' && opponentPokemon.name === 'Seiya') {
+            armaduradivinaseiyaActive = true;
+            opponentPokemon.maxHP = 100000;
+            opponentHP = 100000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 100000;
+        attacker.currentHP = 100000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Meteoro de Pégaso') {
+                m.name = 'Meteoro de Pégaso Divino';
+                m.type = 'Fighting';
+                m.power = 5000;
+            }
+            if (m.name === 'Cadeia de Pégaso') {
+                m.name = 'Relâmpago de Pégaso Divino';
+                m.type = 'Mythic';
+                m.power = 50000; // Shield move
+            }
+            if (m.name === 'Armadura Divina') {
+                m.name = 'Meteoro de Pégaso Divino Absoluto';
+                m.type = 'Mythic';
+                m.power = 100000;
+            }
+            if (m.name === 'Pugna de Pégaso') {
+                m.name = 'Pugna de Pégaso Sagrado';
+                m.type = 'Mythic';
+                m.power = 20000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    // Godzilla (Heisei) - Burning Mode
 
 
     if (attacker.name === 'Godzilla (Heisei)' && move.name === 'Burning') {
