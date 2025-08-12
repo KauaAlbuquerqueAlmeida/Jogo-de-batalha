@@ -528,7 +528,7 @@ function attack(move) {
     const kaijun8IsDefender = defender.name === 'Kaiju Nº 8';
     if (kaijun8Active && kaijun8IsDefender) {
         const chance = Math.random(); // número entre 0 e 1
-        if (chance > 0.3) { // 70% de chance de errar
+        if (chance > 0.5) { // 70% de chance de errar
             alert(`${attacker.name} errou o ataque! Kaiju Nº 8 Desviou!`);
             endTurn();
             return;
