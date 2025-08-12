@@ -505,11 +505,31 @@ function attack(move) {
         }
     }
 
+    const sonicIsDefender = defender.name === 'Sonic';
+    if (supersonic && sonicIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.3) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Saitamaa Desviou!`);
+            endTurn();
+            return;
+        }
+    }
+
     const adaoIsDefender = defender.name === 'Adão';
     if (rageadamActive && adaoIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
         if (chance > 0.3) { // 70% de chance de errar
             alert(`${attacker.name} errou o ataque! Adão viu o seu golpe e Desviou!`);
+            endTurn();
+            return;
+        }
+    }
+
+    const kaijun8IsDefender = defender.name === 'Kaiju Nº 8';
+    if (kaijun8Active && kaijun8IsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.3) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Kaiju Nº 8 Desviou!`);
             endTurn();
             return;
         }
