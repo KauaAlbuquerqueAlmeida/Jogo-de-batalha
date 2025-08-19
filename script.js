@@ -25,6 +25,9 @@ let supersonicActive = false;
 let simohayhaActive = false;
 let darksonicActive = false;
 let armaduradivinaseiyaActive = false;
+let acheronultimateActive = false;
+let feixiaoultimateActive = false;
+let rappaultimateActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -303,6 +306,39 @@ const pokemons = {
             { name: 'Cadeia de Pégaso', type: 'Mythic', power: 5000 }, // Shield move
             { name: armaduradivinaseiyaActive ? 'Meteoro de Pégaso Divino Absoluto' : 'Armadura Divina', type: 'Mythic', power: armaduradivinaseiyaActive ? 1000 : 0 },
             { name: 'Pugna de Pégaso', type: 'Mythic', power: 2000 }
+        ]
+    },
+    acheron: {
+        name: 'Acheron',
+        type: ['Demon', 'Plasma'],
+        maxHP: 8000,
+        moves: [
+            { name: 'Wiltcross Trilateral', type: 'Dark', power: 700 },
+            { name: 'Octobolt Flash', type: 'Plasma', power: 400 },
+            { name: 'Sonhos Cortados Choram em Vermelho', type: 'Plasma', power: 0 }, // Dodge move
+            { name: acheronultimateActive ? 'No topo da folha de chuva está a unidade' : 'Carregar Pericia Suprema', type: 'Void', power: acheronultimateActive ? 1000 : 0 },
+        ]
+    },
+    feixiao: {
+        name: 'Feixiao',
+        type: ['Fighting', 'Wind'],
+        maxHP: 7000,
+        moves: [
+            { name: 'Boltsunder', type: 'Fighting', power: 800 },
+            { name: 'Machado de Guerra', type: 'Wind', power: 1100 },
+            { name: feixiaoultimateActive ? 'Boltsunder Blitz' : 'Feixiao Charge', type: 'Wind', power: feixiaoultimateActive ? 2000 : 0 }, // Ultimate move
+            { name: 'Nascido da Tempestade', type: 'Wind', power: 700 } // Shield move
+        ]
+    },
+    rappa: {
+        name: 'Rappa',
+        type: ['Dream', 'Light'],
+        maxHP: 6000,
+        moves: [
+            { name: 'Ninjutsu: Supere os tombos', type: 'Dream', power: 500 },
+            { name: 'Ningu: Lâmina de Pétala de Maldição Demoníaca', type: 'Dream', power: 400 },
+            { name: 'Ninja Dash: Aos trancos e barrancos', type: 'Light', power: 800 }, // Shield move
+            { name: rappaultimateActive ? 'Ninja Strike: Enraizado Resoluto' : 'Nindo Supremo: Aishiteru', type: 'Fream', power: rappaultimateActive ? 2000 : 0 }, // Ultimate move
         ]
     },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
@@ -689,6 +725,264 @@ function attack(move) {
         return;
     }
 
+    //Acheron Ultimate - No topo da folha de chuva está a unidade
+    if (attacker.name === 'Acheron' && move.name === 'Carregar Pericia Suprema') {
+        acheronultimateActive = true;
+        attackerImg.src = 'acheronultimate.png'; // Sprite da ultimate
+        alert('Acheron começa a carregar sua Perícia Suprema, a escuridão consome a arena!');
+
+        // Muda o fundo
+        document.querySelector('.battle-container').style.backgroundImage = "url('acheronbackgroundultimate.png')";
+        document.querySelector('.battle-container').style.backgroundSize = "cover";
+        document.querySelector('.battle-container').style.backgroundPosition = "center";
+
+        // Troca o movimento para a ultimate ofensiva
+        attacker.moves.forEach(m => {
+            if (m.name === 'Carregar Pericia Suprema') {
+                m.name = 'No topo da folha de chuva está a unidade';
+                m.type = 'Void';
+                m.power = 3000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    // --- Executar Ultimate Acheron ---
+    if (attacker.name === 'Acheron' && acheronultimateActive && move.name === 'No topo da folha de chuva está a unidade') {
+        alert('Acheron liberou sua Perícia Suprema: No topo da folha de chuva está a unidade!');
+
+        // Define movePower para aplicar dano
+        movePower = 3000;
+
+        // Desativa a ultimate
+        acheronultimateActive = false;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'acheronultimatevideo.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            // Restaura fundo original
+            document.querySelector('.battle-container').style.backgroundImage = "url('defaultbattlebg.png')";
+
+            // Volta sprite base
+            attackerImg.src = 'acheron.png';
+
+            // Volta movimentos originais
+            attacker.moves = [
+                { name: 'Wiltcross Trilateral', type: 'Dark', power: 700 },
+                { name: 'Octobolt Flash', type: 'Dark', power: 400 },
+                { name: 'Sonhos Cortados Choram em Vermelho', type: 'Normal', power: 0 },
+                { name: 'Carregar Pericia Suprema', type: 'Void', power: 0 }
+            ];
+        });
+    }
+
+
+    // --- Ativar Feixiao Charge ---
+    // --- Ativar Feixiao Charge ---
+    if (attacker.name === 'Feixiao' && move.name === 'Feixiao Charge') {
+        feixiaoultimateActive = true;
+        attackerImg.src = 'feixiaoultimate.png'; // Sprite ultimate
+        alert('Feixiao começa a carregar sua Ultimate, o vento se agita na arena!');
+
+        // Muda o fundo
+        document.querySelector('.battle-container').style.backgroundImage = "url('feixiaobattlebg.png')";
+        document.querySelector('.battle-container').style.backgroundSize = "cover";
+        document.querySelector('.battle-container').style.backgroundPosition = "center";
+
+        // Toca vídeo de preparação
+        let prepVideo = document.createElement('video');
+        prepVideo.src = 'feixiaopreparando.mp4';
+        prepVideo.autoplay = true;
+        prepVideo.controls = false;
+        prepVideo.muted = true;
+        prepVideo.playsInline = true;
+        prepVideo.style.position = 'fixed';
+        prepVideo.style.top = '0';
+        prepVideo.style.left = '0';
+        prepVideo.style.width = '100%';
+        prepVideo.style.height = '100%';
+        prepVideo.style.objectFit = 'cover';
+        prepVideo.style.zIndex = '9999';
+        document.body.appendChild(prepVideo);
+
+        prepVideo.addEventListener('ended', () => {
+            prepVideo.remove();
+
+            // Troca o movimento para a ultimate ofensiva
+            attacker.moves.forEach(m => {
+                if (m.name === 'Feixiao Charge') {
+                    m.name = 'Boltsunder Blitz';
+                    m.type = 'Wind';
+                    m.power = 2000;
+                }
+            });
+
+            alert('Feixiao está pronta para lançar Boltsunder Blitz!');
+            endTurn();
+        });
+
+        return;
+    }
+
+    // --- Executar Ultimate Feixiao ---
+    if (attacker.name === 'Feixiao' && feixiaoultimateActive && move.name === 'Boltsunder Blitz') {
+        alert('Feixiao lançou sua Ultimate: Boltsunder Blitz!');
+
+        // Define movePower para aplicar dano corretamente
+        movePower = 2000;
+
+        // Desativa a ultimate
+        feixiaoultimateActive = false;
+
+        // Cria vídeo full screen da ultimate
+        let video = document.createElement('video');
+        video.src = 'feixiaoultimatevideo.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            // Restaura fundo original
+            document.querySelector('.battle-container').style.backgroundImage = "url('defaultbattlebg.png')";
+
+            // Volta sprite base
+            attackerImg.src = 'feixiao.png';
+
+            // Volta movimentos originais
+            attacker.moves = [
+                { name: 'Boltsunder', type: 'Fighting', power: 800 },
+                { name: 'Machado de Guerra', type: 'Wind', power: 1100 },
+                { name: 'Feixiao Charge', type: 'Wind', power: 0 },
+                { name: 'Nascido da Tempestade', type: 'Wind', power: 700 }
+            ];
+        });
+    }
+
+
+    // --- Ativar Nindo Supremo: Aishiteru ---
+    if (attacker.name === 'Rappa' && move.name === 'Nindo Supremo: Aishiteru') {
+        rappaultimateActive = true;
+        attackerImg.src = 'Rappapreparada.png'; // Sprite ultimate
+        alert('Rappa começa a carregar seu Nindo Supremo, a luz e o sonho se entrelaçam!');
+
+        // Muda o fundo
+        document.querySelector('.battle-container').style.backgroundImage = "url('rappabattlebg.png')";
+        document.querySelector('.battle-container').style.backgroundSize = "cover";
+        document.querySelector('.battle-container').style.backgroundPosition = "center";
+
+        // Toca vídeo de preparação
+        let prepVideo = document.createElement('video');
+        prepVideo.src = 'rappapreparando.mp4';
+        prepVideo.autoplay = true;
+        prepVideo.controls = false;
+        prepVideo.muted = true;
+        prepVideo.playsInline = true;
+        prepVideo.style.position = 'fixed';
+        prepVideo.style.top = '0';
+        prepVideo.style.left = '0';
+        prepVideo.style.width = '100%';
+        prepVideo.style.height = '100%';
+        prepVideo.style.objectFit = 'cover';
+        prepVideo.style.zIndex = '9999';
+        document.body.appendChild(prepVideo);
+
+        prepVideo.addEventListener('ended', () => {
+            prepVideo.remove();
+
+            // Troca o movimento para a ultimate ofensiva
+            attacker.moves.forEach(m => {
+                if (m.name === 'Nindo Supremo: Aishiteru') {
+                    m.name = 'Ninja Strike: Enraizado Resoluto';
+                    m.type = 'Fream';
+                    m.power = 2000;
+                }
+            });
+
+            alert('Rappa está pronto para lançar Ninja Strike: Enraizado Resoluto!');
+            endTurn();
+        });
+
+        return;
+    }
+
+    // --- Executar Ultimate Rappa ---
+    if (attacker.name === 'Rappa' && rappaultimateActive && move.name === 'Ninja Strike: Enraizado Resoluto') {
+        alert('Rappa lançou sua Ultimate: Ninja Strike: Enraizado Resoluto!');
+
+        // Define movePower para aplicar dano corretamente
+        movePower = 2000;
+
+        // Desativa a ultimate
+        rappaultimateActive = false;
+
+        // Cria vídeo full screen da ultimate
+        let video = document.createElement('video');
+        video.src = 'rappaultimatevideo.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            // Restaura fundo original
+            document.querySelector('.battle-container').style.backgroundImage = "url('defaultbattlebg.png')";
+
+            // Volta sprite base
+            attackerImg.src = 'rappa.png';
+
+            // Volta movimentos originais
+            attacker.moves = [
+                { name: 'Ninjutsu: Supere os tombos', type: 'Dream', power: 500 },
+                { name: 'Ningu: Lâmina de Pétala de Maldição Demoníaca', type: 'Dream', power: 400 },
+                { name: 'Ninja Dash: Aos trancos e barrancos', type: 'Light', power: 800 },
+                { name: 'Nindo Supremo: Aishiteru', type: 'Fream', power: 0 }
+            ];
+
+            endTurn();
+        });
+    }
+
+
     if (attacker.name === 'Kaiju Nº 8' && kaijun8Active && move.name === 'Hyper Destructive Punch') {
         alert('Hyper Destructive Punch!!!');
         movePower = 1000;
@@ -766,7 +1060,7 @@ function attack(move) {
     if (attacker.name === 'Seiya' && move.name === 'Armadura Divina') {
         armaduradivinaseiyaActive = true;
         attackerImg.src = 'Seiyaarmaduradivina.png'; // Imagem da True Form
-    
+
 
         alert('Seiya juntou tanto cosmo que sua armadura divina se formou!');
 
@@ -920,65 +1214,65 @@ function attack(move) {
         endTurn();
         return;
     }
-// Sonic - Transformar em Super ou Dark Sonic
-if (attacker.name === 'Sonic' && move.name === 'Transformar') {
-    const chanceDark = Math.random(); // número entre 0 e 1
+    // Sonic - Transformar em Super ou Dark Sonic
+    if (attacker.name === 'Sonic' && move.name === 'Transformar') {
+        const chanceDark = Math.random(); // número entre 0 e 1
 
-    if (chanceDark < 0.10) { // 10% de chance
-        // Dark Sonic!
-        darksonicActive = true;
-        supersonicActive = false;
-        attacker.name = 'Dark Sonic';
-        attackerImg.src = 'darksonic.png';
+        if (chanceDark < 0.10) { // 10% de chance
+            // Dark Sonic!
+            darksonicActive = true;
+            supersonicActive = false;
+            attacker.name = 'Dark Sonic';
+            attackerImg.src = 'darksonic.png';
 
-        attacker.maxHP = 6800; // HP aumentado
-        attacker.currentHP = 6800; // Ajustado para o max
+            attacker.maxHP = 6800; // HP aumentado
+            attacker.currentHP = 6800; // Ajustado para o max
 
-        attacker.moves = [
-            { name: 'Dark Spin Dash', type: 'Dark', power: 180 },
-            { name: 'Dark Sonic Orb', type: 'Dark', power: 200 },
-            { name: 'Flip Kick', type: 'Fighting', power: 240 },
-            { name: 'Dark Sonic Meteor', type: 'Dark', power: 300 }
-        ];
-        alert('Algo deu errado... Sonic virou DARK SONIC!');
+            attacker.moves = [
+                { name: 'Dark Spin Dash', type: 'Dark', power: 180 },
+                { name: 'Dark Sonic Orb', type: 'Dark', power: 200 },
+                { name: 'Flip Kick', type: 'Fighting', power: 240 },
+                { name: 'Dark Sonic Meteor', type: 'Dark', power: 300 }
+            ];
+            alert('Algo deu errado... Sonic virou DARK SONIC!');
 
-        if (playerTurn) {
-            playerHP = attacker.currentHP;
-            playerMaxHP = attacker.maxHP;
+            if (playerTurn) {
+                playerHP = attacker.currentHP;
+                playerMaxHP = attacker.maxHP;
+            } else {
+                opponentHP = attacker.currentHP;
+                opponentMaxHP = attacker.maxHP;
+            }
         } else {
-            opponentHP = attacker.currentHP;
-            opponentMaxHP = attacker.maxHP;
+            // Super Sonic!
+            supersonicActive = true;
+            darksonicActive = false;
+            attacker.name = 'Super Sonic';
+            attackerImg.src = 'supersonic.png';
+
+            attacker.maxHP = 7000; // HP aumentado
+            attacker.currentHP = 7000; // Ajustado para o max
+
+            attacker.moves = [
+                { name: 'Spin Dash', type: 'Mythic', power: 150 },
+                { name: 'Light Speed Attack', type: 'Mythic', power: 200 },
+                { name: 'Super Spin Attack', type: 'Mythic', power: 250 },
+                { name: 'Golden Energy Constructs', type: 'Mythic', power: 300 }
+            ];
+            alert('Sonic se transformou em SUPER SONIC!');
+
+            if (playerTurn) {
+                playerHP = attacker.currentHP;
+                playerMaxHP = attacker.maxHP;
+            } else {
+                opponentHP = attacker.currentHP;
+                opponentMaxHP = attacker.maxHP;
+            }
         }
-    } else {
-        // Super Sonic!
-        supersonicActive = true;
-        darksonicActive = false;
-        attacker.name = 'Super Sonic';
-        attackerImg.src = 'supersonic.png';
 
-        attacker.maxHP = 7000; // HP aumentado
-        attacker.currentHP = 7000; // Ajustado para o max
-
-        attacker.moves = [
-            { name: 'Spin Dash', type: 'Mythic', power: 150 },
-            { name: 'Light Speed Attack', type: 'Mythic', power: 200 },
-            { name: 'Super Spin Attack', type: 'Mythic', power: 250 },
-            { name: 'Golden Energy Constructs', type: 'Mythic', power: 300 }
-        ];
-        alert('Sonic se transformou em SUPER SONIC!');
-
-        if (playerTurn) {
-            playerHP = attacker.currentHP;
-            playerMaxHP = attacker.maxHP;
-        } else {
-            opponentHP = attacker.currentHP;
-            opponentMaxHP = attacker.maxHP;
-        }
+        endTurn();
+        return;
     }
-
-    endTurn();
-    return;
-}
 
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Evolve') {
         evolvedActive = true;
@@ -1503,12 +1797,3 @@ if (opponentPokemon.name === 'Shin Godzilla') {
     opponentImg.style.height = 'auto';
 }
 
-if (playerPokemon.name === 'Godzilla Monsterverse') {
-    playerImg.style.width = '400px'; // aumente conforme desejar
-    playerImg.style.height = 'auto';
-}
-
-if (opponentPokemon.name === 'Godzilla Monsterverse') {
-    opponentImg.style.width = '400px';
-    opponentImg.style.height = 'auto';
-}
