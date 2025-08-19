@@ -1224,7 +1224,7 @@ function attack(move) {
             attacker.moves = [
                 { name: 'Spin Dash', type: 'Mythic', power: 2500 },
                 { name: 'Light Speed Attack', type: 'Mythic', power: 2000 },
-                { name: 'Super Spin Attack', type: 'Mythic', power: 2500 },
+                { name: 'Super Spin Attack', type: 'Mythic', power: 5000 },
                 { name: 'Golden Energy Constructs', type: 'Mythic', power: 3000 }
             ];
             alert('Sonic se transformou em SUPER SONIC!');
