@@ -315,7 +315,7 @@ const pokemons = {
         moves: [
             { name: 'Wiltcross Trilateral', type: 'Dark', power: 700 },
             { name: 'Octobolt Flash', type: 'Plasma', power: 400 },
-            { name: 'Sonhos Cortados Choram em Vermelho', type: 'Plasma', power: 0 }, // Dodge move
+            { name: 'Sonhos Cortados Choram em Vermelho', type: 'Plasma', power: 800 }, // Dodge move
             { name: acheronultimateActive ? 'No topo da folha de chuva está a unidade' : 'Carregar Pericia Suprema', type: 'Void', power: acheronultimateActive ? 1000 : 0 },
         ]
     },
