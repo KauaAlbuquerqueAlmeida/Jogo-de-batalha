@@ -165,17 +165,6 @@ const pokemons = {
             { name: 'Fire Atomic Breath', type: 'Fire', power: 400 }
         ]
     },
-    vaporzillainhell: {
-        name: 'Vaporzilla in Hell',
-        type: ['Demon', 'Fire'],
-        maxHP: 16666,
-        moves: [
-            { name: 'Vapor Breath', type: 'Demon', power: 3000 },
-            { name: 'Mega Infernal Punch', type: 'Demon', power: 3500 },
-            { name: 'Shield of God', type: 'Normal', power: 0 }, // Shield move
-            { name: 'Tsunami Strike in hell', type: 'Water', power: 4000 }
-        ]
-    },
     godzillainhellslick: {
         name: 'Godzilla in Hell (Slick)',
         type: ['Dragon', 'Nuclear'],
@@ -240,17 +229,6 @@ const pokemons = {
             { name: 'Adão Kick', type: 'Fighting', power: 400 },
             { name: 'Eyes of god', type: 'Normal', power: 0 },
             { name: rageadamActive ? 'Adão Rage' : 'Rage', type: 'Fighting', power: rageadamActive ? 1000 : 0 }
-        ]
-    },
-    distortusrex: {
-        name: 'Distortus Rex',
-        type: ['Dragon', 'Mythic'],
-        maxHP: 800,
-        moves: [
-            { name: 'Distortion Bite', type: 'Dragon', power: 500 },
-            { name: 'Slash', type: 'Normal', power: 200 },
-            { name: 'Tail', type: 'Normal', power: 100 }, // Dodge move
-            { name: 'Tackle Gackle', type: 'Dragon', power: 400 }
         ]
     },
     godzillaheisei: {
@@ -333,7 +311,7 @@ const pokemons = {
     rappa: {
         name: 'Rappa',
         type: ['Dream', 'Light'],
-        maxHP: 6000,
+        maxHP: 6500,
         moves: [
             { name: 'Ninjutsu: Supere os tombos', type: 'Dream', power: 500 },
             { name: 'Ningu: Lâmina de Pétala de Maldição Demoníaca', type: 'Dream', power: 400 },
@@ -741,7 +719,7 @@ function attack(move) {
             if (m.name === 'Carregar Pericia Suprema') {
                 m.name = 'No topo da folha de chuva está a unidade';
                 m.type = 'Void';
-                m.power = 3000;
+                m.power = 6000;
             }
         });
 
@@ -754,7 +732,7 @@ function attack(move) {
         alert('Acheron liberou sua Perícia Suprema: No topo da folha de chuva está a unidade!');
 
         // Define movePower para aplicar dano
-        movePower = 3000;
+        movePower = 6000;
 
         // Desativa a ultimate
         acheronultimateActive = false;
@@ -827,7 +805,7 @@ function attack(move) {
                 if (m.name === 'Feixiao Charge') {
                     m.name = 'Boltsunder Blitz';
                     m.type = 'Wind';
-                    m.power = 2000;
+                    m.power = 5000;
                 }
             });
 
@@ -843,7 +821,7 @@ function attack(move) {
         alert('Feixiao lançou sua Ultimate: Boltsunder Blitz!');
 
         // Define movePower para aplicar dano corretamente
-        movePower = 2000;
+        movePower = 5000;
 
         // Desativa a ultimate
         feixiaoultimateActive = false;
@@ -914,7 +892,7 @@ function attack(move) {
                 if (m.name === 'Nindo Supremo: Aishiteru') {
                     m.name = 'Ninja Strike: Enraizado Resoluto';
                     m.type = 'Fream';
-                    m.power = 2000;
+                    m.power = 4500;
                 }
             });
 
@@ -930,7 +908,7 @@ function attack(move) {
         alert('Rappa lançou sua Ultimate: Ninja Strike: Enraizado Resoluto!');
 
         // Define movePower para aplicar dano corretamente
-        movePower = 2000;
+        movePower = 4500;
 
         // Desativa a ultimate
         rappaultimateActive = false;
