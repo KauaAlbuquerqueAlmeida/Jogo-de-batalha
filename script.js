@@ -803,11 +803,6 @@ function attack(move) {
         attackerImg.src = 'feixiaoultimate.png'; // Sprite ultimate
         alert('Feixiao começa a carregar sua Ultimate, o vento se agita na arena!');
 
-        // Muda o fundo
-        document.querySelector('.battle-container').style.backgroundImage = "url('feixiaobattlebg.png')";
-        document.querySelector('.battle-container').style.backgroundSize = "cover";
-        document.querySelector('.battle-container').style.backgroundPosition = "center";
-
         // Toca vídeo de preparação
         let prepVideo = document.createElement('video');
         prepVideo.src = 'feixiaopreparando.mp4';
@@ -894,11 +889,6 @@ function attack(move) {
         rappaultimateActive = true;
         attackerImg.src = 'Rappapreparada.png'; // Sprite ultimate
         alert('Rappa começa a carregar seu Nindo Supremo, a luz e o sonho se entrelaçam!');
-
-        // Muda o fundo
-        document.querySelector('.battle-container').style.backgroundImage = "url('rappabattlebg.png')";
-        document.querySelector('.battle-container').style.backgroundSize = "cover";
-        document.querySelector('.battle-container').style.backgroundPosition = "center";
 
         // Toca vídeo de preparação
         let prepVideo = document.createElement('video');
