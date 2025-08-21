@@ -1173,13 +1173,13 @@ function attack(move) {
 
         if (move.name === 'Armadura Divina' && playerPokemon.name === 'Seiya') {
             armaduradivinaseiyaActive = true;
-            playerPokemon.maxHP = 100000;
-            playerHP = 100000;
+            playerPokemon.maxHP = 59000;
+            playerHP = 59000;
         }
         if (move.name === 'Armadura Divina' && opponentPokemon.name === 'Seiya') {
             armaduradivinaseiyaActive = true;
-            opponentPokemon.maxHP = 100000;
-            opponentHP = 100000;
+            opponentPokemon.maxHP = 59000;
+            opponentHP = 59000;
         }
 
         // Aumenta a vida máxima e cura totalmente
@@ -1191,17 +1191,17 @@ function attack(move) {
             if (m.name === 'Meteoro de Pégaso') {
                 m.name = 'Meteoro de Pégaso Divino';
                 m.type = 'Fighting';
-                m.power = 5000;
+                m.power = 15000;
             }
             if (m.name === 'Cadeia de Pégaso') {
                 m.name = 'Relâmpago de Pégaso Divino';
                 m.type = 'Mythic';
-                m.power = 50000; // Shield move
+                m.power = 25000; // Shield move
             }
             if (m.name === 'Armadura Divina') {
                 m.name = 'Meteoro de Pégaso Divino Absoluto';
                 m.type = 'Mythic';
-                m.power = 100000;
+                m.power = 45000;
             }
             if (m.name === 'Pugna de Pégaso') {
                 m.name = 'Pugna de Pégaso Sagrado';
