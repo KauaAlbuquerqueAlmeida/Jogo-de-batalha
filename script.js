@@ -28,6 +28,7 @@ let armaduradivinaseiyaActive = false;
 let acheronultimateActive = false;
 let feixiaoultimateActive = false;
 let rappaultimateActive = false;
+let godzillaearthcarregadoActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -317,6 +318,17 @@ const pokemons = {
             { name: 'Ningu: Lâmina de Pétala de Maldição Demoníaca', type: 'Dream', power: 400 },
             { name: 'Ninja Dash: Aos trancos e barrancos', type: 'Light', power: 800 }, // Shield move
             { name: rappaultimateActive ? 'Ninja Strike: Enraizado Resoluto' : 'Nindo Supremo: Aishiteru', type: 'Fream', power: rappaultimateActive ? 2000 : 0 }, // Ultimate move
+        ]
+    },
+    godzillaearth: {
+        name: 'Godzilla Earth',
+        type: ['Nuclear', 'Earth'],
+        maxHP: 30000,
+        moves: [
+            { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+            { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+            { name: godzillaearthcarregadoActive ? 'Regen' : 'Carregar', type: 'Nuclear', power: godzillaearthcarregadoActive ? 0 : 0 }, // Ultimate move
+            { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
         ]
     },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
@@ -772,6 +784,133 @@ function attack(move) {
             ];
         });
     }
+
+    //Acheron Ultimate - No topo da folha de chuva está a unidade
+    if (attacker.name === 'Godzilla Earth' && move.name === 'Carregar') {
+        godzillaearthcarregadoActive = true;
+        attackerImg.src = 'godzillaearthpronto.png'; // Sprite da ultimate
+        alert('Godzilla Earth desperta e está pronto!');
+
+        // Troca o movimento para a ultimate ofensiva
+        attacker.moves.forEach(m => {
+            if (m.name === 'Carregar') {
+                m.name = 'Nuclear';
+                m.power = 0;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    // --- Executar Ultimate Acheron ---
+    if (attacker.name === 'Godzilla Earth' && godzillaearthcarregadoActive && move.name === 'Atomic Breath of Earth') {
+        alert('Godzilla Earth carregou e lança sua baforada atomica!');
+
+        // Define movePower para aplicar dano
+        movePower = 8000;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'godzillaearthatomicbreath.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            attacker.moves = [
+                { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+                { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+                { name: 'Regen', type: 'Nuclear', power: 0 },
+                { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+            ];
+        });
+    }
+
+    if (attacker.name === 'Godzilla Earth' && godzillaearthcarregadoActive && move.name === 'Terra Rumble') {
+        alert('Godzilla Earth ruge!');
+
+        // Define movePower para aplicar dano
+        movePower = 8000;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'godzillaearthroar.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            attacker.moves = [
+                { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+                { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+                { name: 'Regen', type: 'Nuclear', power: 0 },
+                { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+            ];
+        });
+    }
+
+    if (attacker.name === 'Godzilla Earth' && godzillaearthcarregadoActive && move.name === 'Planetary Destruction') {
+        alert('Godzilla Earth carrega e lança um corte planetario!');
+
+        // Define movePower para aplicar dano
+        movePower = 8000;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'godzillaearthcorte.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            attacker.moves = [
+                { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+                { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+                { name: 'Regen', type: 'Nuclear', power: 0 },
+                { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+            ];
+        });
+    }
+
+
+    
 
 
     // --- Ativar Feixiao Charge ---
