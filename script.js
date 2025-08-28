@@ -45,24 +45,24 @@ let playerPokemon, opponentPokemon;
 const pokemons = {
     godzillainhell: {
         name: 'Godzilla in Hell',
-        type: ['Dragon', 'Fire'],
-        maxHP: 66666,
+        type: ['Demon', 'Fire'],
+        maxHP: 666666,
         moves: [
-            { name: 'Atomic Breath', type: 'Dragon', power: 10000 },
+            { name: 'Atomic Breath', type: 'Dragon', power: 100000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
             { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon' },
-            { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 15000 }
+            { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 150000 }
         ]
     },
     saitama: {
         name: 'Saitama',
         type: ['Fighting', 'Normal'],
-        maxHP: 15000,
+        maxHP: 150000,
         moves: [
-            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 8000 },
-            { name: 'Consecutive Normal Punches', type: 'Normal', power: 1500 },
+            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 80000 },
+            { name: 'Consecutive Normal Punches', type: 'Normal', power: 15000 },
             { name: 'Dodge', type: 'Normal', power: 0 },
-            { name: 'One Punch', type: 'Fighting', power: 3000 }
+            { name: 'One Punch', type: 'Fighting', power: 30000 }
         ]
     },
     jacktheripper: {
@@ -645,7 +645,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
-                m.power = 30000;
+                m.power = 333333;
             }
         });
         endTurn();
@@ -654,7 +654,7 @@ function attack(move) {
 
     if (attacker.name === 'Godzilla in Hell' && demonBoostActive && move.name === 'Godzilla\'s Final Blast') {
         alert('Godzilla\'s Final Blast!!!');
-        movePower = 30000;
+        movePower = 333333;
         demonBoostActive = false;
         attacker.moves.forEach(m => {
             if (m.name === 'Godzilla\'s Final Blast') {
@@ -1712,29 +1712,29 @@ function attack(move) {
 
         if (move.name === 'Serious Punch' && playerPokemon.name === 'Saitama') {
             serioActive = true;
-            playerPokemon.maxHP = 18000;
-            playerHP = 18000;
+            playerPokemon.maxHP = 280000;
+            playerHP = 280000;
         }
         if (move.name === 'Serious Punch' && opponentPokemon.name === 'Saitama') {
             serioActive = true;
-            opponentPokemon.maxHP = 18000;
-            opponentHP = 18000;
+            opponentPokemon.maxHP = 280000;
+            opponentHP = 280000;
         }
 
         // Aumenta a vida máxima e cura totalmente
-        attacker.maxHP = 18000;
-        attacker.currentHP = 18000;
+        attacker.maxHP = 280000;
+        attacker.currentHP = 280000;
 
         // Altera os movimentos
         attacker.moves.forEach(m => {
             if (m.name === 'Serious Punch') {
                 m.name = 'Super Serious Punch';
-                m.power = 8000;
+                m.power = 80000;
             }
             if (m.name === 'Consecutive Normal Punches') {
                 m.name = 'Consecutive Serious Punches';
                 m.type = 'Fighting';
-                m.power = 16000;
+                m.power = 160000;
             }
             if (m.name === 'Dodge') {
                 m.name = 'Dodge';
@@ -1743,7 +1743,7 @@ function attack(move) {
             if (m.name === 'One Punch') {
                 m.name = 'Serious One Punch';
                 m.type = 'Fighting';
-                m.power = 10000;
+                m.power = 100000;
             }
         });
 
