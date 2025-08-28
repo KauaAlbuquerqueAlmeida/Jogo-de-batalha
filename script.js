@@ -38,6 +38,9 @@ let supersaiyajingodActive = false;
 let supersaiyajinblueActive = false;
 let instintosuperiorincompletoActive = false;
 let instintosuperiorcompletoActive = false;
+let supersonicAdaptedHP = 0; // guarda o HP ao qual ele se adaptou
+let supersonicAdaptedPower = 0; // guarda o poder de ataque ao qual ele se adaptou
+let supersonicAdapted = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -565,6 +568,50 @@ function attack(move) {
         }
     }
 
+if (supersonicActive && attacker.name === 'Super Sonic') {
+    const defenderMaxHP = defender.maxHP;
+
+    // Descobre o maior poder do defensor
+    let highestMovePower = 0;
+    defender.moves.forEach(m => {
+        if (m.power > highestMovePower) highestMovePower = m.power;
+    });
+
+    // Só adapta se ainda não tiver adaptado
+    if (!supersonicAdapted) {
+        // Ajusta HP do Super Sonic (cura total só aqui)
+        attacker.maxHP = Math.floor(defenderMaxHP * 0.9); // 90% do HP do defensor
+        attacker.currentHP = attacker.maxHP;
+
+        // Atualiza o HP real da batalha
+        if (playerTurn) {
+            playerHP = attacker.currentHP;
+            playerMaxHP = attacker.maxHP;
+        } else {
+            opponentHP = attacker.currentHP;
+            opponentMaxHP = attacker.maxHP;
+        }
+
+        // Ajusta poder dos golpes para 70% do maior golpe do defensor
+        attacker.moves.forEach(m => {
+            if (m.power > 0) {
+                m.power = Math.max(m.power, Math.floor(highestMovePower * 0.6));
+            }
+        });
+
+        supersonicAdapted = true; // marca que ele já se adaptou
+        alert('Super Sonic se adaptou parcialmente e recuperou toda a vida!');
+    }
+}
+
+// Função auxiliar para descobrir o maior poder do defensor
+function getHighestMovePower(pokemon) {
+    let highest = 0;
+    pokemon.moves.forEach(m => {
+        if (m.power > highest) highest = m.power;
+    });
+    return highest;
+}
     const seiyaIsDefender = defender.name === 'Seiya';
     if (armaduradivinaseiyaActive && seiyaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
@@ -586,20 +633,20 @@ function attack(move) {
     }
 
     const gokuIsDefender = defender.name === 'Goku';
-if (gokuIsDefender) {
-    const chance = Math.random(); // número entre 0 e 1
-    if (instintosuperiorcompletoActive && chance > 0.1) { 
-        // 90% de chance de errar (só acerta se chance <= 0.1)
-        alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Completo!`);
-        endTurn();
-        return;
-    } else if (instintosuperiorincompletoActive && chance > 0.3) {
-        // 70% de chance de errar (só acerta se chance <= 0.3)
-        alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Incompleto!`);
-        endTurn();
-        return;
+    if (gokuIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (instintosuperiorcompletoActive && chance > 0.1) {
+            // 90% de chance de errar (só acerta se chance <= 0.1)
+            alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Completo!`);
+            endTurn();
+            return;
+        } else if (instintosuperiorincompletoActive && chance > 0.3) {
+            // 70% de chance de errar (só acerta se chance <= 0.3)
+            alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Incompleto!`);
+            endTurn();
+            return;
+        }
     }
-}
 
     const sonicIsDefender = defender.name === 'Sonic';
     if (supersonicActive && sonicIsDefender) {
@@ -1702,53 +1749,53 @@ if (gokuIsDefender) {
         return;
     }
 
-// Ativar modo sério
-if (attacker.name === 'Saitama' && move.name === 'Serious Punch' && !serioActive) {
-    serioActive = true;
-    saitamaBuff = 0; // zera buff no começo
-    attackerImg.src = 'saitamamodoserio.png';
-    attacker.maxHP = 280000;
-    attacker.currentHP = 280000;
+    // Ativar modo sério
+    if (attacker.name === 'Saitama' && move.name === 'Serious Punch' && !serioActive) {
+        serioActive = true;
+        saitamaBuff = 0; // zera buff no começo
+        attackerImg.src = 'saitamamodoserio.png';
+        attacker.maxHP = 280000;
+        attacker.currentHP = 280000;
 
-    // Atualiza movimentos
-    attacker.moves.forEach(m => {
-        if (m.name === 'Serious Punch') {
-            m.name = 'Super Serious Punch';
-            m.power = 80000;
-        }
-        if (m.name === 'Consecutive Normal Punches') {
-            m.name = 'Consecutive Serious Punches';
-            m.type = 'Fighting';
-            m.power = 160000;
-        }
-        if (m.name === 'Dodge') {
-            m.name = 'Dodge';
-            m.power = 0;
-        }
-        if (m.name === 'One Punch') {
-            m.name = 'Serious One Punch';
-            m.type = 'Fighting';
-            m.power = 100000;
-        }
-    });
+        // Atualiza movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Serious Punch') {
+                m.name = 'Super Serious Punch';
+                m.power = 80000;
+            }
+            if (m.name === 'Consecutive Normal Punches') {
+                m.name = 'Consecutive Serious Punches';
+                m.type = 'Fighting';
+                m.power = 160000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.power = 0;
+            }
+            if (m.name === 'One Punch') {
+                m.name = 'Serious One Punch';
+                m.type = 'Fighting';
+                m.power = 100000;
+            }
+        });
 
-    alert('Saitama percebeu que tem que levar isso mais a sério!');
-    endTurn();
-    return;
-}
+        alert('Saitama percebeu que tem que levar isso mais a sério!');
+        endTurn();
+        return;
+    }
 
-// Buff por turno (só no atacante Saitama)
-if (serioActive && attacker.name === 'Saitama') {
-    saitamaBuff += 50000; // aumenta 50k de ataque a cada turno
-    attacker.moves.forEach(m => {
-        if (m.power > 0) {
-            m.power += 50000;
-        }
-    });
+    // Buff por turno (só no atacante Saitama)
+    if (serioActive && attacker.name === 'Saitama') {
+        saitamaBuff += 50000; // aumenta 50k de ataque a cada turno
+        attacker.moves.forEach(m => {
+            if (m.power > 0) {
+                m.power += 50000;
+            }
+        });
 
-    attacker.currentHP = Math.min(attacker.currentHP + 20000, attacker.maxHP); // cura 20k
-    alert('Saitama está ficando ainda mais forte!');
-}
+        attacker.currentHP = Math.min(attacker.currentHP + 20000, attacker.maxHP); // cura 20k
+        alert('Saitama está ficando ainda mais forte!');
+    }
     // Sonic - Transformar em Super ou Dark Sonic
     if (attacker.name === 'Sonic' && move.name === 'Transformar') {
         const chanceDark = Math.random(); // número entre 0 e 1
