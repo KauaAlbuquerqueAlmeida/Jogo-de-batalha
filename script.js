@@ -59,10 +59,10 @@ const pokemons = {
         type: ['Fighting', 'Normal'],
         maxHP: 150000,
         moves: [
-            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 80000 },
-            { name: 'Consecutive Normal Punches', type: 'Normal', power: 15000 },
+            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 20000 },
+            { name: 'Consecutive Normal Punches', type: 'Normal', power: 1500 },
             { name: 'Dodge', type: 'Normal', power: 0 },
-            { name: 'One Punch', type: 'Fighting', power: 30000 }
+            { name: 'One Punch', type: 'Fighting', power: 3000 }
         ]
     },
     jacktheripper: {
@@ -586,22 +586,20 @@ function attack(move) {
     }
 
     const gokuIsDefender = defender.name === 'Goku';
-    if (gokuIsDefender) {
-        // prioriza o completo se os dois flags estiverem true por engano
-        let missProb = 0; // probabilidade de ERRAR o ataque no Goku
-        if (instintosuperiorcompletoActive) {
-            missProb = 0.9; // 90% erra (UI completo)
-        } else if (instintosuperiorincompletoActive) {
-            missProb = 0.7; // 70% erra (UI incompleto)
-        }
-
-        if (missProb > 0 && Math.random() < missProb) {
-            alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior!`);
-            endTurn();
-            return;
-        }
+if (gokuIsDefender) {
+    const chance = Math.random(); // número entre 0 e 1
+    if (instintosuperiorcompletoActive && chance > 0.1) { 
+        // 90% de chance de errar (só acerta se chance <= 0.1)
+        alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Completo!`);
+        endTurn();
+        return;
+    } else if (instintosuperiorincompletoActive && chance > 0.3) {
+        // 70% de chance de errar (só acerta se chance <= 0.3)
+        alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Incompleto!`);
+        endTurn();
+        return;
     }
-
+}
 
     const sonicIsDefender = defender.name === 'Sonic';
     if (supersonicActive && sonicIsDefender) {
@@ -1704,52 +1702,53 @@ function attack(move) {
         return;
     }
 
-    if (attacker.name === 'Saitama' && move.name === 'Serious Punch') {
-        serioActive = true;
-        attackerImg.src = 'saitamamodoserio.png'; // Imagem Serious mode
+// Ativar modo sério
+if (attacker.name === 'Saitama' && move.name === 'Serious Punch' && !serioActive) {
+    serioActive = true;
+    saitamaBuff = 0; // zera buff no começo
+    attackerImg.src = 'saitamamodoserio.png';
+    attacker.maxHP = 280000;
+    attacker.currentHP = 280000;
 
-        alert('Saitama percebeu que tem que levar isso mais a sério!');
-
-        if (move.name === 'Serious Punch' && playerPokemon.name === 'Saitama') {
-            serioActive = true;
-            playerPokemon.maxHP = 280000;
-            playerHP = 280000;
+    // Atualiza movimentos
+    attacker.moves.forEach(m => {
+        if (m.name === 'Serious Punch') {
+            m.name = 'Super Serious Punch';
+            m.power = 80000;
         }
-        if (move.name === 'Serious Punch' && opponentPokemon.name === 'Saitama') {
-            serioActive = true;
-            opponentPokemon.maxHP = 280000;
-            opponentHP = 280000;
+        if (m.name === 'Consecutive Normal Punches') {
+            m.name = 'Consecutive Serious Punches';
+            m.type = 'Fighting';
+            m.power = 160000;
         }
+        if (m.name === 'Dodge') {
+            m.name = 'Dodge';
+            m.power = 0;
+        }
+        if (m.name === 'One Punch') {
+            m.name = 'Serious One Punch';
+            m.type = 'Fighting';
+            m.power = 100000;
+        }
+    });
 
-        // Aumenta a vida máxima e cura totalmente
-        attacker.maxHP = 280000;
-        attacker.currentHP = 280000;
+    alert('Saitama percebeu que tem que levar isso mais a sério!');
+    endTurn();
+    return;
+}
 
-        // Altera os movimentos
-        attacker.moves.forEach(m => {
-            if (m.name === 'Serious Punch') {
-                m.name = 'Super Serious Punch';
-                m.power = 80000;
-            }
-            if (m.name === 'Consecutive Normal Punches') {
-                m.name = 'Consecutive Serious Punches';
-                m.type = 'Fighting';
-                m.power = 160000;
-            }
-            if (m.name === 'Dodge') {
-                m.name = 'Dodge';
-                m.power = 0;
-            }
-            if (m.name === 'One Punch') {
-                m.name = 'Serious One Punch';
-                m.type = 'Fighting';
-                m.power = 100000;
-            }
-        });
+// Buff por turno (só no atacante Saitama)
+if (serioActive && attacker.name === 'Saitama') {
+    saitamaBuff += 50000; // aumenta 50k de ataque a cada turno
+    attacker.moves.forEach(m => {
+        if (m.power > 0) {
+            m.power += 50000;
+        }
+    });
 
-        endTurn();
-        return;
-    }
+    attacker.currentHP = Math.min(attacker.currentHP + 20000, attacker.maxHP); // cura 20k
+    alert('Saitama está ficando ainda mais forte!');
+}
     // Sonic - Transformar em Super ou Dark Sonic
     if (attacker.name === 'Sonic' && move.name === 'Transformar') {
         const chanceDark = Math.random(); // número entre 0 e 1
