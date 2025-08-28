@@ -354,17 +354,6 @@ const pokemons = {
             { name: 'Ataques Saiyajins', type: 'Dragon', power: 2500 }
         ]
     },
-    inkdemon: {
-        name: 'Ink Demon',
-        type: ['Demon', 'ink'],
-        maxHP: 4000,
-        moves: [
-            { name: 'Ink Splash', type: 'Dark', power: 2000 },
-            { name: 'Tentacle Grab', type: 'Dark', power: 1000 },
-            { name: 'Digital Distortion', type: 'Digital', power: 0 }, // Dodge move
-            { name: 'Corrupted Strike', type: 'Digital', power: 3000 }
-        ]
-    }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
