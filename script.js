@@ -18,6 +18,7 @@ let thermonuclearActive = false;
 let thermonuclearevolvedActive = false;
 let thermonuclearmothraevolvedActive = false;
 let serioActive = false;
+let saitamaBuff = 0;
 let carregadoActive = false;
 let rageadamActive = false;
 let burningActive = false;
@@ -29,6 +30,14 @@ let acheronultimateActive = false;
 let feixiaoultimateActive = false;
 let rappaultimateActive = false;
 let godzillaearthcarregadoActive = false;
+let supersaiyajinumActive = false;
+let supersaiyajindoisActive = false;
+let supersaiyajintresActive = false;
+let supersaiyajinquatroActive = false;
+let supersaiyajingodActive = false;
+let supersaiyajinblueActive = false;
+let instintosuperiorincompletoActive = false;
+let instintosuperiorcompletoActive = false;
 
 let playerPokemon, opponentPokemon;
 
@@ -331,6 +340,28 @@ const pokemons = {
             { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
         ]
     },
+    goku: {
+        name: 'Goku',
+        type: ['Fighting', 'Dragon'],
+        maxHP: 5000,
+        moves: [
+            { name: 'Kamehameha', type: 'Dragon', power: 3000 },
+            { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
+            { name: supersaiyajinumActive ? 'Transformar' : 'Transformar', type: 'Fighting', power: supersaiyajinumActive ? 0 : 0 }, // Buff move
+            { name: 'Ataques Saiyajins', type: 'Dragon', power: 2500 }
+        ]
+    },
+    inkdemon: {
+        name: 'Ink Demon',
+        type: ['Demon', 'ink'],
+        maxHP: 4000,
+        moves: [
+            { name: 'Ink Splash', type: 'Dark', power: 2000 },
+            { name: 'Tentacle Grab', type: 'Dark', power: 1000 },
+            { name: 'Digital Distortion', type: 'Digital', power: 0 }, // Dodge move
+            { name: 'Corrupted Strike', type: 'Digital', power: 3000 }
+        ]
+    }
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -379,7 +410,8 @@ const typeChart = {
     Sound: { Psychic: 2, Water: 2, Ghost: 1.5, Rock: 0.5 },
     Dream: { Psychic: 2, Fairy: 2, Ghost: 0.5, Sound: 2 },
     Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0, Fairy: 0.5, Dream: 2, Paranormal: 0.5 },
-    Demon: { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 }
+    Demon: { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 },
+    ink: { Digital: 2, Psychic: 2, Normal: 0.5, Fairy: 0.5 },
 };
 
 
@@ -553,6 +585,24 @@ function attack(move) {
         }
     }
 
+    const gokuIsDefender = defender.name === 'Goku';
+    if (gokuIsDefender) {
+        // prioriza o completo se os dois flags estiverem true por engano
+        let missProb = 0; // probabilidade de ERRAR o ataque no Goku
+        if (instintosuperiorcompletoActive) {
+            missProb = 0.9; // 90% erra (UI completo)
+        } else if (instintosuperiorincompletoActive) {
+            missProb = 0.7; // 70% erra (UI incompleto)
+        }
+
+        if (missProb > 0 && Math.random() < missProb) {
+            alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior!`);
+            endTurn();
+            return;
+        }
+    }
+
+
     const sonicIsDefender = defender.name === 'Sonic';
     if (supersonicActive && sonicIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
@@ -669,6 +719,390 @@ function attack(move) {
             }
         });
         attackerImg.src = 'adao.png';
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar') {
+        supersaiyajinumActive = true;
+        attackerImg.src = 'gokussj1.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin!');
+
+        if (move.name === 'Transformar' && playerPokemon.name === 'Goku') {
+            supersaiyajinumActive = true;
+            playerPokemon.maxHP = 8000;
+            playerHP = 8000;
+        }
+        if (move.name === 'Transformar' && opponentPokemon.name === 'Goku') {
+            supersaiyajinumActive = true;
+            opponentPokemon.maxHP = 8000;
+            opponentHP = 8000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 8000;
+        attacker.currentHP = 8000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Kamehameha') {
+                m.name = 'Super Kamehameha';
+                m.type = 'Dragon';
+                m.power = 6000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar') {
+                m.name = 'Transformar SSJ2';
+                m.power = 0;
+            }
+            if (m.name === 'Ataques Saiyajins') {
+                m.name = 'Super Ataques Saiyajins';
+                m.type = 'Dragon';
+                m.power = 5000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ2') {
+        supersaiyajindoisActive = true;
+        attackerImg.src = 'gokussj2.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin 2!');
+
+        if (move.name === 'Transformar SSJ2' && playerPokemon.name === 'Goku') {
+            supersaiyajindoisActive = true;
+            playerPokemon.maxHP = 16000;
+            playerHP = 16000;
+        }
+        if (move.name === 'Transformar SSJ2' && opponentPokemon.name === 'Goku') {
+            supersaiyajindoisActive = true;
+            opponentPokemon.maxHP = 16000;
+            opponentHP = 16000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 16000;
+        attacker.currentHP = 16000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha') {
+                m.name = 'Super Kamehameha 2';
+                m.type = 'Dragon';
+                m.power = 12000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ2') {
+                m.name = 'Transformar SSJ3';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins') {
+                m.name = 'Super Ataques Saiyajins 2';
+                m.type = 'Dragon';
+                m.power = 10000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ3') {
+        supersaiyajintresActive = true;
+        attackerImg.src = 'gokussj3.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin 3!');
+
+        if (move.name === 'Transformar SSJ3' && playerPokemon.name === 'Goku') {
+            supersaiyajintresActive = true;
+            playerPokemon.maxHP = 32000;
+            playerHP = 32000;
+        }
+        if (move.name === 'Transformar SSJ3' && opponentPokemon.name === 'Goku') {
+            supersaiyajintresActive = true;
+            opponentPokemon.maxHP = 32000;
+            opponentHP = 32000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 32000;
+        attacker.currentHP = 32000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha 2') {
+                m.name = 'Super Kamehameha 3';
+                m.type = 'Dragon';
+                m.power = 24000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ3') {
+                m.name = 'Transformar SSJ4';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins 2') {
+                m.name = 'Super Ataques Saiyajins 3';
+                m.type = 'Dragon';
+                m.power = 20000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ4') {
+        supersaiyajinquatroActive = true;
+        attackerImg.src = 'gokussj4.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin 4!');
+
+        if (move.name === 'Transformar SSJ4' && playerPokemon.name === 'Goku') {
+            supersaiyajinquatroActive = true;
+            playerPokemon.maxHP = 64000;
+            playerHP = 64000;
+        }
+        if (move.name === 'Transformar SSJ4' && opponentPokemon.name === 'Goku') {
+            supersaiyajinquatroActive = true;
+            opponentPokemon.maxHP = 64000;
+            opponentHP = 64000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 64000;
+        attacker.currentHP = 64000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha 3') {
+                m.name = 'Super Kamehameha 4';
+                m.type = 'Dragon';
+                m.power = 48000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ4') {
+                m.name = 'Transformar SSJ GOD';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins 3') {
+                m.name = 'Super Ataques Saiyajins 4';
+                m.type = 'Dragon';
+                m.power = 40000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ GOD') {
+        supersaiyajingodActive = true;
+        attackerImg.src = 'gokussjgod.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin god!');
+
+        if (move.name === 'Transformar SSJ GOD' && playerPokemon.name === 'Goku') {
+            supersaiyajingodActive = true;
+            playerPokemon.maxHP = 128000;
+            playerHP = 128000;
+        }
+        if (move.name === 'Transformar SSJ GOD' && opponentPokemon.name === 'Goku') {
+            supersaiyajingodActive = true;
+            opponentPokemon.maxHP = 128000;
+            opponentHP = 128000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 128000;
+        attacker.currentHP = 128000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha 4') {
+                m.name = 'Super Kamehameha GOD';
+                m.type = 'Dragon';
+                m.power = 96000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ GOD') {
+                m.name = 'Transformar SSJ Blue';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins 4') {
+                m.name = 'Super Ataques Saiyajins GOD';
+                m.type = 'Dragon';
+                m.power = 80000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ Blue') {
+        supersaiyajinblueActive = true;
+        attackerImg.src = 'gokussjblue.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin Blue!');
+
+        if (move.name === 'Transformar SSJ Blue' && playerPokemon.name === 'Goku') {
+            supersaiyajinblueActive = true;
+            playerPokemon.maxHP = 256000;
+            playerHP = 256000;
+        }
+        if (move.name === 'Transformar SSJ Blue' && opponentPokemon.name === 'Goku') {
+            supersaiyajinblueActive = true;
+            opponentPokemon.maxHP = 256000;
+            opponentHP = 256000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 256000;
+        attacker.currentHP = 256000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha GOD') {
+                m.name = 'Super Kamehameha Blue';
+                m.type = 'Dragon';
+                m.power = 192000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ Blue') {
+                m.name = 'Instinto Superior Incompleto';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins GOD') {
+                m.name = 'Super Ataques Saiyajins Blue';
+                m.type = 'Dragon';
+                m.power = 160000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Instinto Superior Incompleto') {
+        instintosuperiorincompletoActive = true;
+        attackerImg.src = 'gokuinstintosuperiorincompleto.png';
+
+        alert('Goku ficou enfurecido e ativou o instinto superior!');
+
+        if (move.name === 'Instinto Superior Incompleto' && playerPokemon.name === 'Goku') {
+            instintosuperiorincompletoActive = true;
+            playerPokemon.maxHP = 512000;
+            playerHP = 512000;
+        }
+        if (move.name === 'Instinto Superior Incompleto' && opponentPokemon.name === 'Goku') {
+            instintosuperiorincompletoActive = true;
+            opponentPokemon.maxHP = 512000;
+            opponentHP = 512000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 516000;
+        attacker.currentHP = 516000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha Blue') {
+                m.name = 'Super Kamehameha ISIC';
+                m.type = 'Dragon';
+                m.power = 384000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Instinto Superior Incompleto') {
+                m.name = 'Instinto Superior Completo';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins Blue') {
+                m.name = 'Super Ataques Saiyajins ISIC';
+                m.type = 'Dragon';
+                m.power = 320000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Instinto Superior Completo') {
+        instintosuperiorcompletoActive = true;
+        attackerImg.src = 'gokuinstintosuperiorcompleto.png';
+
+        alert('Goku ficou enfurecido e completou o instinto superior!');
+
+        if (move.name === 'Instinto Superior Incompleto' && playerPokemon.name === 'Goku') {
+            instintosuperiorcompletoActive = true;
+            playerPokemon.maxHP = 1024000;
+            playerHP = 1024000;
+        }
+        if (move.name === 'Instinto Superior Incompleto' && opponentPokemon.name === 'Goku') {
+            instintosuperiorcompletoActive = true;
+            opponentPokemon.maxHP = 1024000;
+            opponentHP = 1024000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 1024000;
+        attacker.currentHP = 1024000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha ISIC') {
+                m.name = 'Super Kamehameha ISC';
+                m.type = 'Dragon';
+                m.power = '768000';
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Genki Dama';
+                m.type = 'Dragon';
+                m.power = '1000000';
+            }
+            if (m.name === 'Instinto Superior Completo') {
+                m.name = 'Rajadas de Ki';
+                m.power = '500000';
+            }
+            if (m.name === 'Super Ataques Saiyajins ISIC') {
+                m.name = 'Super Ataques Saiyajins ISC';
+                m.type = 'Dragon';
+                m.power = '640000';
+            }
+        });
+
+        endTurn();
+        return;
     }
 
 
@@ -909,11 +1343,6 @@ function attack(move) {
         });
     }
 
-
-    
-
-
-    // --- Ativar Feixiao Charge ---
     // --- Ativar Feixiao Charge ---
     if (attacker.name === 'Feixiao' && move.name === 'Feixiao Charge') {
         feixiaoultimateActive = true;
