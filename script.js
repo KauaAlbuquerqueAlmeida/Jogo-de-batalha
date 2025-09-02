@@ -49,7 +49,7 @@ const pokemons = {
     godzillainhell: {
         name: 'Godzilla in Hell',
         type: ['Demon', 'Fire'],
-        maxHP: 666666,
+        maxHP: 6666666,
         moves: [
             { name: 'Atomic Breath', type: 'Dragon', power: 100000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
@@ -522,6 +522,14 @@ if (playerHP > 0 && opponentHP > 0) {
     }, 500);
 }
 
+function getHighestMovePower(pokemon) {
+        let highest = 0;
+        pokemon.moves.forEach(m => {
+            if (m.power > highest) highest = m.power;
+        });
+        return highest;
+    }
+
 function calcularDanoComCritico(basePower) {
     const critChance = 0.1; // 10% de chance
     const isCrit = Math.random() < critChance;
@@ -557,67 +565,62 @@ function attack(move) {
         }
     }
 
-if (supersonicActive && attacker.name === 'Super Sonic') {
-    // protege se o defensor não tiver moves
-    const defenderMoves = Array.isArray(defender.moves) ? defender.moves : [];
-    let highestMovePower = 0;
-    for (const m of defenderMoves) {
-        if (m && typeof m.power === 'number' && m.power > highestMovePower) highestMovePower = m.power;
-    }
+    // Adaptação do Super Sonic
+    if (supersonicActive && attacker.name === 'Super Sonic') {
+        // protege se o defensor não tiver moves
+        const defenderMoves = Array.isArray(defender.moves) ? defender.moves : [];
+        let highestMovePower = 0;
+        for (const m of defenderMoves) {
+            if (m && typeof m.power === 'number' && m.power > highestMovePower) highestMovePower = m.power;
+        }
 
-    const defenderMaxHP = typeof defender.maxHP === 'number' ? defender.maxHP : 0;
+        const defenderMaxHP = typeof defender.maxHP === 'number' ? defender.maxHP : 0;
 
-    // Só adapta se for a primeira vez ou se o inimigo realmente ficou mais forte
-    const inimigoFicouMaisForte =
-        defenderMaxHP > supersonicLastDefenderMaxHP ||
-        highestMovePower > supersonicLastHighestMovePower;
+        // Só adapta se for a primeira vez ou se o inimigo realmente ficou mais forte
+        const inimigoFicouMaisForte =
+            defenderMaxHP > supersonicLastDefenderMaxHP ||
+            highestMovePower > supersonicLastHighestMovePower;
 
-    if (!supersonicAdapted || inimigoFicouMaisForte) {
-        // calcula os novos limites de poder/vida
-        const alvoMaxHP = Math.floor(defenderMaxHP * 0.9);
-        const alvoPower = Math.floor(highestMovePower * 0.6);
+        if (!supersonicAdapted || inimigoFicouMaisForte) {
+            // calcula os novos limites de poder/vida
+            const alvoMaxHP = Math.floor(defenderMaxHP * 0.9);
+            const alvoPower = Math.floor(highestMovePower * 0.6);
 
-        // checa se realmente precisa adaptar (ou seja, o inimigo é MAIS forte que o que já temos)
-        const precisaAdaptar = alvoMaxHP > attacker.maxHP || alvoPower > Math.max(...attacker.moves.map(m => m.power || 0));
+            // checa se realmente precisa adaptar (ou seja, o inimigo é MAIS forte que o que já temos)
+            const precisaAdaptar = alvoMaxHP > attacker.maxHP || alvoPower > Math.max(...attacker.moves.map(m => m.power || 0));
 
-        if (precisaAdaptar) {
-            // Ajusta HP
-            if (alvoMaxHP > attacker.maxHP) {
-                attacker.maxHP = alvoMaxHP;
-                attacker.currentHP = attacker.maxHP; // cura total apenas aqui
+            if (precisaAdaptar) {
+                // Ajusta HP
+                if (alvoMaxHP > attacker.maxHP) {
+                    attacker.maxHP = alvoMaxHP;
+                    attacker.currentHP = attacker.maxHP; // cura total apenas aqui
 
-                if (playerTurn) {
-                    playerHP = attacker.currentHP; playerMaxHP = attacker.maxHP;
-                } else {
-                    opponentHP = attacker.currentHP; opponentMaxHP = attacker.maxHP;
+                    if (playerTurn) {
+                        playerHP = attacker.currentHP; playerMaxHP = attacker.maxHP;
+                    } else {
+                        opponentHP = attacker.currentHP; opponentMaxHP = attacker.maxHP;
+                    }
                 }
+
+                // Ajusta poder dos golpes
+                attacker.moves.forEach(m => {
+                    if (m && typeof m.power === 'number' && m.power > 0) {
+                        if (alvoPower > m.power) m.power = alvoPower;
+                    }
+                });
+
+                // marca/“tira foto” do nível atual do inimigo
+                supersonicAdapted = true;
+                supersonicLastDefenderMaxHP = defenderMaxHP;
+                supersonicLastHighestMovePower = highestMovePower;
+
+                alert('Super Sonic analisou o inimigo e se adaptou!');
             }
-
-            // Ajusta poder dos golpes
-            attacker.moves.forEach(m => {
-                if (m && typeof m.power === 'number' && m.power > 0) {
-                    if (alvoPower > m.power) m.power = alvoPower;
-                }
-            });
-
-            // marca/“tira foto” do nível atual do inimigo
-            supersonicAdapted = true;
-            supersonicLastDefenderMaxHP = defenderMaxHP;
-            supersonicLastHighestMovePower = highestMovePower;
-
-            alert('Super Sonic analisou o inimigo e se adaptou!');
         }
     }
-}
 
-// Função auxiliar para descobrir o maior poder do defensor
-function getHighestMovePower(pokemon) {
-    let highest = 0;
-    pokemon.moves.forEach(m => {
-        if (m.power > highest) highest = m.power;
-    });
-    return highest;
-}
+    // Função auxiliar para descobrir o maior poder do defensor
+    
     const seiyaIsDefender = defender.name === 'Seiya';
     if (armaduradivinaseiyaActive && seiyaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
