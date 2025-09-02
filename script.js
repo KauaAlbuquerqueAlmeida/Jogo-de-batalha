@@ -38,8 +38,8 @@ let supersaiyajingodActive = false;
 let supersaiyajinblueActive = false;
 let instintosuperiorincompletoActive = false;
 let instintosuperiorcompletoActive = false;
-let supersonicAdaptedHP = 0; // guarda o HP ao qual ele se adaptou
-let supersonicAdaptedPower = 0; // guarda o poder de ataque ao qual ele se adaptou
+let supersonicLastDefenderMaxHP = 0;
+let supersonicLastHighestMovePower = 0;
 let supersonicAdapted = false;
 
 let playerPokemon, opponentPokemon;
@@ -558,38 +558,55 @@ function attack(move) {
     }
 
 if (supersonicActive && attacker.name === 'Super Sonic') {
-    const defenderMaxHP = defender.maxHP;
-
-    // Descobre o maior poder do defensor
+    // protege se o defensor não tiver moves
+    const defenderMoves = Array.isArray(defender.moves) ? defender.moves : [];
     let highestMovePower = 0;
-    defender.moves.forEach(m => {
-        if (m.power > highestMovePower) highestMovePower = m.power;
-    });
+    for (const m of defenderMoves) {
+        if (m && typeof m.power === 'number' && m.power > highestMovePower) highestMovePower = m.power;
+    }
 
-    // Só adapta se ainda não tiver adaptado
-    if (!supersonicAdapted) {
-        // Ajusta HP do Super Sonic (cura total só aqui)
-        attacker.maxHP = Math.floor(defenderMaxHP * 0.9); // 90% do HP do defensor
-        attacker.currentHP = attacker.maxHP;
+    const defenderMaxHP = typeof defender.maxHP === 'number' ? defender.maxHP : 0;
 
-        // Atualiza o HP real da batalha
-        if (playerTurn) {
-            playerHP = attacker.currentHP;
-            playerMaxHP = attacker.maxHP;
-        } else {
-            opponentHP = attacker.currentHP;
-            opponentMaxHP = attacker.maxHP;
-        }
+    // Só adapta se for a primeira vez ou se o inimigo realmente ficou mais forte
+    const inimigoFicouMaisForte =
+        defenderMaxHP > supersonicLastDefenderMaxHP ||
+        highestMovePower > supersonicLastHighestMovePower;
 
-        // Ajusta poder dos golpes para 70% do maior golpe do defensor
-        attacker.moves.forEach(m => {
-            if (m.power > 0) {
-                m.power = Math.max(m.power, Math.floor(highestMovePower * 0.6));
+    if (!supersonicAdapted || inimigoFicouMaisForte) {
+        // calcula os novos limites de poder/vida
+        const alvoMaxHP = Math.floor(defenderMaxHP * 0.9);
+        const alvoPower = Math.floor(highestMovePower * 0.6);
+
+        // checa se realmente precisa adaptar (ou seja, o inimigo é MAIS forte que o que já temos)
+        const precisaAdaptar = alvoMaxHP > attacker.maxHP || alvoPower > Math.max(...attacker.moves.map(m => m.power || 0));
+
+        if (precisaAdaptar) {
+            // Ajusta HP
+            if (alvoMaxHP > attacker.maxHP) {
+                attacker.maxHP = alvoMaxHP;
+                attacker.currentHP = attacker.maxHP; // cura total apenas aqui
+
+                if (playerTurn) {
+                    playerHP = attacker.currentHP; playerMaxHP = attacker.maxHP;
+                } else {
+                    opponentHP = attacker.currentHP; opponentMaxHP = attacker.maxHP;
+                }
             }
-        });
 
-        supersonicAdapted = true; // marca que ele já se adaptou
-        alert('Super Sonic se adaptou parcialmente e recuperou toda a vida!');
+            // Ajusta poder dos golpes
+            attacker.moves.forEach(m => {
+                if (m && typeof m.power === 'number' && m.power > 0) {
+                    if (alvoPower > m.power) m.power = alvoPower;
+                }
+            });
+
+            // marca/“tira foto” do nível atual do inimigo
+            supersonicAdapted = true;
+            supersonicLastDefenderMaxHP = defenderMaxHP;
+            supersonicLastHighestMovePower = highestMovePower;
+
+            alert('Super Sonic analisou o inimigo e se adaptou!');
+        }
     }
 }
 
