@@ -18,79 +18,51 @@ let thermonuclearActive = false;
 let thermonuclearevolvedActive = false;
 let thermonuclearmothraevolvedActive = false;
 let serioActive = false;
+let saitamaBuff = 0;
 let carregadoActive = false;
 let rageadamActive = false;
 let burningActive = false;
 let supersonicActive = false;
 let simohayhaActive = false;
 let darksonicActive = false;
+let armaduradivinaseiyaActive = false;
+let acheronultimateActive = false;
+let feixiaoultimateActive = false;
+let rappaultimateActive = false;
+let godzillaearthcarregadoActive = false;
+let supersaiyajinumActive = false;
+let supersaiyajindoisActive = false;
+let supersaiyajintresActive = false;
+let supersaiyajinquatroActive = false;
+let supersaiyajingodActive = false;
+let supersaiyajinblueActive = false;
+let instintosuperiorincompletoActive = false;
+let instintosuperiorcompletoActive = false;
+let supersonicLastDefenderMaxHP = 0;
+let supersonicLastHighestMovePower = 0;
+let supersonicAdapted = false;
 
 let playerPokemon, opponentPokemon;
 
 // Dados dos Pokémon
 const pokemons = {
-    charizard: {
-        name: 'Charizard',
-        type: ['Fire', 'Flying'],
-        maxHP: 120,
-        moves: [
-            { name: 'Flamethrower', type: 'Fire', power: 30 },
-            { name: 'Dragon Claw', type: 'Dragon', power: 25 },
-            { name: 'Air Slash', type: 'Flying', power: 20 },
-            { name: 'Slash', type: 'Normal', power: 15 }
-        ]
-    },
-    blastoise: {
-        name: 'Blastoise',
-        type: 'Water',
-        maxHP: 130,
-        moves: [
-            { name: 'Hydro Pump', type: 'Water', power: 30 },
-            { name: 'Ice Beam', type: 'Ice', power: 25 },
-            { name: 'Bite', type: 'Dark', power: 20 },
-            { name: 'Tackle', type: 'Normal', power: 15 }
-        ]
-    },
-    venusaur: {
-        name: 'Venusaur',
-        type: 'Grass',
-        maxHP: 140,
-        moves: [
-            { name: 'Solar Beam', type: 'Grass', power: 30 },
-            { name: 'Sludge Bomb', type: 'Poison', power: 25 },
-            { name: 'Earthquake', type: 'Ground', power: 20 },
-            { name: 'Tackle', type: 'Normal', power: 15 }
-        ]
-    },
-    pikachu: {
-        name: 'Pikachu',
-        type: 'Electric',
-        maxHP: 90,
-        moves: [
-            { name: 'Thunderbolt', type: 'Electric', power: 30 },
-            { name: 'Iron Tail', type: 'Steel', power: 25 },
-            { name: 'Quick Attack', type: 'Normal', power: 20 },
-            { name: 'Double Team', type: 'Normal', power: 15 }
-        ]
-    },
-
     godzillainhell: {
         name: 'Godzilla in Hell',
-        type: ['Dragon', 'Fire'],
-        maxHP: 66666,
+        type: ['Demon', 'Fire'],
+        maxHP: 6666666,
         moves: [
-            { name: 'Atomic Breath', type: 'Dragon', power: 10000 },
+            { name: 'Atomic Breath', type: 'Dragon', power: 100000 },
             { name: 'Shield of God', type: 'Normal', power: 0 },
             { name: demonBoostActive ? 'Godzilla\'s Final Blast' : 'Demon Boost', type: 'Dragon' },
-            { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 15000 }
+            { name: 'Atomic Spiral Breath of God', type: 'Cosmic', power: 150000 }
         ]
     },
     saitama: {
         name: 'Saitama',
         type: ['Fighting', 'Normal'],
-        maxHP: 15000,
+        maxHP: 150000,
         moves: [
-            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 8000 },
+            { name: serioActive ? 'Super Serious Punch' : 'Serious Punch', type: 'Fighting', power: 20000 },
             { name: 'Consecutive Normal Punches', type: 'Normal', power: 1500 },
             { name: 'Dodge', type: 'Normal', power: 0 },
             { name: 'One Punch', type: 'Fighting', power: 3000 }
@@ -206,17 +178,6 @@ const pokemons = {
             { name: 'Fire Atomic Breath', type: 'Fire', power: 400 }
         ]
     },
-    vaporzillainhell: {
-        name: 'Vaporzilla in Hell',
-        type: ['Demon', 'Fire'],
-        maxHP: 16666,
-        moves: [
-            { name: 'Vapor Breath', type: 'Demon', power: 3000 },
-            { name: 'Mega Infernal Punch', type: 'Demon', power: 3500 },
-            { name: 'Shield of God', type: 'Normal', power: 0 }, // Shield move
-            { name: 'Tsunami Strike in hell', type: 'Water', power: 4000 }
-        ]
-    },
     godzillainhellslick: {
         name: 'Godzilla in Hell (Slick)',
         type: ['Dragon', 'Nuclear'],
@@ -283,17 +244,6 @@ const pokemons = {
             { name: rageadamActive ? 'Adão Rage' : 'Rage', type: 'Fighting', power: rageadamActive ? 1000 : 0 }
         ]
     },
-    distortusrex: {
-        name: 'Distortus Rex',
-        type: ['Dragon', 'Mythic'],
-        maxHP: 800,
-        moves: [
-            { name: 'Distortion Bite', type: 'Dragon', power: 500 },
-            { name: 'Slash', type: 'Normal', power: 200 },
-            { name: 'Tail', type: 'Normal', power: 100 }, // Dodge move
-            { name: 'Tackle Gackle', type: 'Dragon', power: 400 }
-        ]
-    },
     godzillaheisei: {
         name: 'Godzilla (Heisei)',
         type: ['Nuclear', 'Dragon'],
@@ -315,7 +265,95 @@ const pokemons = {
             { name: supersonicActive ? 'Super Sonic Punch' : 'Transformar', type: 'Normal', power: supersonicActive ? 500 : 500 },
             { name: 'Super Sonic Boom', type: 'Electric', power: 1000 }
         ]
-    }
+    },
+    jasonvoorhees: {
+        name: 'Jason Voorhees',
+        type: ['Dark', 'Normal'],
+        maxHP: 800,
+        moves: [
+            { name: 'Machete Slash', type: 'Dark', power: 300 },
+            { name: 'Hockey Mask Shield', type: 'Normal', power: 0 }, // Shield move
+            { name: 'Teleport', type: 'Dark', power: 0 }, // Dodge move
+            { name: 'Killer Stab', type: 'Dark', power: 500 }
+        ]
+    },
+    garou: {
+        name: 'Garou',
+        type: ['Fighting', 'Dark'],
+        maxHP: 700,
+        moves: [
+            { name: 'Monster Strike', type: 'Fighting', power: 400 },
+            { name: 'Dark Fist', type: 'Dark', power: 300 },
+            { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
+            { name: 'Garou\'s Rage', type: 'Fighting', power: 600 }
+        ]
+    },
+    seiya: {
+        name: 'Seiya',
+        type: ['Fighting', 'Mythic'],
+        maxHP: 1000,
+        moves: [
+            { name: 'Meteoro de Pégaso', type: 'Fighting', power: 500 },
+            { name: 'Cadeia de Pégaso', type: 'Mythic', power: 5000 }, // Shield move
+            { name: armaduradivinaseiyaActive ? 'Meteoro de Pégaso Divino Absoluto' : 'Armadura Divina', type: 'Mythic', power: armaduradivinaseiyaActive ? 1000 : 0 },
+            { name: 'Pugna de Pégaso', type: 'Mythic', power: 2000 }
+        ]
+    },
+    acheron: {
+        name: 'Acheron',
+        type: ['Demon', 'Plasma'],
+        maxHP: 8000,
+        moves: [
+            { name: 'Wiltcross Trilateral', type: 'Dark', power: 700 },
+            { name: 'Octobolt Flash', type: 'Plasma', power: 400 },
+            { name: 'Sonhos Cortados Choram em Vermelho', type: 'Plasma', power: 800 }, // Dodge move
+            { name: acheronultimateActive ? 'No topo da folha de chuva está a unidade' : 'Carregar Pericia Suprema', type: 'Void', power: acheronultimateActive ? 1000 : 0 },
+        ]
+    },
+    feixiao: {
+        name: 'Feixiao',
+        type: ['Fighting', 'Wind'],
+        maxHP: 7000,
+        moves: [
+            { name: 'Boltsunder', type: 'Fighting', power: 800 },
+            { name: 'Machado de Guerra', type: 'Wind', power: 1100 },
+            { name: feixiaoultimateActive ? 'Boltsunder Blitz' : 'Feixiao Charge', type: 'Wind', power: feixiaoultimateActive ? 2000 : 0 }, // Ultimate move
+            { name: 'Nascido da Tempestade', type: 'Wind', power: 700 } // Shield move
+        ]
+    },
+    rappa: {
+        name: 'Rappa',
+        type: ['Dream', 'Light'],
+        maxHP: 6500,
+        moves: [
+            { name: 'Ninjutsu: Supere os tombos', type: 'Dream', power: 500 },
+            { name: 'Ningu: Lâmina de Pétala de Maldição Demoníaca', type: 'Dream', power: 400 },
+            { name: 'Ninja Dash: Aos trancos e barrancos', type: 'Light', power: 800 }, // Shield move
+            { name: rappaultimateActive ? 'Ninja Strike: Enraizado Resoluto' : 'Nindo Supremo: Aishiteru', type: 'Fream', power: rappaultimateActive ? 2000 : 0 }, // Ultimate move
+        ]
+    },
+    godzillaearth: {
+        name: 'Godzilla Earth',
+        type: ['Nuclear', 'Earth'],
+        maxHP: 30000,
+        moves: [
+            { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+            { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+            { name: godzillaearthcarregadoActive ? 'Regen' : 'Carregar', type: 'Nuclear', power: godzillaearthcarregadoActive ? 0 : 0 }, // Ultimate move
+            { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+        ]
+    },
+    goku: {
+        name: 'Goku',
+        type: ['Fighting', 'Dragon'],
+        maxHP: 5000,
+        moves: [
+            { name: 'Kamehameha', type: 'Dragon', power: 3000 },
+            { name: 'Dodge', type: 'Normal', power: 0 }, // Dodge move
+            { name: supersaiyajinumActive ? 'Transformar' : 'Transformar', type: 'Fighting', power: supersaiyajinumActive ? 0 : 0 }, // Buff move
+            { name: 'Ataques Saiyajins', type: 'Dragon', power: 2500 }
+        ]
+    },
     // Adicione mais personagens aqui de acordo com a regra colocada acima e deixe o mais balanceado possível
 
 };
@@ -364,7 +402,8 @@ const typeChart = {
     Sound: { Psychic: 2, Water: 2, Ghost: 1.5, Rock: 0.5 },
     Dream: { Psychic: 2, Fairy: 2, Ghost: 0.5, Sound: 2 },
     Paranormal: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0, Fairy: 0.5, Dream: 2, Paranormal: 0.5 },
-    Demon: { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 }
+    Demon: { Angel: 0.5, Holy: 0.5, Dark: 2, Psychic: 2, Ghost: 2, Fairy: 2, Dragon: 1, Dream: 2, Light: 0.5, Void: 1.5, Demon: 0.5 },
+    ink: { Digital: 2, Psychic: 2, Normal: 0.5, Fairy: 0.5 },
 };
 
 
@@ -483,6 +522,14 @@ if (playerHP > 0 && opponentHP > 0) {
     }, 500);
 }
 
+function getHighestMovePower(pokemon) {
+        let highest = 0;
+        pokemon.moves.forEach(m => {
+            if (m.power > highest) highest = m.power;
+        });
+        return highest;
+    }
+
 function calcularDanoComCritico(basePower) {
     const critChance = 0.1; // 10% de chance
     const isCrit = Math.random() < critChance;
@@ -518,11 +565,103 @@ function attack(move) {
         }
     }
 
+    // Adaptação do Super Sonic
+    if (supersonicActive && attacker.name === 'Super Sonic') {
+        // protege se o defensor não tiver moves
+        const defenderMoves = Array.isArray(defender.moves) ? defender.moves : [];
+        let highestMovePower = 0;
+        for (const m of defenderMoves) {
+            if (m && typeof m.power === 'number' && m.power > highestMovePower) highestMovePower = m.power;
+        }
+
+        const defenderMaxHP = typeof defender.maxHP === 'number' ? defender.maxHP : 0;
+
+        // Só adapta se for a primeira vez ou se o inimigo realmente ficou mais forte
+        const inimigoFicouMaisForte =
+            defenderMaxHP > supersonicLastDefenderMaxHP ||
+            highestMovePower > supersonicLastHighestMovePower;
+
+        if (!supersonicAdapted || inimigoFicouMaisForte) {
+            // calcula os novos limites de poder/vida
+            const alvoMaxHP = Math.floor(defenderMaxHP * 0.9);
+            const alvoPower = Math.floor(highestMovePower * 0.6);
+
+            // checa se realmente precisa adaptar (ou seja, o inimigo é MAIS forte que o que já temos)
+            const precisaAdaptar = alvoMaxHP > attacker.maxHP || alvoPower > Math.max(...attacker.moves.map(m => m.power || 0));
+
+            if (precisaAdaptar) {
+                // Ajusta HP
+                if (alvoMaxHP > attacker.maxHP) {
+                    attacker.maxHP = alvoMaxHP;
+                    attacker.currentHP = attacker.maxHP; // cura total apenas aqui
+
+                    if (playerTurn) {
+                        playerHP = attacker.currentHP; playerMaxHP = attacker.maxHP;
+                    } else {
+                        opponentHP = attacker.currentHP; opponentMaxHP = attacker.maxHP;
+                    }
+                }
+
+                // Ajusta poder dos golpes
+                attacker.moves.forEach(m => {
+                    if (m && typeof m.power === 'number' && m.power > 0) {
+                        if (alvoPower > m.power) m.power = alvoPower;
+                    }
+                });
+
+                // marca/“tira foto” do nível atual do inimigo
+                supersonicAdapted = true;
+                supersonicLastDefenderMaxHP = defenderMaxHP;
+                supersonicLastHighestMovePower = highestMovePower;
+
+                alert('Super Sonic analisou o inimigo e se adaptou!');
+            }
+        }
+    }
+
+    // Função auxiliar para descobrir o maior poder do defensor
+    
+    const seiyaIsDefender = defender.name === 'Seiya';
+    if (armaduradivinaseiyaActive && seiyaIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.2) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Seiya está esquivou facilmente!`);
+            endTurn();
+            return;
+        }
+    }
+
     const saitamaIsDefender = defender.name === 'Saitama';
     if (serioActive && saitamaIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
-        if (chance > 0.4) { // 70% de chance de errar
+        if (chance > 0.3) { // 70% de chance de errar
             alert(`${attacker.name} errou o ataque! Saitama Desviou!`);
+            endTurn();
+            return;
+        }
+    }
+
+    const gokuIsDefender = defender.name === 'Goku';
+    if (gokuIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (instintosuperiorcompletoActive && chance > 0.1) {
+            // 90% de chance de errar (só acerta se chance <= 0.1)
+            alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Completo!`);
+            endTurn();
+            return;
+        } else if (instintosuperiorincompletoActive && chance > 0.3) {
+            // 70% de chance de errar (só acerta se chance <= 0.3)
+            alert(`${attacker.name} errou o ataque! Goku desviou com Instinto Superior Incompleto!`);
+            endTurn();
+            return;
+        }
+    }
+
+    const sonicIsDefender = defender.name === 'Sonic';
+    if (supersonicActive && sonicIsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.3) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Sonic Desviou!`);
             endTurn();
             return;
         }
@@ -531,8 +670,18 @@ function attack(move) {
     const adaoIsDefender = defender.name === 'Adão';
     if (rageadamActive && adaoIsDefender) {
         const chance = Math.random(); // número entre 0 e 1
-        if (chance > 0.4) { // 70% de chance de errar
+        if (chance > 0.3) { // 70% de chance de errar
             alert(`${attacker.name} errou o ataque! Adão viu o seu golpe e Desviou!`);
+            endTurn();
+            return;
+        }
+    }
+
+    const kaijun8IsDefender = defender.name === 'Kaiju Nº 8';
+    if (kaijun8Active && kaijun8IsDefender) {
+        const chance = Math.random(); // número entre 0 e 1
+        if (chance > 0.5) { // 70% de chance de errar
+            alert(`${attacker.name} errou o ataque! Kaiju Nº 8 Desviou!`);
             endTurn();
             return;
         }
@@ -550,7 +699,7 @@ function attack(move) {
         attacker.moves.forEach(m => {
             if (m.name === 'Demon Boost') {
                 m.name = 'Godzilla\'s Final Blast';
-                m.power = 30000;
+                m.power = 333333;
             }
         });
         endTurn();
@@ -559,7 +708,7 @@ function attack(move) {
 
     if (attacker.name === 'Godzilla in Hell' && demonBoostActive && move.name === 'Godzilla\'s Final Blast') {
         alert('Godzilla\'s Final Blast!!!');
-        movePower = 30000;
+        movePower = 333333;
         demonBoostActive = false;
         attacker.moves.forEach(m => {
             if (m.name === 'Godzilla\'s Final Blast') {
@@ -626,6 +775,390 @@ function attack(move) {
         attackerImg.src = 'adao.png';
     }
 
+    if (attacker.name === 'Goku' && move.name === 'Transformar') {
+        supersaiyajinumActive = true;
+        attackerImg.src = 'gokussj1.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin!');
+
+        if (move.name === 'Transformar' && playerPokemon.name === 'Goku') {
+            supersaiyajinumActive = true;
+            playerPokemon.maxHP = 8000;
+            playerHP = 8000;
+        }
+        if (move.name === 'Transformar' && opponentPokemon.name === 'Goku') {
+            supersaiyajinumActive = true;
+            opponentPokemon.maxHP = 8000;
+            opponentHP = 8000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 8000;
+        attacker.currentHP = 8000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Kamehameha') {
+                m.name = 'Super Kamehameha';
+                m.type = 'Dragon';
+                m.power = 6000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar') {
+                m.name = 'Transformar SSJ2';
+                m.power = 0;
+            }
+            if (m.name === 'Ataques Saiyajins') {
+                m.name = 'Super Ataques Saiyajins';
+                m.type = 'Dragon';
+                m.power = 5000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ2') {
+        supersaiyajindoisActive = true;
+        attackerImg.src = 'gokussj2.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin 2!');
+
+        if (move.name === 'Transformar SSJ2' && playerPokemon.name === 'Goku') {
+            supersaiyajindoisActive = true;
+            playerPokemon.maxHP = 16000;
+            playerHP = 16000;
+        }
+        if (move.name === 'Transformar SSJ2' && opponentPokemon.name === 'Goku') {
+            supersaiyajindoisActive = true;
+            opponentPokemon.maxHP = 16000;
+            opponentHP = 16000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 16000;
+        attacker.currentHP = 16000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha') {
+                m.name = 'Super Kamehameha 2';
+                m.type = 'Dragon';
+                m.power = 12000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ2') {
+                m.name = 'Transformar SSJ3';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins') {
+                m.name = 'Super Ataques Saiyajins 2';
+                m.type = 'Dragon';
+                m.power = 10000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ3') {
+        supersaiyajintresActive = true;
+        attackerImg.src = 'gokussj3.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin 3!');
+
+        if (move.name === 'Transformar SSJ3' && playerPokemon.name === 'Goku') {
+            supersaiyajintresActive = true;
+            playerPokemon.maxHP = 32000;
+            playerHP = 32000;
+        }
+        if (move.name === 'Transformar SSJ3' && opponentPokemon.name === 'Goku') {
+            supersaiyajintresActive = true;
+            opponentPokemon.maxHP = 32000;
+            opponentHP = 32000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 32000;
+        attacker.currentHP = 32000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha 2') {
+                m.name = 'Super Kamehameha 3';
+                m.type = 'Dragon';
+                m.power = 24000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ3') {
+                m.name = 'Transformar SSJ4';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins 2') {
+                m.name = 'Super Ataques Saiyajins 3';
+                m.type = 'Dragon';
+                m.power = 20000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ4') {
+        supersaiyajinquatroActive = true;
+        attackerImg.src = 'gokussj4.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin 4!');
+
+        if (move.name === 'Transformar SSJ4' && playerPokemon.name === 'Goku') {
+            supersaiyajinquatroActive = true;
+            playerPokemon.maxHP = 64000;
+            playerHP = 64000;
+        }
+        if (move.name === 'Transformar SSJ4' && opponentPokemon.name === 'Goku') {
+            supersaiyajinquatroActive = true;
+            opponentPokemon.maxHP = 64000;
+            opponentHP = 64000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 64000;
+        attacker.currentHP = 64000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha 3') {
+                m.name = 'Super Kamehameha 4';
+                m.type = 'Dragon';
+                m.power = 48000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ4') {
+                m.name = 'Transformar SSJ GOD';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins 3') {
+                m.name = 'Super Ataques Saiyajins 4';
+                m.type = 'Dragon';
+                m.power = 40000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ GOD') {
+        supersaiyajingodActive = true;
+        attackerImg.src = 'gokussjgod.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin god!');
+
+        if (move.name === 'Transformar SSJ GOD' && playerPokemon.name === 'Goku') {
+            supersaiyajingodActive = true;
+            playerPokemon.maxHP = 128000;
+            playerHP = 128000;
+        }
+        if (move.name === 'Transformar SSJ GOD' && opponentPokemon.name === 'Goku') {
+            supersaiyajingodActive = true;
+            opponentPokemon.maxHP = 128000;
+            opponentHP = 128000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 128000;
+        attacker.currentHP = 128000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha 4') {
+                m.name = 'Super Kamehameha GOD';
+                m.type = 'Dragon';
+                m.power = 96000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ GOD') {
+                m.name = 'Transformar SSJ Blue';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins 4') {
+                m.name = 'Super Ataques Saiyajins GOD';
+                m.type = 'Dragon';
+                m.power = 80000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Transformar SSJ Blue') {
+        supersaiyajinblueActive = true;
+        attackerImg.src = 'gokussjblue.png';
+
+        alert('Goku ficou enfurecido e se transformou no lendario super saiyajin Blue!');
+
+        if (move.name === 'Transformar SSJ Blue' && playerPokemon.name === 'Goku') {
+            supersaiyajinblueActive = true;
+            playerPokemon.maxHP = 256000;
+            playerHP = 256000;
+        }
+        if (move.name === 'Transformar SSJ Blue' && opponentPokemon.name === 'Goku') {
+            supersaiyajinblueActive = true;
+            opponentPokemon.maxHP = 256000;
+            opponentHP = 256000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 256000;
+        attacker.currentHP = 256000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha GOD') {
+                m.name = 'Super Kamehameha Blue';
+                m.type = 'Dragon';
+                m.power = 192000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Transformar SSJ Blue') {
+                m.name = 'Instinto Superior Incompleto';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins GOD') {
+                m.name = 'Super Ataques Saiyajins Blue';
+                m.type = 'Dragon';
+                m.power = 160000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Instinto Superior Incompleto') {
+        instintosuperiorincompletoActive = true;
+        attackerImg.src = 'gokuinstintosuperiorincompleto.png';
+
+        alert('Goku ficou enfurecido e ativou o instinto superior!');
+
+        if (move.name === 'Instinto Superior Incompleto' && playerPokemon.name === 'Goku') {
+            instintosuperiorincompletoActive = true;
+            playerPokemon.maxHP = 512000;
+            playerHP = 512000;
+        }
+        if (move.name === 'Instinto Superior Incompleto' && opponentPokemon.name === 'Goku') {
+            instintosuperiorincompletoActive = true;
+            opponentPokemon.maxHP = 512000;
+            opponentHP = 512000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 516000;
+        attacker.currentHP = 516000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha Blue') {
+                m.name = 'Super Kamehameha ISIC';
+                m.type = 'Dragon';
+                m.power = 384000;
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Dodge';
+                m.type = 'Dragon';
+                m.power = 0;
+            }
+            if (m.name === 'Instinto Superior Incompleto') {
+                m.name = 'Instinto Superior Completo';
+                m.power = 0;
+            }
+            if (m.name === 'Super Ataques Saiyajins Blue') {
+                m.name = 'Super Ataques Saiyajins ISIC';
+                m.type = 'Dragon';
+                m.power = 320000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    if (attacker.name === 'Goku' && move.name === 'Instinto Superior Completo') {
+        instintosuperiorcompletoActive = true;
+        attackerImg.src = 'gokuinstintosuperiorcompleto.png';
+
+        alert('Goku ficou enfurecido e completou o instinto superior!');
+
+        if (move.name === 'Instinto Superior Incompleto' && playerPokemon.name === 'Goku') {
+            instintosuperiorcompletoActive = true;
+            playerPokemon.maxHP = 1024000;
+            playerHP = 1024000;
+        }
+        if (move.name === 'Instinto Superior Incompleto' && opponentPokemon.name === 'Goku') {
+            instintosuperiorcompletoActive = true;
+            opponentPokemon.maxHP = 1024000;
+            opponentHP = 1024000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 1024000;
+        attacker.currentHP = 1024000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Super Kamehameha ISIC') {
+                m.name = 'Super Kamehameha ISC';
+                m.type = 'Dragon';
+                m.power = '768000';
+            }
+            if (m.name === 'Dodge') {
+                m.name = 'Genki Dama';
+                m.type = 'Dragon';
+                m.power = '1000000';
+            }
+            if (m.name === 'Instinto Superior Completo') {
+                m.name = 'Rajadas de Ki';
+                m.power = '500000';
+            }
+            if (m.name === 'Super Ataques Saiyajins ISIC') {
+                m.name = 'Super Ataques Saiyajins ISC';
+                m.type = 'Dragon';
+                m.power = '640000';
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
 
     // Demon Boost Slick - Godzilla in Hell Slick
     if (attacker.name === 'Godzilla in Hell (Slick)' && move.name === 'Demon Boost Slick') {
@@ -669,6 +1202,376 @@ function attack(move) {
         endTurn();
         return;
     }
+
+    //Acheron Ultimate - No topo da folha de chuva está a unidade
+    if (attacker.name === 'Acheron' && move.name === 'Carregar Pericia Suprema') {
+        acheronultimateActive = true;
+        attackerImg.src = 'acheronultimate.png'; // Sprite da ultimate
+        alert('Acheron começa a carregar sua Perícia Suprema, a escuridão consome a arena!');
+
+        // Muda o fundo
+        document.querySelector('.battle-container').style.backgroundImage = "url('acheronbackgroundultimate.png')";
+        document.querySelector('.battle-container').style.backgroundSize = "cover";
+        document.querySelector('.battle-container').style.backgroundPosition = "center";
+
+        // Troca o movimento para a ultimate ofensiva
+        attacker.moves.forEach(m => {
+            if (m.name === 'Carregar Pericia Suprema') {
+                m.name = 'No topo da folha de chuva está a unidade';
+                m.type = 'Void';
+                m.power = 6000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    // --- Executar Ultimate Acheron ---
+    if (attacker.name === 'Acheron' && acheronultimateActive && move.name === 'No topo da folha de chuva está a unidade') {
+        alert('Acheron liberou sua Perícia Suprema: No topo da folha de chuva está a unidade!');
+
+        // Define movePower para aplicar dano
+        movePower = 6000;
+
+        // Desativa a ultimate
+        acheronultimateActive = false;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'acheronultimatevideo.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            // Restaura fundo original
+            document.querySelector('.battle-container').style.backgroundImage = "url('defaultbattlebg.png')";
+
+            // Volta sprite base
+            attackerImg.src = 'acheron.png';
+
+            // Volta movimentos originais
+            attacker.moves = [
+                { name: 'Wiltcross Trilateral', type: 'Dark', power: 700 },
+                { name: 'Octobolt Flash', type: 'Dark', power: 400 },
+                { name: 'Sonhos Cortados Choram em Vermelho', type: 'Normal', power: 0 },
+                { name: 'Carregar Pericia Suprema', type: 'Void', power: 0 }
+            ];
+        });
+    }
+
+    //Acheron Ultimate - No topo da folha de chuva está a unidade
+    if (attacker.name === 'Godzilla Earth' && move.name === 'Carregar') {
+        godzillaearthcarregadoActive = true;
+        attackerImg.src = 'godzillaearthpronto.png'; // Sprite da ultimate
+        alert('Godzilla Earth desperta e está pronto!');
+
+        // Troca o movimento para a ultimate ofensiva
+        attacker.moves.forEach(m => {
+            if (m.name === 'Carregar') {
+                m.name = 'Nuclear';
+                m.power = 0;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    // --- Executar Ultimate Acheron ---
+    if (attacker.name === 'Godzilla Earth' && godzillaearthcarregadoActive && move.name === 'Atomic Breath of Earth') {
+        alert('Godzilla Earth carregou e lança sua baforada atomica!');
+
+        // Define movePower para aplicar dano
+        movePower = 8000;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'godzillaearthatomicbreath.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            attacker.moves = [
+                { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+                { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+                { name: 'Regen', type: 'Nuclear', power: 0 },
+                { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+            ];
+        });
+    }
+
+    if (attacker.name === 'Godzilla Earth' && godzillaearthcarregadoActive && move.name === 'Terra Rumble') {
+        alert('Godzilla Earth ruge!');
+
+        // Define movePower para aplicar dano
+        movePower = 8000;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'godzillaearthroar.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            attacker.moves = [
+                { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+                { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+                { name: 'Regen', type: 'Nuclear', power: 0 },
+                { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+            ];
+        });
+    }
+
+    if (attacker.name === 'Godzilla Earth' && godzillaearthcarregadoActive && move.name === 'Planetary Destruction') {
+        alert('Godzilla Earth carrega e lança um corte planetario!');
+
+        // Define movePower para aplicar dano
+        movePower = 8000;
+
+        // Cria vídeo full screen
+        let video = document.createElement('video');
+        video.src = 'godzillaearthcorte.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        // Quando o vídeo termina, restaura sprite e movimentos
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            attacker.moves = [
+                { name: 'Atomic Breath of Earth', type: 'Dragon', power: 8000 },
+                { name: 'Terra Rumble', type: 'Earth', power: 4000 },
+                { name: 'Regen', type: 'Nuclear', power: 0 },
+                { name: 'Planetary Destruction', type: 'Nuclear', power: 10000 }
+            ];
+        });
+    }
+
+    // --- Ativar Feixiao Charge ---
+    if (attacker.name === 'Feixiao' && move.name === 'Feixiao Charge') {
+        feixiaoultimateActive = true;
+        attackerImg.src = 'feixiaoultimate.png'; // Sprite ultimate
+        alert('Feixiao começa a carregar sua Ultimate, o vento se agita na arena!');
+
+        // Toca vídeo de preparação
+        let prepVideo = document.createElement('video');
+        prepVideo.src = 'feixiaopreparando.mp4';
+        prepVideo.autoplay = true;
+        prepVideo.controls = false;
+        prepVideo.muted = true;
+        prepVideo.playsInline = true;
+        prepVideo.style.position = 'fixed';
+        prepVideo.style.top = '0';
+        prepVideo.style.left = '0';
+        prepVideo.style.width = '100%';
+        prepVideo.style.height = '100%';
+        prepVideo.style.objectFit = 'cover';
+        prepVideo.style.zIndex = '9999';
+        document.body.appendChild(prepVideo);
+
+        prepVideo.addEventListener('ended', () => {
+            prepVideo.remove();
+
+            // Troca o movimento para a ultimate ofensiva
+            attacker.moves.forEach(m => {
+                if (m.name === 'Feixiao Charge') {
+                    m.name = 'Boltsunder Blitz';
+                    m.type = 'Wind';
+                    m.power = 5000;
+                }
+            });
+
+            alert('Feixiao está pronta para lançar Boltsunder Blitz!');
+            endTurn();
+        });
+
+        return;
+    }
+
+    // --- Executar Ultimate Feixiao ---
+    if (attacker.name === 'Feixiao' && feixiaoultimateActive && move.name === 'Boltsunder Blitz') {
+        alert('Feixiao lançou sua Ultimate: Boltsunder Blitz!');
+
+        // Define movePower para aplicar dano corretamente
+        movePower = 5000;
+
+        // Desativa a ultimate
+        feixiaoultimateActive = false;
+
+        // Cria vídeo full screen da ultimate
+        let video = document.createElement('video');
+        video.src = 'feixiaoultimatevideo.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            // Restaura fundo original
+            document.querySelector('.battle-container').style.backgroundImage = "url('defaultbattlebg.png')";
+
+            // Volta sprite base
+            attackerImg.src = 'feixiao.png';
+
+            // Volta movimentos originais
+            attacker.moves = [
+                { name: 'Boltsunder', type: 'Fighting', power: 800 },
+                { name: 'Machado de Guerra', type: 'Wind', power: 1100 },
+                { name: 'Feixiao Charge', type: 'Wind', power: 0 },
+                { name: 'Nascido da Tempestade', type: 'Wind', power: 700 }
+            ];
+        });
+    }
+
+
+    // --- Ativar Nindo Supremo: Aishiteru ---
+    if (attacker.name === 'Rappa' && move.name === 'Nindo Supremo: Aishiteru') {
+        rappaultimateActive = true;
+        attackerImg.src = 'Rappapreparada.png'; // Sprite ultimate
+        alert('Rappa começa a carregar seu Nindo Supremo, a luz e o sonho se entrelaçam!');
+
+        // Toca vídeo de preparação
+        let prepVideo = document.createElement('video');
+        prepVideo.src = 'rappapreparando.mp4';
+        prepVideo.autoplay = true;
+        prepVideo.controls = false;
+        prepVideo.muted = true;
+        prepVideo.playsInline = true;
+        prepVideo.style.position = 'fixed';
+        prepVideo.style.top = '0';
+        prepVideo.style.left = '0';
+        prepVideo.style.width = '100%';
+        prepVideo.style.height = '100%';
+        prepVideo.style.objectFit = 'cover';
+        prepVideo.style.zIndex = '9999';
+        document.body.appendChild(prepVideo);
+
+        prepVideo.addEventListener('ended', () => {
+            prepVideo.remove();
+
+            // Troca o movimento para a ultimate ofensiva
+            attacker.moves.forEach(m => {
+                if (m.name === 'Nindo Supremo: Aishiteru') {
+                    m.name = 'Ninja Strike: Enraizado Resoluto';
+                    m.type = 'Fream';
+                    m.power = 4500;
+                }
+            });
+
+            alert('Rappa está pronto para lançar Ninja Strike: Enraizado Resoluto!');
+            endTurn();
+        });
+
+        return;
+    }
+
+    // --- Executar Ultimate Rappa ---
+    if (attacker.name === 'Rappa' && rappaultimateActive && move.name === 'Ninja Strike: Enraizado Resoluto') {
+        alert('Rappa lançou sua Ultimate: Ninja Strike: Enraizado Resoluto!');
+
+        // Define movePower para aplicar dano corretamente
+        movePower = 4500;
+
+        // Desativa a ultimate
+        rappaultimateActive = false;
+
+        // Cria vídeo full screen da ultimate
+        let video = document.createElement('video');
+        video.src = 'rappaultimatevideo.mp4';
+        video.autoplay = true;
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = '9999';
+        document.body.appendChild(video);
+
+        video.addEventListener('ended', () => {
+            video.remove();
+
+            // Restaura fundo original
+            document.querySelector('.battle-container').style.backgroundImage = "url('defaultbattlebg.png')";
+
+            // Volta sprite base
+            attackerImg.src = 'rappa.png';
+
+            // Volta movimentos originais
+            attacker.moves = [
+                { name: 'Ninjutsu: Supere os tombos', type: 'Dream', power: 500 },
+                { name: 'Ningu: Lâmina de Pétala de Maldição Demoníaca', type: 'Dream', power: 400 },
+                { name: 'Ninja Dash: Aos trancos e barrancos', type: 'Light', power: 800 },
+                { name: 'Nindo Supremo: Aishiteru', type: 'Fream', power: 0 }
+            ];
+
+            endTurn();
+        });
+    }
+
 
     if (attacker.name === 'Kaiju Nº 8' && kaijun8Active && move.name === 'Hyper Destructive Punch') {
         alert('Hyper Destructive Punch!!!');
@@ -744,6 +1647,59 @@ function attack(move) {
     }
 
 
+    if (attacker.name === 'Seiya' && move.name === 'Armadura Divina') {
+        armaduradivinaseiyaActive = true;
+        attackerImg.src = 'Seiyaarmaduradivina.png'; // Imagem da True Form
+
+
+        alert('Seiya juntou tanto cosmo que sua armadura divina se formou!');
+
+        if (move.name === 'Armadura Divina' && playerPokemon.name === 'Seiya') {
+            armaduradivinaseiyaActive = true;
+            playerPokemon.maxHP = 59000;
+            playerHP = 59000;
+        }
+        if (move.name === 'Armadura Divina' && opponentPokemon.name === 'Seiya') {
+            armaduradivinaseiyaActive = true;
+            opponentPokemon.maxHP = 59000;
+            opponentHP = 59000;
+        }
+
+        // Aumenta a vida máxima e cura totalmente
+        attacker.maxHP = 100000;
+        attacker.currentHP = 100000;
+
+        // Altera os movimentos
+        attacker.moves.forEach(m => {
+            if (m.name === 'Meteoro de Pégaso') {
+                m.name = 'Meteoro de Pégaso Divino';
+                m.type = 'Fighting';
+                m.power = 15000;
+            }
+            if (m.name === 'Cadeia de Pégaso') {
+                m.name = 'Relâmpago de Pégaso Divino';
+                m.type = 'Mythic';
+                m.power = 25000; // Shield move
+            }
+            if (m.name === 'Armadura Divina') {
+                m.name = 'Meteoro de Pégaso Divino Absoluto';
+                m.type = 'Mythic';
+                m.power = 45000;
+            }
+            if (m.name === 'Pugna de Pégaso') {
+                m.name = 'Pugna de Pégaso Sagrado';
+                m.type = 'Mythic';
+                m.power = 20000;
+            }
+        });
+
+        endTurn();
+        return;
+    }
+
+    // Godzilla (Heisei) - Burning Mode
+
+
     if (attacker.name === 'Godzilla (Heisei)' && move.name === 'Burning') {
         burningActive = true;
         attackerImg.src = 'burninggodzillaheisei.png'; // Imagem da True Form
@@ -802,37 +1758,24 @@ function attack(move) {
         return;
     }
 
-    if (attacker.name === 'Saitama' && move.name === 'Serious Punch') {
+    // Ativar modo sério
+    if (attacker.name === 'Saitama' && move.name === 'Serious Punch' && !serioActive) {
         serioActive = true;
-        attackerImg.src = 'saitamamodoserio.png'; // Imagem Serious mode
+        saitamaBuff = 0; // zera buff no começo
+        attackerImg.src = 'saitamamodoserio.png';
+        attacker.maxHP = 280000;
+        attacker.currentHP = 280000;
 
-        alert('Saitama percebeu que tem que levar isso mais a sério!');
-
-        if (move.name === 'Serious Punch' && playerPokemon.name === 'Saitama') {
-            serioActive = true;
-            playerPokemon.maxHP = 18000;
-            playerHP = 18000;
-        }
-        if (move.name === 'Serious Punch' && opponentPokemon.name === 'Saitama') {
-            serioActive = true;
-            opponentPokemon.maxHP = 18000;
-            opponentHP = 18000;
-        }
-
-        // Aumenta a vida máxima e cura totalmente
-        attacker.maxHP = 18000;
-        attacker.currentHP = 18000;
-
-        // Altera os movimentos
+        // Atualiza movimentos
         attacker.moves.forEach(m => {
             if (m.name === 'Serious Punch') {
                 m.name = 'Super Serious Punch';
-                m.power = 8000;
+                m.power = 80000;
             }
             if (m.name === 'Consecutive Normal Punches') {
                 m.name = 'Consecutive Serious Punches';
                 m.type = 'Fighting';
-                m.power = 16000;
+                m.power = 160000;
             }
             if (m.name === 'Dodge') {
                 m.name = 'Dodge';
@@ -841,72 +1784,86 @@ function attack(move) {
             if (m.name === 'One Punch') {
                 m.name = 'Serious One Punch';
                 m.type = 'Fighting';
-                m.power = 10000;
+                m.power = 100000;
             }
         });
+
+        alert('Saitama percebeu que tem que levar isso mais a sério!');
+        endTurn();
+        return;
+    }
+
+    // Buff por turno (só no atacante Saitama)
+    if (serioActive && attacker.name === 'Saitama') {
+        saitamaBuff += 50000; // aumenta 50k de ataque a cada turno
+        attacker.moves.forEach(m => {
+            if (m.power > 0) {
+                m.power += 50000;
+            }
+        });
+
+        attacker.currentHP = Math.min(attacker.currentHP + 20000, attacker.maxHP); // cura 20k
+        alert('Saitama está ficando ainda mais forte!');
+    }
+    // Sonic - Transformar em Super ou Dark Sonic
+    if (attacker.name === 'Sonic' && move.name === 'Transformar') {
+        const chanceDark = Math.random(); // número entre 0 e 1
+
+        if (chanceDark < 0.10) { // 10% de chance
+            // Dark Sonic!
+            darksonicActive = true;
+            supersonicActive = false;
+            attacker.name = 'Dark Sonic';
+            attackerImg.src = 'darksonic.png';
+
+            attacker.maxHP = 6800; // HP aumentado
+            attacker.currentHP = 6800; // Ajustado para o max
+
+            attacker.moves = [
+                { name: 'Dark Spin Dash', type: 'Dark', power: 1800 },
+                { name: 'Dark Sonic Orb', type: 'Dark', power: 2000 },
+                { name: 'Flip Kick', type: 'Fighting', power: 2400 },
+                { name: 'Dark Sonic Meteor', type: 'Dark', power: 3000 }
+            ];
+            alert('Algo deu errado... Sonic virou DARK SONIC!');
+
+            if (playerTurn) {
+                playerHP = attacker.currentHP;
+                playerMaxHP = attacker.maxHP;
+            } else {
+                opponentHP = attacker.currentHP;
+                opponentMaxHP = attacker.maxHP;
+            }
+        } else {
+            // Super Sonic!
+            supersonicActive = true;
+            darksonicActive = false;
+            attacker.name = 'Super Sonic';
+            attackerImg.src = 'supersonic.png';
+
+            attacker.maxHP = 7000; // HP aumentado
+            attacker.currentHP = 7000; // Ajustado para o max
+
+            attacker.moves = [
+                { name: 'Spin Dash', type: 'Mythic', power: 2500 },
+                { name: 'Light Speed Attack', type: 'Mythic', power: 2000 },
+                { name: 'Super Spin Attack', type: 'Mythic', power: 5000 },
+                { name: 'Golden Energy Constructs', type: 'Mythic', power: 3000 }
+            ];
+            alert('Sonic se transformou em SUPER SONIC!');
+
+            if (playerTurn) {
+                playerHP = attacker.currentHP;
+                playerMaxHP = attacker.maxHP;
+            } else {
+                opponentHP = attacker.currentHP;
+                opponentMaxHP = attacker.maxHP;
+            }
+        }
 
         endTurn();
         return;
     }
-// Sonic - Transformar em Super ou Dark Sonic
-if (attacker.name === 'Sonic' && move.name === 'Transformar') {
-    const chanceDark = Math.random(); // número entre 0 e 1
-
-    if (chanceDark < 0.10) { // 10% de chance
-        // Dark Sonic!
-        darksonicActive = true;
-        supersonicActive = false;
-        attacker.name = 'Dark Sonic';
-        attackerImg.src = 'darksonic.png';
-
-        attacker.maxHP = 6800; // HP aumentado
-        attacker.currentHP = 6800; // Ajustado para o max
-
-        attacker.moves = [
-            { name: 'Dark Spin Dash', power: 180 },
-            { name: 'Dark Sonic Orb', power: 200 },
-            { name: 'Flip Kick', power: 240 },
-            { name: 'Dark Sonic Meteor', power: 300 }
-        ];
-        alert('Algo deu errado... Sonic virou DARK SONIC!');
-
-        if (playerTurn) {
-            playerHP = attacker.currentHP;
-            playerMaxHP = attacker.maxHP;
-        } else {
-            opponentHP = attacker.currentHP;
-            opponentMaxHP = attacker.maxHP;
-        }
-    } else {
-        // Super Sonic!
-        supersonicActive = true;
-        darksonicActive = false;
-        attacker.name = 'Super Sonic';
-        attackerImg.src = 'supersonic.png';
-
-        attacker.maxHP = 7000; // HP aumentado
-        attacker.currentHP = 7000; // Ajustado para o max
-
-        attacker.moves = [
-            { name: 'Spin Dash', power: 150 },
-            { name: 'Light Speed Attack', power: 200 },
-            { name: 'Super Spin Attack', power: 250 },
-            { name: 'Golden Energy Constructs', power: 300 }
-        ];
-        alert('Sonic se transformou em SUPER SONIC!');
-
-        if (playerTurn) {
-            playerHP = attacker.currentHP;
-            playerMaxHP = attacker.maxHP;
-        } else {
-            opponentHP = attacker.currentHP;
-            opponentMaxHP = attacker.maxHP;
-        }
-    }
-
-    endTurn();
-    return;
-}
 
     if (attacker.name === 'Godzilla Monsterverse' && move.name === 'Evolve') {
         evolvedActive = true;
@@ -1246,6 +2203,13 @@ if (attacker.name === 'Sonic' && move.name === 'Transformar') {
         return;
     }
 
+    if (move.name === 'Hockey Mask Shield') {
+        if (playerTurn) playerShield = true; else opponentShield = true;
+        logMessage(`${attacker.name} ativou Hockey Mask Shield e ficará imune ao próximo golpe!`);
+        endTurn();
+        return;
+    }
+
     if (move.name === 'Eyes of God') {
         if (playerTurn) playerShield = true; else opponentShield = true;
         logMessage(`${attacker.name} ativou Shield of God e ficará imune ao próximo golpe!`);
@@ -1256,6 +2220,13 @@ if (attacker.name === 'Sonic' && move.name === 'Transformar') {
     if (move.name === 'Dodge') {
         if (playerTurn) playerDodge = true; else opponentDodge = true;
         logMessage(`${attacker.name} preparou um Dodge e vai desviar do próximo golpe!`);
+        endTurn();
+        return;
+    }
+
+    if (move.name === 'Teleport') {
+        if (playerTurn) playerDodge = true; else opponentDodge = true;
+        logMessage(`${attacker.name} preparou um Teleport e vai desviar do próximo golpe!`);
         endTurn();
         return;
     }
@@ -1417,12 +2388,3 @@ if (opponentPokemon.name === 'Shin Godzilla') {
     opponentImg.style.height = 'auto';
 }
 
-if (playerPokemon.name === 'Godzilla Monsterverse') {
-    playerImg.style.width = '400px'; // aumente conforme desejar
-    playerImg.style.height = 'auto';
-}
-
-if (opponentPokemon.name === 'Godzilla Monsterverse') {
-    opponentImg.style.width = '400px';
-    opponentImg.style.height = 'auto';
-}
