@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Página Inicial - Jogo de Batalha</title>
+  <style>
+    /* Reset / básico */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#fff;
+      background:#000;
+      overflow:hidden;
+    }
+
+    /* Vídeo de fundo (full-bleed) */
+    .bg-video{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    /* Sobreposição para escurecer e dar contraste */
+    .overlay{
+      position:fixed;inset:0;z-index:1;
+      background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.6));
+      pointer-events:none;
+    }
+
+    /* Conteúdo central (logo/título) */
+    .hero{
+      position:relative;z-index:2;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:2rem;
+    }
+    .hero .title{
+      font-size:clamp(24px,6vw,64px);
+      letter-spacing:2px;
+      text-transform:uppercase;
+      text-shadow:0 8px 30px rgba(0,0,0,0.6);
+      margin:0;
+    }
+    .hero .subtitle{opacity:0.85;margin-top:0.5rem;font-size:clamp(12px,2.2vw,18px)}
+
+    /* Área de botões no canto inferior direito */
+    .controls{
+      position:fixed;
+      right:28px;
+      bottom:28px;
+      z-index:3;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:flex-end;
+    }
+
+    .btn{
+      min-width:160px;
+      padding:14px 20px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.12);
+      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.35));
+      backdrop-filter: blur(6px);
+      color:#fff;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,0.5);
+      transition:transform .14s ease, box-shadow .14s ease, opacity .12s ease;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn:active{transform:translateY(1px) scale(.997)}
+    .btn:hover{transform:translateY(-4px); box-shadow:0 14px 34px rgba(0,0,0,0.6)}
+
+    .btn.secondary{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2));
+      font-weight:600;
+      min-width:140px;
+    }
+
+    /* Pequeno ícone (circulo) */
+    .btn .dot{
+      width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.9);opacity:0.9;box-shadow:0 2px 6px rgba(0,0,0,0.5)
+    }
+
+    /* Modal simples para Créditos / Opções */
+    .modal{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;padding:24px;
+    }
+    .modal.open{display:flex}
+    .modal .panel{
+      max-width:900px;width:100%;background:rgba(6,6,6,0.75);border-radius:14px;padding:22px;border:1px solid rgba(255,255,255,0.06);
+      box-shadow:0 20px 60px rgba(0,0,0,0.7);color:#eee;backdrop-filter:blur(6px);
+    }
+    .modal h3{margin:0 0 8px 0}
+    .modal p{margin:0 0 12px 0;opacity:0.9}
+    .modal .close{
+      margin-top:12px;padding:10px 14px;border-radius:10px;border:0;background:rgba(255,255,255,0.06);cursor:pointer;color:#fff
+    }
+
+    /* Responsivo: em telas pequenas empilha o conteúdo dos botões para centro horizontal */
+    @media (max-width:480px){
+      .controls{right:12px;bottom:12px;align-items:center}
+      .btn{min-width:140px;padding:12px 16px}
+      .hero .title{font-size:28px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vídeo: coloque o arquivo 'arena.mp4' (ou .webm) na mesma pasta -->
+  <video class="bg-video" autoplay muted loop playsinline poster="poster.jpg">
+    <source src="arena.mp4" type="video/mp4">
+    <source src="arena.webm" type="video/webm">
+    Seu navegador não suporta vídeo — use um arquivo de vídeo ou imagem de fundo.
+  </video>
+
+  <div class="overlay" aria-hidden="true"></div>
+
+  <main class="hero" role="main">
+    <div>
+      <h1 class="title">Arena: Batalha Final</h1>
+      <p class="subtitle">Escolha seu destino — lute, aprenda e conquiste.</p>
+    </div>
+  </main>
+
+  <!-- Controles no canto inferior direito -->
+  <div class="controls" role="navigation" aria-label="Controles principais">
+    <button class="btn" id="playBtn" aria-label="Jogar">
+      <span class="dot" aria-hidden="true"></span>
+      <span>Jogar</span>
+    </button>
+
+    <button class="btn secondary" id="optionsBtn" aria-label="Opções">
+      <span>Opções</span>
+    </button>
+
+    <button class="btn secondary" id="creditsBtn" aria-label="Créditos">
+      <span>Créditos</span>
+    </button>
+  </div>
+
+  <!-- Modal reutilizável -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="panel" role="document">
+      <h3 id="modalTitle">Título</h3>
+      <div id="modalBody">
+        <p>Conteúdo...</p>
+      </div>
+      <button class="close" id="closeModal">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    // Elementos
+    const playBtn = document.getElementById('playBtn');
+    const optionsBtn = document.getElementById('optionsBtn');
+    const creditsBtn = document.getElementById('creditsBtn');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
+
+    // Função para abrir modal com título e conteúdo
+    function openModal(title, html){
+      modalTitle.textContent = title;
+      modalBody.innerHTML = html;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      // foco acessível
+      closeModal.focus();
+    }
+
+    function close(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+    }
+
+    // Eventos
+    playBtn.addEventListener('click', ()=>{
+      // Aqui você pode iniciar a lógica do jogo — por enquanto apenas redireciona/mostra mensagem
+      // Exemplo: window.location.href = 'jogo.html';
+      openModal('Preparando a Batalha', '<p>Carregando... (aqui você iniciaria o jogo)</p>');
+    });
+
+    optionsBtn.addEventListener('click', ()=>{
+      openModal('Opções', `
+        <p>Som: <select><option>Ligado</option><option>Desligado</option></select></p>
+        <p>Qualidade do vídeo: <select><option>Alta</option><option>Média</option><option>Baixa</option></select></p>
+        <p>Controles: WASD / Teclas de seta</p>
+      `);
+    });
+
+    creditsBtn.addEventListener('click', ()=>{
+      openModal('Créditos', `
+        <p>Desenvolvedor: Seu Nome</p>
+        <p>Música/Assets: [inserir créditos]</p>
+        <p>Motor de jogo: Sua engine</p>
+      `);
+    });
+
+    closeModal.addEventListener('click', close);
+
+    // Fechar modal com ESC
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') close();
+    });
+
+    // Tentar (silenciosamente) tocar o vídeo se autoplay foi bloqueado
+    window.addEventListener('load', ()=>{
+      const v = document.querySelector('.bg-video');
+      if(v && v.paused){
+        v.muted = true;
+        v.play().catch(()=>{/* autoplay bloqueado; usuário precisa interagir */});
+      }
+    });
+  </script>
+</body>
+</html>

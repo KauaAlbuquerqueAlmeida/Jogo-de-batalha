@@ -1,67 +1,214 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Jogo de Batalha</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #add8e6;
-            /* Azul claro */
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Arena — Tela Inicial</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:ital,wght@0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent: #ffcc00; /* cor dos botões */
+      --accent-2: #ff8a00;
+      --bg-dark: rgba(0,0,0,0.45);
+      --glass: rgba(255,255,255,0.03);
+      --radius: 14px;
+      --blur: 8px;
+      --safe-padding: 18px;
+    }
+    .stage .bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: contrast(1.02) saturate(1.05) brightness(0.85);
+}
 
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            max-width: 400px;
-        }
+    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial;color:white}
+    .stage{
+      position:relative;min-height:100vh;overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+      background:#000;
+    }
 
-        h1 {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
+    /* video layer */
+    .stage video{
+      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+      z-index:0;filter:contrast(1.02) saturate(1.05) brightness(0.85);
+    }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+    /* dark gradient overlay to ensure text contrast */
+    .overlay{
+      position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.6) 100%);z-index:1;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    /* central title */
+    .title-wrap{position:relative;z-index:2;text-align:center;padding:4rem 1rem;padding-right: 500px}
+    h1{font-family:'Press Start 2P',monospace;margin:0;font-size:clamp(22px,5vw,56px);letter-spacing:2px;text-transform:uppercase}
+    p.lead{margin-top:10px;opacity:0.9;font-size:clamp(12px,1.6vw,16px)}
 
-        .versao {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 14px;
-            color: #333;
-            opacity: 0.7;
-        }
-    </style>
+    /* bottom-right control panel */
+    .controls{
+      position:fixed;right:var(--safe-padding);bottom:var(--safe-padding);z-index:3;display:flex;flex-direction:column;gap:12px;align-items:flex-end
+    }
+
+    .btn{
+      min-width:160px;padding:14px 18px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#111;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.45);font-size:14px;backdrop-filter:blur(var(--blur));
+      transform:translateY(0);transition:all .18s ease;display:inline-flex;align-items:center;justify-content:center;gap:10px
+    }
+    .btn:active{transform:translateY(2px) scale(.997)}
+    .btn.secondary{background:transparent;color:var(--accent);border:2px solid rgba(255,204,0,0.16);font-weight:600}
+    .btn.ghost{background:var(--glass);color:var(--accent);border:1px solid rgba(255,255,255,0.06)}
+
+    /* small icon circle */
+    .circle{width:36px;height:36px;border-radius:999px;display:inline-grid;place-items:center;background:rgba(0,0,0,0.18);backdrop-filter:blur(6px)}
+
+    /* credits modal simple */
+    .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.98);z-index:40;background:linear-gradient(180deg,rgba(17,17,17,0.98),rgba(8,8,8,0.95));padding:18px;border-radius:12px;min-width:280px;max-width:90vw;box-shadow:0 18px 80px rgba(0,0,0,0.6);display:none}
+    .modal.show{display:block}
+    .modal h3{margin:0 0 8px 0;font-size:16px}
+    .modal p{margin:0 0 12px 0;opacity:0.85;font-size:13px}
+    .modal .close{display:flex;justify-content:flex-end}
+
+    /* options panel (sliding) */
+    .panel{position:fixed;right:0;top:0;height:100vh;width:320px;z-index:39;background:linear-gradient(180deg,rgba(7,7,7,0.98),rgba(16,16,16,0.96));box-shadow:-30px 0 60px rgba(0,0,0,0.6);transform:translateX(110%);transition:transform .32s ease;padding:22px;display:flex;flex-direction:column;gap:12px}
+    .panel.open{transform:translateX(0)}
+    .row{display:flex;justify-content:space-between;align-items:center}
+    label{font-size:13px}
+
+    /* accessibility & responsive tweaks */
+    @media (max-width:520px){
+      .btn{min-width:140px;padding:12px 14px;font-size:13px}
+      .controls{right:12px;bottom:12px}
+      .panel{width:86vw}
+    }
+
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Bem-vindo ao Jogo de Batalha!<br>Um site para simular lutas.<br><br>Aperte o botão abaixo para entrar.</h1>
-        <a href="select.html"><button>Entrar</button></a>
-    </div>
-    <div class="versao">Versão 1.0.0</div>
-</body>
 
+  <div class="stage">
+    <!-- Background video: substitua "assets/arena.mp4" pelo seu arquivo. O video está muted por padrão para permitir autoplay em navegadores. -->
+    <img src="colizel.png" alt="Arena" class="bg-img">
+      <!-- Fallback image caso o video não carregue -->
+      Seu navegador não suporta vídeo — use uma imagem de fundo.
+    </video>
+
+    <div class="overlay"></div>
+
+    <div class="title-wrap" aria-hidden="false">
+      <h1>Arena</h1>
+      <p class="lead">Prepare-se para batalhas épicas — escolha uma opção para começar</p>
+    </div>
+
+    <!-- Controls: jogar / opções / créditos -->
+    <div class="controls" role="navigation" aria-label="Menu principal">
+      <button id="btn-play" class="btn" aria-label="Jogar">
+        <span class="circle" aria-hidden="true">▶</span>
+        <span>Jogar</span>
+      </button>
+
+      <button id="btn-options" class="btn secondary" aria-haspopup="true" aria-expanded="false">
+        <span>Opções</span>
+      </button>
+
+      <button id="btn-credits" class="btn ghost" aria-haspopup="dialog" aria-controls="credits-modal">
+        <span>Créditos</span>
+      </button>
+    </div>
+
+    
+    <aside id="options-panel" class="panel" aria-hidden="true">
+      <div class="row">
+        <h3>Opções</h3>
+        <button id="close-panel" aria-label="Fechar opções">✕</button>
+      </div>
+
+      <div class="row">
+        <label for="toggle-sound">Som do menu</label>
+        <input id="toggle-sound" type="checkbox" checked />
+      </div>
+
+      <div class="row">
+        <label for="video-muted">Vídeo mutado</label>
+        <input id="video-muted" type="checkbox" checked />
+      </div>
+
+      <div style="margin-top:auto;font-size:12px;opacity:0.8">Versão demo • HTML/CSS/JS</div>
+    </aside>
+
+    <!-- Credits modal -->
+    <dialog id="credits-modal" class="modal" aria-modal="true" aria-labelledby="credits-title">
+      <h3 id="credits-title">Créditos</h3>
+      <p>Produzido por: Seu Nome<br>Design e assets: Equipe Arena<br>Motor de jogo: — (demo)</p>
+      <div class="close"><button id="close-credits" class="btn ghost">Fechar</button></div>
+    </dialog>
+
+  </div>
+
+  <script>
+    // Elementos
+    const btnPlay = document.getElementById('btn-play');
+    const btnOptions = document.getElementById('btn-options');
+    const btnCredits = document.getElementById('btn-credits');
+    const optionsPanel = document.getElementById('options-panel');
+    const closePanel = document.getElementById('close-panel');
+    const creditsModal = document.getElementById('credits-modal');
+    const closeCredits = document.getElementById('close-credits');
+    const bgvid = document.getElementById('bgvid');
+    const videoMuted = document.getElementById('video-muted');
+
+    // Ações
+    btnPlay.addEventListener('click', () => {
+      // Aqui você pode iniciar o jogo — por enquanto mostramos um alerta e redirecionamos para "game.html".
+      if (confirm('Começar jogo agora?')){
+        // exemplo de navegação:
+        window.location.href = 'select.html';
+      }
+    });
+
+    btnOptions.addEventListener('click', () => {
+      const open = optionsPanel.classList.toggle('open');
+      btnOptions.setAttribute('aria-expanded', open);
+      optionsPanel.setAttribute('aria-hidden', !open);
+    });
+
+    closePanel.addEventListener('click', () => {
+      optionsPanel.classList.remove('open');
+      btnOptions.setAttribute('aria-expanded', 'false');
+      optionsPanel.setAttribute('aria-hidden', 'true');
+    });
+
+    btnCredits.addEventListener('click', async () => {
+      // usar <dialog> quando suportado
+      if (typeof creditsModal.showModal === 'function'){
+        creditsModal.showModal();
+      } else {
+        creditsModal.classList.add('show');
+      }
+    });
+
+    closeCredits.addEventListener('click', () => {
+      if (typeof creditsModal.close === 'function') creditsModal.close();
+      creditsModal.classList.remove('show');
+    });
+
+    // Controle do mute do vídeo via opção
+    videoMuted.addEventListener('change', (e) => {
+      bgvid.muted = e.target.checked;
+    });
+
+    // Se o usuário clicar fora do modal, fecha (polyfill simples)
+    creditsModal.addEventListener('click', (e) => {
+      if (e.target === creditsModal) {
+        if (typeof creditsModal.close === 'function') creditsModal.close();
+        creditsModal.classList.remove('show');
+      }
+    });
+
+    // Sugestão: pré-carregar o vídeo (já usamos preload). Se quiser tocar som ao clicar, habilite a reprodução de som nas opções.
+  </script>
+</body>
 </html>
